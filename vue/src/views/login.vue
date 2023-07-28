@@ -1,0 +1,96 @@
+<script setup>
+// import {ref} from '@vue/reactivity'
+// import { useRouter } from 'vue-router'
+// import { useAuthenticateStore } from '../../store/authenticate'
+// import { storeToRefs } from 'pinia'
+
+
+// const { normalLogin, test } = useAuthenticateStore()
+// const { loading, authenticated } = storeToRefs(useAuthenticateStore())
+// const router = useRouter()
+
+// const loginButton = async () => {
+//   try {
+//     const response = await normalLogin(email.value, password.value);
+//     console.log(response);
+//     if (localStorage.getItem('token') !== null && response.Message === "Authorized") {
+//       router.push('/');
+//     } else {
+//       console.log("An unexpected success response occurred");
+//       localStorage.removeItem('token');
+//       router.push('/login');
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     localStorage.removeItem('token');
+//     router.push('/login');
+//   }
+// };
+
+// const email = ref('')
+// const password = ref('')
+</script>
+
+
+<template>
+	<div class="flex min-h-full flex-1 flex-col justify-center px-12 py-16 lg:px-8 bg-white rounded-lg shadow-lg">
+	  <img class="mx-auto h-12 w-auto rounded-full" src="https://via.placeholder.com/50" alt="Your Company" />
+	  <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-black">Log in to your account</h2>
+  
+	  <form class="space-y-6 mt-6">
+		<div>
+		  <label for="email" class="flex flex-col items-start block text-sm font-medium leading-6 text-black">Email address</label>
+		  
+		  <div class="mt-2">
+			<input
+			  id="email"
+			  name="email"
+			  type="email"
+			  autocomplete="email"
+			  required=""
+			  class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+			/>
+		  </div>
+		</div>
+  
+		<div>
+		  <div class="flex items-center justify-between">
+			<label for="password" class="block text-sm font-medium leading-6 text-black">Password</label>
+			<div class="text-sm">
+			  <a href="#" class="font-semibold text-black hover:text-blue-800">Forgot password?</a>
+			</div>
+		  </div>
+		  <div class="mt-2">
+			<input
+			  id="password"
+			  name="password"
+			  type="password"
+			  autocomplete="current-password"
+			  required=""
+			  class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+			/>
+		  </div>
+		</div>
+  
+		<div>
+		  <button
+			type="submit"
+			class="flex w-full justify-center rounded-md bg-black px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+		  >
+			Sign in
+		  </button>
+		</div>
+	  </form>
+  
+	  <p class="mt-10 text-center text-sm text-gray-500">
+		No Account yet?
+		{{ ' ' }}
+		<router-link :to="{ name: 'signup' }" class=" cursor-pointer font-semibold leading-6 text-black hover:text-gray-600">Register Here</router-link>
+	  </p>
+	</div>
+  </template>
+  
+  
+
+<style>
+</style>

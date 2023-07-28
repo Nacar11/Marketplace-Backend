@@ -1,0 +1,4 @@
+<template>
+    <h1>This is the account page</h1>
+	
+</template>
