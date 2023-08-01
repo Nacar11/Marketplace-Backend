@@ -6,3 +6,26 @@ html,
 body {
   background-color: #f1f1f1; 
 }
+
+@layer components {
+  .cta-btn {
+    @apply inline-flex w-full cursor-pointer items-center justify-center rounded-full px-8 py-2.5 text-base font-medium leading-6 shadow-sm transition duration-200 ease-in-out hover:scale-105 active:translate-y-1 md:w-auto md:py-3;
+  }
+
+  .cta-btn-icons {
+    @apply ml-2 h-3 w-3 transform transition-transform duration-200 group-hover:animate-moveRightAndBack;
+  }
+}
+
+#app {
+  width:100%;
+  margin: 0 ;
+  text-align: center;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+
+}

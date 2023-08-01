@@ -41,6 +41,11 @@ const routes = [
 				name:'account',
 				component: account
 						},
+				{
+				path: '/product',
+				name:'addProduct',
+				component: addProduct
+						},
 				],
 				},
 	{
@@ -56,11 +61,6 @@ const routes = [
 				path: '/signup',
 				name:'signup',
 				component: signup
-						},
-				{
-				path: '/product',
-				name:'addProduct',
-				component: addProduct
 						},
 			],
 			}

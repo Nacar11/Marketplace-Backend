@@ -9,38 +9,49 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 
 class AuthController extends Controller{
 
     public function login(Request $request){
         $credentials = $request->validate([
-            'email' => 'required|string',
-            'password' => 'required|string'
+            'email' => 'required|string|email|exists:users,email',
+            'password' => 'required|string',
+            'remember' => 'boolean'
         ]);
-        $user = User::where('email', $credentials['email'])->first();
-        if ($user) {
-            if (Hash::check($credentials['password'], $user->password)) {
-                $token = $user->createToken('auth-token')->plainTextToken;
-                return response()->json([
-                    
-                        'Message'=> 'Authorized',
-                        'access_token' => $token,
-                        'token_type' => 'Bearer',
-                        'expires_in' => null,
-                        'username' => $user->username
-                    
-            ]);
-            }
-            else {
-                return response()->json(['Message' => 'Error, Invalid Password'], 401);
-            }
+
+        $remember = $credentials['remember'] ?? false;
+        unset($credentials['remember']);
+
+        if (!Auth::attempt($credentials, $remember)){
+            return response ([
+                'error' => 'Invalid Credentials'
+            ], 422);
         }
-        else {
-            return response()->json(['Message'=> 'Error, Invalid Email'], 401);
-        }
+
+        $user = Auth::user();
+        $token = $user->createToken('auth-token')->plainTextToken;
+
+        return response()->json([
+                    
+            'Message'=> 'Authorized',
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'expires_in' => null,
+            'username' => $user->username
+        
+]);
+
+
+       
     }
-    public function logout(Request $request){
+    public function logout(){
+        // $user = Auth::user();
+        // $user->currentAccessToken()->delete();
+        // return response([
+        //     'success' => true
+        // ]);
         auth()->user()->tokens()->delete();
         return response()->json(['Success' => 'Logged out']);
     }

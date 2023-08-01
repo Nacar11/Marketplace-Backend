@@ -4,9 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 // use App\Http\Controllers\UserController;
-// use App\Http\Controllers\ProductController;
-// use App\Http\Controllers\ProductItemController;
-// use App\Http\Controllers\ProductCategoryController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductItemController;
+use App\Http\Controllers\ProductCategoryController;
 // use App\Http\Controllers\VariationController;
 // use App\Http\Controllers\VariationOptionController;
 
@@ -31,16 +31,16 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     // Route::get('user', UserController::class);
     // Route::put('user/{id}', [UserController::class, 'update']);
     
-    // Route::get('product-item', ProductItemController::class);
-    // Route::get('product-item/{product}', [ProductItemController::class, 'show']);
+    Route::get('product-item', ProductItemController::class);
+    Route::get('product-item/{product}', [ProductItemController::class, 'show']);
     // Route::put('product-item/{product}', [ProductItemController::class, 'update']);
     // Route::delete('/product-item/{product}', [ProductItemController::class, 'destroy']);
     // Route::post('product-item', [ProductItemController::class, 'store']);
 
-    // Route::get('product', ProductController::class);
-    // Route::get('product-category', ProductCategoryController::class);
-    // Route::get('product-category/{id}', [ProductCategoryController::class, 'show']);
-
+    Route::get('product', ProductController::class);
+    Route::get('product-category', ProductCategoryController::class);
+    Route::get('product-category/{id}', [ProductCategoryController::class, 'show']);
+    Route::get('/logout', [AuthController::class, 'logout']);
     // Route::get('variation', VariationController::class);
     // Route::get('variation/{variation}', [VariationController::class, 'show']);
     // Route::post('variation/', [VariationController::class, 'store']);
@@ -55,7 +55,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     // Route::delete('variation-option/{id}', [VariationOptionController::class, 'destroy']);
 
 
-    // Route::get('/logout', [AuthController::class, 'logout']);
 
 
 });
@@ -65,3 +64,5 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('test',function(){
     return 'Success';
 });
+Route::get('product-category', ProductCategoryController::class);
+Route::get('product-category/{id}', [ProductCategoryController::class, 'show']);

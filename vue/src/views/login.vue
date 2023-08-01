@@ -1,48 +1,51 @@
 <script setup>
-// import {ref} from '@vue/reactivity'
-// import { useRouter } from 'vue-router'
-// import { useAuthenticateStore } from '../../store/authenticate'
-// import { storeToRefs } from 'pinia'
+import {ref} from '@vue/reactivity'
+import { useRouter } from 'vue-router'
+import store from '../store'
+import agreement from '../components/modal/agreement.vue';
 
 
-// const { normalLogin, test } = useAuthenticateStore()
-// const { loading, authenticated } = storeToRefs(useAuthenticateStore())
-// const router = useRouter()
+const router = useRouter();
+const error= ref('')
 
-// const loginButton = async () => {
-//   try {
-//     const response = await normalLogin(email.value, password.value);
-//     console.log(response);
-//     if (localStorage.getItem('token') !== null && response.Message === "Authorized") {
-//       router.push('/');
-//     } else {
-//       console.log("An unexpected success response occurred");
-//       localStorage.removeItem('token');
-//       router.push('/login');
-//     }
-//   } catch (error) {
-//     console.log(error);
-//     localStorage.removeItem('token');
-//     router.push('/login');
-//   }
-// };
+const loginButton = async (ev) => {
+  ev.preventDefault()
+  store.dispatch('login', user).then((data) => {
+	console.log(data)
+	router.push({
+		name: 'home',
+	}) 	
+  })
+  .catch(err => {
+	console.log(err.response.data.message)
+	error.value = err.response.data.message
+  })
+};
+const user = {
+email:'',
+password :''
+}
 
-// const email = ref('')
-// const password = ref('')
 </script>
 
 
 <template>
+	<!-- <agreement :show="state.show"></agreement> -->
+
 	<div class="flex min-h-full flex-1 flex-col justify-center px-12 py-16 lg:px-8 bg-white rounded-lg shadow-lg">
 	  <img class="mx-auto h-12 w-auto rounded-full" src="https://via.placeholder.com/50" alt="Your Company" />
 	  <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-black">Log in to your account</h2>
   
 	  <form class="space-y-6 mt-6">
+		<div v-if="error" class="py-3 px-5 bg-red-500 text-white rounded">
+			{{ error }}
+		</div>
 		<div>
 		  <label for="email" class="flex flex-col items-start block text-sm font-medium leading-6 text-black">Email address</label>
 		  
 		  <div class="mt-2">
 			<input
+			  v-model="user.email"
 			  id="email"
 			  name="email"
 			  type="email"
@@ -62,6 +65,7 @@
 		  </div>
 		  <div class="mt-2">
 			<input
+			  v-model="user.password"
 			  id="password"
 			  name="password"
 			  type="password"
@@ -74,7 +78,7 @@
   
 		<div>
 		  <button
-			type="submit"
+			@click="loginButton"
 			class="flex w-full justify-center rounded-md bg-black px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
 		  >
 			Sign in

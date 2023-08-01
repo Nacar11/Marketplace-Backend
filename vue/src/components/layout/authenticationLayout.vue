@@ -8,7 +8,7 @@ import appFooter from '/src/components/layout/appFooter.vue';
 <template>
   <div>
     <authenticationHeader/>
-        <router-view class="my-2" />
+        <router-view />
 		</div>
 	  <div class='foot1'>
 		  <!-- <appFooter/> -->
