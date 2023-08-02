@@ -41,20 +41,14 @@ class AuthController extends Controller{
             'expires_in' => null,
             'username' => $user->username
         
-]);
+]);     
+}
 
-
-       
-    }
     public function logout(){
-        // $user = Auth::user();
-        // $user->currentAccessToken()->delete();
-        // return response([
-        //     'success' => true
-        // ]);
         auth()->user()->tokens()->delete();
         return response()->json(['Success' => 'Logged out']);
     }
+
     public function register(UserRequest $request){
         $validatedData = $request->validated();
         $validatedData['credits'] = 0; // Set credits to 0

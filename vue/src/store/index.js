@@ -6,6 +6,10 @@ const store  = createStore({
         user:{
             data: {username: ''},
             token: sessionStorage.getItem('Token'),
+        },
+        product_categories:{
+            data: "",
+
         }
     },
     getters:{},
@@ -22,8 +26,9 @@ const store  = createStore({
                 return data;
             })
         },
-        getProductCategories({}){
+        getProductCategories({commit}){
             return api.get('/product-category').then(({data}) => {
+                commit('setProductCategories', data)
                 return data;
             })
         },
@@ -44,8 +49,25 @@ const store  = createStore({
                 return data;
             })
         },
+        getVariantsByProductTypes({},id){
+            console.log(id)
+            return api.get(`/getVariantsByProductTypes/${id}`).then(({data}) => {
+                return data;
+            })
+        },
+        getVariationOptionbyVariant({},id){
+            console.log(id)
+            return api.get(`/variationOptions/${id}`).then(({data}) => {
+                return data;
+            })
+        },
+        
     },
     mutations:{
+        setProductCategories: (state, product_categories) =>{
+            state.product_categories.data =  product_categories
+        },
+
         logout: (state) => {
             state.user.token = null;
             state.user.data = {};
