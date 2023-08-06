@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\ProductCategory;
 use App\Models\ProductItem;
 use App\Models\Product;
+use App\Models\ProductImage;
 
 class DatabaseSeeder extends Seeder
 {
@@ -21,5 +22,6 @@ class DatabaseSeeder extends Seeder
         ProductCategory::factory(10)->create();
         Product::factory(5)->create();
         ProductItem::factory(10)->create();
+        ProductImage::factory(10)->create();
     }
 }

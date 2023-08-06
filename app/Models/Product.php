@@ -32,6 +32,10 @@ class Product extends Authenticatable
         return $this->belongsTo(ProductCategory::class);
     }
     
+    public function productItems()
+    {
+        return $this->hasMany(ProductItem::class, 'product_id', 'id');
+    }
 
     
 }

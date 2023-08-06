@@ -26,6 +26,12 @@ const store  = createStore({
                 return data;
             })
         },
+        addProductItem({commit},details){
+            console.log(details)
+            return api.post('/product-item', details).then(({data}) => {
+                return data;
+            })
+        },
         getProductCategories({commit}){
             return api.get('/product-category').then(({data}) => {
                 commit('setProductCategories', data)
@@ -34,7 +40,6 @@ const store  = createStore({
         },
         logout({commit}){
             return api.get('/logout').then(data => {
-                console.log("asda")
                 commit('logout') 
                 return data;
             })
@@ -50,14 +55,17 @@ const store  = createStore({
             })
         },
         getVariantsByProductTypes({},id){
-            console.log(id)
             return api.get(`/getVariantsByProductTypes/${id}`).then(({data}) => {
                 return data;
             })
         },
-        getVariationOptionbyVariant({},id){
-            console.log(id)
-            return api.get(`/variationOptions/${id}`).then(({data}) => {
+        async getAllVariationOptions({}){
+            return await api.get('/variation-option').then(({data}) => {
+                return data;
+            })
+        },
+        async addProductConfiguration({},form){
+            return await api.post('/product-configuration',form).then(({data}) => {
                 return data;
             })
         },

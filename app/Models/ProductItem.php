@@ -4,19 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\ProductImage;
 
 class ProductItem extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['product_id', 'SKU', 'qty_in_stock', 'product_image', 'price', 'user_id'];
+    protected $fillable = ['product_id', 'SKU', 'qty_in_stock', 'price', 'user_id'];
 
     public function product()
-{
+    {
     return $this->belongsTo(Product::class, 'product_id');
-}
-    // public function variationOptions()
-    // {
-    //     return $this->belongsToMany(VariationOption::class, 'product_configurations');
-    // }
+    }
+    public function variationOptions()
+    {
+        return $this->belongsToMany(VariationOption::class, 'product_configurations');
+    }
+
+    public function productImages()
+    {
+        return $this->hasMany(ProductImage::class, 'product_id', 'id');
+
+    }
 }

@@ -19,7 +19,6 @@ class ProductItemFactory extends Factory
             'product_id' => $productId,
             'SKU' => $this->faker->unique()->bothify('??-########'),
             'qty_in_stock' => $this->faker->numberBetween(10, 100),
-            'product_image' => $this->faker->imageUrl(640, 480),
             'price' => $this->faker->randomFloat(2, 10, 100),
             'user_id' => $userId,
         ];

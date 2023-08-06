@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductItemController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\VariationController;
 use App\Http\Controllers\VariationOptionController;
+use App\Http\Controllers\ProductConfigurationController;
 
 
 /*
@@ -35,7 +36,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('product-item/{product}', [ProductItemController::class, 'show']);
     // Route::put('product-item/{product}', [ProductItemController::class, 'update']);
     // Route::delete('/product-item/{product}', [ProductItemController::class, 'destroy']);
-    // Route::post('product-item', [ProductItemController::class, 'store']);
+    Route::post('product-item', [ProductItemController::class, 'store']);
 
     Route::get('product', ProductController::class);
     Route::get('getVariantsByProductTypes/{id}', [ProductController::class, 'getVariantsByProductTypes']);
@@ -48,7 +49,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('variation/', [VariationController::class, 'store']);
     // Route::put('variation/{variation}', [VariationController::class, 'update']);
     // Route::delete('variation/{variation}', [VariationController::class, 'destroy']);
-
+    Route::get('product-configuration', [ProductConfigurationController::class, 'getAll']);
+    Route::post('product-configuration', [ProductConfigurationController::class, 'add']);
 
     Route::get('variation-option', VariationOptionController::class);
     Route::get('variation-option/{id}', [VariationOptionController::class, 'show']);

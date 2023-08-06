@@ -1,13 +1,16 @@
 <script setup>
-import {computed, ref} from '@vue/reactivity'
+import { ref} from '@vue/reactivity'
 import store from '../store'
-import { useRouter } from 'vue-router'
+// import { useRouter } from 'vue-router'
 import { onBeforeMount } from '@vue/runtime-core'
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+// import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+import productItemModal from '../components/modal/productItem.vue'
+
 const error= ref('')
 const organizedCategories = ref([])
 const product_items = ref([])
 const openMenus = ref([]);
+
 const organizeCategories = (data) => {
     const categoriesMap = new Map();
     const result = [];
@@ -31,10 +34,7 @@ const organizeCategories = (data) => {
 
 onBeforeMount(async () => {
 	store.dispatch('getProductCategories').then((data) => {
-	console.log(data)
   organizedCategories.value = organizeCategories(data);
-  console.log("organizedcategories")
-	console.log(organizedCategories.value)
   })
   .catch(err => {
 	console.log(err.response.data.message)
@@ -48,9 +48,6 @@ onBeforeMount(async () => {
 	}
   })
   
-  
-
-
 })
 
 const openMenu = (categoryId) => {
@@ -70,10 +67,21 @@ const isActiveSubCategory = (subCategoryId) => {
   return openMenus.value.includes(subCategoryId);
 };
 
+const show = ref(false);
+const productItem = ref(null);
+const showProductItem = () => {
+  show.value = !show.value;
+}
+
+const openProductModal = (product) => {
+  productItem.value = product;
+  show.value = true;
+};
 </script>
 
 
 <template>
+  
   <div class="p-5 flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
     <div class="hidden sm:ml-6 sm:block">
       <div class="flex space-x-4">
@@ -102,27 +110,44 @@ const isActiveSubCategory = (subCategoryId) => {
       </div>
     </div>
   </div>
-  <div class="bg-white">
-    <div class="mx-auto max-w-2xl px-4 py-16">
-      <!-- <h2 class="text-2xl font-bold tracking-tight text-gray-900">Customers also purchased</h2> -->
-
-      <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-        <div v-for="product in product_items" :key="product.id" class="group relative">
-          <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
-            <img :src="product.product_image" :alt="product.product_image" class="h-full w-full object-cover object-center lg:h-full lg:w-full" />
+  <div class="p-5 bg-white">
+    <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+      <div v-for="product in product_items" :key="product.id" class="group relative">
+        <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+          <img 
+            @click="openProductModal(product)"
+            v-if="product.product_images && product.product_images.length > 0"
+            :src="product.product_images[0].product_image"
+            :alt="product.product_images[0].product_image"
+            class="h-full w-full object-cover object-center lg:h-full lg:w-full"
+          />
+          <img
+            v-else
+            src="https://via.placeholder.com/300x200"
+            alt="Default Image"
+            class="h-full w-full object-cover object-center lg:h-full lg:w-full"
+          />
+        </div>
+        <div class="mt-4 flex justify-between">
+          <div>
+            <h3 class="text-sm text-gray-700">{{ product.product.name }}</h3>
           </div>
-          <div class="mt-4 flex justify-between">
-            <div>
-              <h3 class="text-sm text-gray-700">
-                {{ product.product.name }}
-              </h3>
-                        </div>
-                        <p class="text-sm font-medium text-gray-900">{{ product.price }}</p>
-          </div>
+          <p class="text-sm font-medium text-gray-900">{{ product.price }}</p>
         </div>
       </div>
     </div>
   </div>
+  <productItemModal
+    :show="show"
+	  :showProductItem = "showProductItem"
+    :productItem = "productItem"
+    />
+
+
+
+
+
+
 </template>
 
 <style>

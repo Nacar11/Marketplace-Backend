@@ -4,32 +4,7 @@ import { useRouter } from 'vue-router'
 import store from '../store'
 import agreement from '../components/modal/agreement.vue'
 const router = useRouter();
-// import { useAuthenticateStore } from '../../store/authenticate'
 
-// const { register } = useAuthenticateStore()
-// const router = useRouter()
-
-
-// const registerButton = async () => {
-//   if (formData.password === formData.confirm_password) {
-//     try {
-//       const response = await register(formData);
-//       console.log(response);
-//       // Handle the successful registration here, if needed
-//       router.push('/login'); // Redirect to login page after successful registration
-//     } catch (error) {
-//       console.log(error);
-//       // Handle the error during registration here
-//       if (error.response) {
-//         console.log('Error during Registration:', error.response.data);
-//         // You can show error messages to the user using this response data
-//       }
-//     }
-//   } else {
-//     console.log('Error: Passwords do not match');
-//     // Handle the case where the passwords do not match
-//   }
-// };
 
 const isTermsAccepted = ref(false);
 
