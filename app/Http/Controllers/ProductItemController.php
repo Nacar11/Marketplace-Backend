@@ -19,7 +19,6 @@ class ProductItemController extends Controller
         return $productItems;
     }
 
-
     public function getProductName()
     {
     $products = Product::with('Product')->get();
@@ -30,8 +29,9 @@ class ProductItemController extends Controller
 
     public function store(ProductItemRequest $request)
     {
-        // dd($request);
+        
         $user = auth()->user();
+        
         $userId = $user->id;
         $sku = uniqid();
         $productItem = ProductItem::create(array_merge($request->validated(), [

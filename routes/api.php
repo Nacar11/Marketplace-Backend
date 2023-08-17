@@ -10,6 +10,8 @@ use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\VariationController;
 use App\Http\Controllers\VariationOptionController;
 use App\Http\Controllers\ProductConfigurationController;
+use App\Http\Controllers\ShoppingCartItemController;
+use App\Http\Controllers\ShoppingCartController;
 
 
 /*
@@ -58,11 +60,18 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('variation-option/{id}', [VariationOptionController::class, 'update']);
     Route::delete('variation-option/{id}', [VariationOptionController::class, 'destroy']);
 
+    Route::get('getCartItems', ShoppingCartItemController::class);
+    Route::get('getCartItemByID/{id}', [ShoppingCartItemController::class, 'getCartItemByID']);
+    Route::post('addToCart', [ShoppingCartItemController::class, 'addToCart']);
+    Route::get('getShoppingCartByUser/{id}', [AuthController::class, 'getShoppingCartByUser']);
 
 
 
 });
-// Route::get('user', UserController::class);
+
+
+Route::get('/users', AuthController::class);
+
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('test',function(){
@@ -70,4 +79,6 @@ Route::get('test',function(){
 });
 Route::get('product-category', ProductCategoryController::class);
 Route::get('product-category/{id}', [ProductCategoryController::class, 'show']);
+Route::get('getProductItemByCategory/{id}', [ProductCategoryController::class, 'getProductItemsByCategory']);
+
 Route::get('product-item', ProductItemController::class);

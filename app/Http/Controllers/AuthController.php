@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
+use App\Models\ShoppingCart;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -13,6 +14,13 @@ use Illuminate\Support\Facades\Auth;
 
 
 class AuthController extends Controller{
+
+
+    public function __invoke()
+    {
+        $users = User::with('shoppingCart')->get();    
+        return $users;
+    }
 
     public function login(Request $request){
         $credentials = $request->validate([
@@ -29,20 +37,20 @@ class AuthController extends Controller{
                 'error' => 'Invalid Credentials'
             ], 422);
         }
-
         $user = Auth::user();
         $token = $user->createToken('auth-token')->plainTextToken;
-
-        return response()->json([
-                    
+        $user->load('shoppingCart');
+        // dd($user);
+        return response()->json([ 
             'Message'=> 'Authorized',
             'access_token' => $token,
             'token_type' => 'Bearer',
             'expires_in' => null,
-            'username' => $user->username
-        
-]);     
-}
+            'username' => $user->username,
+            'user_id' => $user->id,
+            'shopping_cart' => $user->shoppingCart
+            ]);     
+        }
 
     public function logout(){
         auth()->user()->tokens()->delete();
@@ -50,26 +58,37 @@ class AuthController extends Controller{
     }
 
     public function register(UserRequest $request){
-        $validatedData = $request->validated();
-        $validatedData['credits'] = 0; // Set credits to 0
-        
+        $validatedData = $request->validated(); 
         $user = User::create($validatedData);
         
-        return response()->json([
-            'status' => "Success",
-            'Body' => $user,
-        ], 200);
+        if (!$user->shoppingCart) {
+            $shoppingCart = ShoppingCart::create([
+                'user_id' => $user->id,
+            ]);
         }
-        
+        return response()->json([ 
+            'Message'=> 'Success',
+            'User' => $user,
+            ]);     
+        }
+
     
 
-            // $user = User::create([
-            //     'first_name' => ucwords(strtolower($fields['first_name'])),
-            //     'last_name' => ucwords(strtolower($fields['last_name'])),
-            //     'contact_number' => $fields['contact_number'],
-            //     'email' => $fields['email'],
-            //     'password' => Hash::make($fields['password']),
 
 
-            // ]);
+    public function getShoppingCartByUser($id){
+
+        $user = User::find($id); 
+        if (!$user) {
+            return "User Not Found"; 
+        }
+        $shoppingCart = $user->shoppingCart;
+        if (!$shoppingCart) {
+            return "Shopping Cart Not Found."; 
+        }
+        $shoppingCart->load('items.productItem.productImages', 'items.variationOptions', 'items.productItem.product');
+
+    
+        return $shoppingCart;
+        }
     }

@@ -2,7 +2,6 @@
 import {ref} from '@vue/reactivity'
 import { useRouter } from 'vue-router'
 import store from '../store'
-import agreement from '../components/modal/agreement.vue';
 
 
 const router = useRouter();

@@ -1,16 +1,25 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { reactive, ref, computed} from 'vue'
+import store from '../../store'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 const props = defineProps({
   visible: Boolean,
   showProductItem: Function,
   productItem: Object,
+  shopping_cart: Object,
 })
 
 const onClick = () => {
   props.showProductItem()
 }
 
+const state = reactive({
+  quantityToAdd: 0
+});
+
+const userID = computed(() => {
+  return parseInt(sessionStorage.getItem('userID'))
+})
 const checkedOptions = ref([]);
 const toggleOption = (option) => {
   option.selected = !option.selected;
@@ -21,7 +30,7 @@ const updateSelectedValues = () => {
   for (const options of Object.values(groupedVariationOptions.value)) {
     for (const option of options) {
       if (option.selected) {
-        checkedOptions.value.push(option.value);
+        checkedOptions.value.push(option.id);
       }
     }
   }
@@ -44,6 +53,23 @@ const hasSelectedOption = (groupedOptions, selectedOption) => {
   return groupedOptions.some(option => option.selected && option !== selectedOption);
 };
 
+const addToCart = async() => {
+  const formData = new FormData();
+  formData.append('product_item_id', props.productItem.id);
+  formData.append('qty', state.quantityToAdd);
+  for (const option of checkedOptions.value) {
+    formData.append('variation_options[]', option);
+  }
+  console.log(formData)
+  store.dispatch('addToCart',formData).then((data) => {
+    console.log(data)
+
+  })
+  .catch(err => {
+	console.log(err)
+})
+  
+};
 
 </script>
 
@@ -82,7 +108,6 @@ const hasSelectedOption = (groupedOptions, selectedOption) => {
         />
       </div>
     </div>
-    
     <!-- Product Details -->
     <div class="w-1/2">
       <p>Price:  {{ productItem.price }}</p>
@@ -102,13 +127,24 @@ const hasSelectedOption = (groupedOptions, selectedOption) => {
         </button>
         </a>
       </div>
+      <div class="mt-4 flex items-center">
+    <label for="quantity" class="mr-2">Quantity:</label>
+    <input
+      id="quantity"
+      v-model.number="state.quantityToAdd"
+      type="number"
+      min="1"
+      :max="productItem.qty_in_stock"
+      class="w-16 px-2 py-1 border rounded"
+    />
+  </div>
     </div>
   </div>
   </div>
   </div>
   </div>
   <div class='flex justify-end'>
-  <div class="pl-2 py-3 sm:flex sm:flex-row-reverse ">
+  <div class="pl-2 py-3 sm:flex sm:flex-row-reverse" v-if="userID !== productItem.user_id">
     <button
         @click="addToCart"
         type="button"
@@ -129,7 +165,21 @@ const hasSelectedOption = (groupedOptions, selectedOption) => {
           />
         </svg>
         Add To Cart
-      </button>   </div>
+        
+      </button>
+     
+    </div>
+    <div v-else class="flex items-center space-x-2 text-green-500">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <path
+          fill-rule="evenodd"
+          d="M6.293 9.293a1 1 0 011.414 0L10 11.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-2-2a1 1 0 010-1.414z"
+          clip-rule="evenodd"
+        />
+      </svg>
+      <p>This product is owned by the current user.</p>
+    </div>
+
     <div class="pr-4 py-3 sm:flex sm:flex-row-reverse ">
     <button @click="onClick" type="button" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Close</button>       
     </div>

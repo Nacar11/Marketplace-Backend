@@ -1,11 +1,13 @@
 <script setup>	
 import store from '../../store'
 import {ref} from '@vue/reactivity'
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+import { BellIcon } from '@heroicons/vue/24/outline'
 import { useRouter } from 'vue-router'
+import shoppingCart from '../sider/shoppingCart.vue'
 
-const error= ref('')
+
+
 const router = useRouter()
 const logoutButton = async (ev) => {
   ev.preventDefault()
@@ -21,64 +23,40 @@ const logoutButton = async (ev) => {
 };
 
 const addProduct = async (ev) => {
-
-  
 	router.push('/product');
- 
 };
+
+const showSider = ref(false);
+const openSider = () => {
+  showSider.value = true;
+};
+const showShoppingCartSider = () => {
+  showSider.value = !showSider.value;
+}
+
 </script>
 
 
 <template>
-	
+	<shoppingCart
+    :show="showSider"
+	  :showShoppingCartSider = "showShoppingCartSider"
+    />
 <section class="bg-gray-800" as="nav">
 	  <div class="flex flex-wrap items-center justify-between mx-auto p-3">
 	    <a class="flex items-center">
 	        <img src="https://via.placeholder.com/50" alt="Placeholder Image" style="border-radius: 50%; border: 3px solid #ddd; margin-right: 10px;">
 	        <span id="title" class="self-center text-2xl text-white font-semibold whitespace-nowrap ">MarketPlace</span>
 	    </a>
-		<!-- <div v-if="hasUsernameInLocalStorage()" class="relative">
-        <div class="dropdown">
-          <button class="dropbtn">{{username}}</button>
-          <div class="dropdown-content">
-            <a href="#">View Profile</a>
-			<router-link :to="{ name: 'addProduct' }" class="cursor-pointer"><Select:disabled></Select:disabled>Sell Product</router-link>
-			<router-link :to="{ name: 'login' }" class="cursor-pointer" @click="logoutButton">Logout</router-link>
-			</div>
-        </div>
-		</div>
-		<router-link :to="{ name: 'login' }" v-else class="block px-4 py-2 font-light text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-        Login
-      </router-link> -->
+      <router-link to="/" class="text-white hover:underline rounded-md px-3 py-2 text-m font-medium cursor-pointer relative inline-block">Home</router-link>
 
-      
-	<!-- {{ product_category }} -->
-	  <!-- <div class="hidden w-full md:block md:w-auto" id="navbar-default">
-    <ul class="font-medium flex flex-row items-center p-1 sm:p-4 md:p-0 mt-4 md:flex-row md:space-x-8 md:mt-0 md:border-0">
-      <li v-for="parentCategory in parent_categories" :key="parentCategory.id">
-        <button class="dropbtn text-1xl font-light cursor-pointer" @click="toggleDropdown(parentCategory.id)">
-          {{ parentCategory.category_name }}
-        </button> -->
-	
-
-        <!-- <ul v-if="showDropdown[parentCategory.id]" class="absolute mt-2 bg-white border rounded-lg">
-				
-			{{ parentCategory.subcategory }}
-          <li v-for="subcategory in product_category.filter(category => category.category_id === parentCategory.id)" :key="subcategory.id">
-            <div class="p-2">{{ subcategory.category_name }}</div>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </div> -->
-  <div v-if="store.state.user.token" class="absolute right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-          <button type="button" class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+          <div v-if="store.state.user.token" class="absolute right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+          <button  @click="openSider" type="button" class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
             <span class="absolute -inset-1.5" />
             <span class="sr-only">View notifications</span>
             <BellIcon class="h-6 w-6" aria-hidden="true" />
           </button>
 
-          
           <Menu as="div" class="relative ml-3">
             <div>
               <MenuButton class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
@@ -94,6 +72,9 @@ const addProduct = async (ev) => {
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <a  @click="addProduct" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">List a Product</a>
+                </MenuItem>
+                <MenuItem v-slot="{ active }">
+                  <a :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Your Orders</a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <a :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Settings</a>

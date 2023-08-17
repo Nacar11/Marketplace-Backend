@@ -4,7 +4,10 @@ import api from '../api'
 const store  = createStore({
     state:{
         user:{
-            data: {username: ''},
+            data: {
+                username: '',
+                userID: sessionStorage.getItem('userID'),
+            },
             token: sessionStorage.getItem('Token'),
         },
         product_categories:{
@@ -69,6 +72,21 @@ const store  = createStore({
                 return data;
             })
         },
+        async getProductItemByCategory({},id){
+            return await api.get(`/getProductItemByCategory/${id}`).then(({data}) => {
+                return data;
+            })
+        },
+        async getShoppingCartByUser({},id){
+            return await api.get(`/getShoppingCartByUser/${id}`).then(({data}) => {
+                return data;
+        })
+         },
+         async addToCart({},form){
+            return await api.post(`/addToCart`,form).then(({data}) => {
+                return data;
+        })
+         },
         
     },
     mutations:{
@@ -81,10 +99,12 @@ const store  = createStore({
             state.user.data = {};
             sessionStorage.removeItem('Token')
         },
-        setUser: (state, userData) => {
+         setUser: (state, userData) => {
             state.user.token = userData.access_token;
             state.user.data.username = userData.username;
+            state.user.data.userID = userData.user_id;
             sessionStorage.setItem('Token', userData.access_token);
+            sessionStorage.setItem('userID', userData.user_id);
         }
     },
     modules:{}

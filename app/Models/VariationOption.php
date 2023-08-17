@@ -20,4 +20,9 @@ class VariationOption extends Model
     {
         return $this->belongsToMany(ProductItem::class, 'product_configurations');
     }
+
+    public function shoppingCartItems()
+    {
+        return $this->belongsToMany(ShoppingCartItem::class, 'cart_item_variation_option');
+    }
 }

@@ -1,15 +1,12 @@
 <script setup>
 import {reactive, ref, computed} from '@vue/reactivity'
 import { useRouter } from 'vue-router'
-// import { useAuthenticateStore } from '../../store/authenticate'
-// import { storeToRefs } from 'pinia'
-import { onBeforeMount, onMounted } from '@vue/runtime-core'
+import { onBeforeMount } from '@vue/runtime-core'
 import store from '../store'
 
 
 const router = useRouter();
 const product_types = ref({})
-const currentIndex = ref(0);
 const variation_options = ref([])
 const checkedOptions = ref([]);
 
@@ -195,6 +192,9 @@ const filteredOptions = (variantId) => {
 
   <div class="border-t border-gray-100">
     <dl class="divide-y divide-gray-100">
+      <div v-if="Object.keys(variants_of_product_type).length === 0" class="px-4 py-6 text-sm text-gray-700">
+        <h3 class="text-base font-semibold leading-7 text-gray-900">The Product Type Selected Has No Attributes.</h3>
+      </div>
       <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0" v-for="variant in variants_of_product_type" :key="variant.id">
         <dt class="ml-16 text-sm font-medium leading-6 text-gray-900 flex items-center">{{ variant.name }}</dt>
         <dd class="mr-10 mt-1 text-sm leading-6 text-gray-700 sm:col-span-2">
@@ -202,6 +202,7 @@ const filteredOptions = (variantId) => {
             <input v-model="checkedOptions" :value="option.id" type="checkbox" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300">
             <span class="ml-2 text-gray-700">{{ option.value }}</span>
           </label>
+          
           
         </dd>
       </div>

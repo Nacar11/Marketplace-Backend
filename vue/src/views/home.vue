@@ -1,16 +1,14 @@
 <script setup>
-import { ref} from '@vue/reactivity'
+import { ref, computed} from '@vue/reactivity'
 import store from '../store'
 // import { useRouter } from 'vue-router'
 import { onBeforeMount } from '@vue/runtime-core'
-// import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import productItemModal from '../components/modal/productItem.vue'
 
-const error= ref('')
+
 const organizedCategories = ref([])
 const product_items = ref([])
-const openMenus = ref([]);
-
+const openMenus = ref([])
 const organizeCategories = (data) => {
     const categoriesMap = new Map();
     const result = [];
@@ -33,21 +31,20 @@ const organizeCategories = (data) => {
 };
 
 onBeforeMount(async () => {
-	store.dispatch('getProductCategories').then((data) => {
+	await store.dispatch('getProductCategories').then((data) => {
   organizedCategories.value = organizeCategories(data);
   })
   .catch(err => {
 	console.log(err.response.data.message)
-	error.value = err.response.data.message
   })
 
-  store.dispatch('getProductItems').then((data) => {
-		
-		for (let i = 0; i < data.length; i++) {
-		product_items.value.push(data[i]);
-	}
+  await store.dispatch('getProductItems').then((data) => {
+		product_items.value = data
   })
   
+  .catch(err => {
+	console.log(err)
+  })
 })
 
 const openMenu = (categoryId) => {
@@ -67,21 +64,31 @@ const isActiveSubCategory = (subCategoryId) => {
   return openMenus.value.includes(subCategoryId);
 };
 
-const show = ref(false);
+const showModal = ref(false);
 const productItem = ref(null);
 const showProductItem = () => {
-  show.value = !show.value;
+  showModal.value = !showModal.value;
 }
 
 const openProductModal = (product) => {
   productItem.value = product;
-  show.value = true;
+  showModal.value = true;
 };
+
+
+const handleSubCategoryClick = (id) => {
+  store.dispatch('getProductItemByCategory',id).then((data) => {
+  product_items.value = data
+  })
+  .catch(err => {
+	console.log(err.response.data.message)
+  })  
+};
+
 </script>
 
 
 <template>
-  
   <div class="p-5 flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
     <div class="hidden sm:ml-6 sm:block">
       <div class="flex space-x-4">
@@ -101,7 +108,8 @@ const openProductModal = (product) => {
                 :key="subCategory.id"
                 class="hover:text-black hover:text-lg block px-4 py-2 text-sm text-gray-700"
                 :class="{ 'bg-gray-100': isActiveSubCategory(subCategory.id) }"
-              >
+                @click="handleSubCategoryClick(subCategory.id)"
+                >
                 {{ subCategory.category_name }}
               </a>
             </div>
@@ -112,21 +120,26 @@ const openProductModal = (product) => {
   </div>
   <div class="p-5 bg-white">
     <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+      <div v-if="Object.keys(product_items).length === 0" class="px-4 py-6 text-sm text-gray-700">
+        <h3 class="text-base font-semibold text-gray-900">No Product Listing yet</h3>
+      </div>
       <div v-for="product in product_items" :key="product.id" class="group relative">
-        <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
-          <img 
-            @click="openProductModal(product)"
-            v-if="product.product_images && product.product_images.length > 0"
-            :src="product.product_images[0].product_image"
-            :alt="product.product_images[0].product_image"
-            class="h-full w-full object-cover object-center lg:h-full lg:w-full"
-          />
-          <img
-            v-else
-            src="https://via.placeholder.com/300x200"
-            alt="Default Image"
-            class="h-full w-full object-cover object-center lg:h-full lg:w-full"
-          />
+        <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-48">  
+          <div class="h-full w-full flex items-center justify-center">
+            <img
+              @click="openProductModal(product)"
+              v-if="product.product_images && product.product_images.length > 0"
+              :src="product.product_images[0].product_image"
+              :alt="product.product_images[0].product_image"
+              class="max-h-full max-w-full object-cover object-center"
+            />
+            <img
+              v-else
+              src="https://via.placeholder.com/300x200"
+              alt="Default Image"
+              class="h-full w-full object-cover object-center"
+            />
+          </div>
         </div>
         <div class="mt-4 flex justify-between">
           <div>
@@ -138,7 +151,7 @@ const openProductModal = (product) => {
     </div>
   </div>
   <productItemModal
-    :show="show"
+    :show="showModal"
 	  :showProductItem = "showProductItem"
     :productItem = "productItem"
     />

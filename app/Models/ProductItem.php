@@ -26,4 +26,8 @@ class ProductItem extends Model
         return $this->hasMany(ProductImage::class, 'product_id', 'id');
 
     }
+    public function productConfigurations()
+    {
+        return $this->hasMany(ProductConfiguration::class, 'product_item_id', 'id');
+    }
 }
