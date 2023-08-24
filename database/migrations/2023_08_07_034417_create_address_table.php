@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAddressesTable extends Migration
+class CreateAddressTable extends Migration
 {
     /**
      * Run the migrations.
@@ -24,7 +24,7 @@ class CreateAddressesTable extends Migration
             $table->unsignedInteger('country_id');
             $table->timestamps();
 
-            $table->foreign('country_id')->references('id')->on('country')->onDelete('cascade');
+            // $table->foreign('country_id')->references('id')->on('country')->onDelete('cascade');
         });
     }
 
@@ -35,6 +35,6 @@ class CreateAddressesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('addresses');
+        Schema::dropIfExists('address_table');
     }
 }

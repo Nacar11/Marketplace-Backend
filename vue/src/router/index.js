@@ -9,6 +9,8 @@ import authenticationLayout from '../components/layout/authenticationLayout.vue'
 import login from '../views/login.vue'
 import signup from '../views/signup.vue'
 import addProduct from '../views/addProduct.vue'
+import shoppingCart from '../views/shoppingCart.vue'
+import address from '../views/address.vue'
 import store from '../store'
 
 const routes = [
@@ -46,6 +48,18 @@ const routes = [
 				meta: {requiresAuth: true},
 				name:'addProduct',
 				component: addProduct
+						},
+				{
+				path: '/cart',
+				meta: {requiresAuth: true},
+				name:'shoppingCart',
+				component: shoppingCart
+						},
+				{
+				path: '/address',
+				meta: {requiresAuth: true},
+				name:'address',
+				component: address
 						},
 				],
 				},

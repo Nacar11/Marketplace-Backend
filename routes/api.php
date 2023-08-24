@@ -32,7 +32,7 @@ use App\Http\Controllers\ShoppingCartController;
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     // Route::get('user', UserController::class);
-    // Route::put('user/{id}', [UserController::class, 'update']);
+    Route::get('getUser/{id}', [AuthController::class, 'getUserByID']);
     Route::get('/logout', [AuthController::class, 'logout']);
     Route::get('product-item', ProductItemController::class);
     Route::get('product-item/{product}', [ProductItemController::class, 'show']);
@@ -64,6 +64,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('getCartItemByID/{id}', [ShoppingCartItemController::class, 'getCartItemByID']);
     Route::post('addToCart', [ShoppingCartItemController::class, 'addToCart']);
     Route::get('getShoppingCartByUser/{id}', [AuthController::class, 'getShoppingCartByUser']);
+    Route::delete('deleteShoppingCartItemByCart/{itemID}/{cartID}', [ShoppingCartController::class, 'deleteShoppingCartItemByCart']);
 
 
 
@@ -82,3 +83,4 @@ Route::get('product-category/{id}', [ProductCategoryController::class, 'show']);
 Route::get('getProductItemByCategory/{id}', [ProductCategoryController::class, 'getProductItemsByCategory']);
 
 Route::get('product-item', ProductItemController::class);
+

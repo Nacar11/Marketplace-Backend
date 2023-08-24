@@ -1,10 +1,8 @@
 <script setup>	
 import store from '../../store'
-import {ref} from '@vue/reactivity'
+// import {ref} from '@vue/reactivity'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { BellIcon } from '@heroicons/vue/24/outline'
 import { useRouter } from 'vue-router'
-import shoppingCart from '../sider/shoppingCart.vue'
 
 
 
@@ -26,22 +24,19 @@ const addProduct = async (ev) => {
 	router.push('/product');
 };
 
-const showSider = ref(false);
-const openSider = () => {
-  showSider.value = true;
+const shopCart = async (ev) => {
+	router.push('/cart');
 };
-const showShoppingCartSider = () => {
-  showSider.value = !showSider.value;
-}
+
+const userProfile = async (ev) => {
+	router.push('/account');
+};
+
 
 </script>
 
 
 <template>
-	<shoppingCart
-    :show="showSider"
-	  :showShoppingCartSider = "showShoppingCartSider"
-    />
 <section class="bg-gray-800" as="nav">
 	  <div class="flex flex-wrap items-center justify-between mx-auto p-3">
 	    <a class="flex items-center">
@@ -51,11 +46,6 @@ const showShoppingCartSider = () => {
       <router-link to="/" class="text-white hover:underline rounded-md px-3 py-2 text-m font-medium cursor-pointer relative inline-block">Home</router-link>
 
           <div v-if="store.state.user.token" class="absolute right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-          <button  @click="openSider" type="button" class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-            <span class="absolute -inset-1.5" />
-            <span class="sr-only">View notifications</span>
-            <BellIcon class="h-6 w-6" aria-hidden="true" />
-          </button>
 
           <Menu as="div" class="relative ml-3">
             <div>
@@ -68,10 +58,13 @@ const showShoppingCartSider = () => {
             <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
               <MenuItems class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <MenuItem v-slot="{ active }">
-                  <a :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">View Profile</a>
+                  <a @click="userProfile" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">View Profile</a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <a  @click="addProduct" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">List a Product</a>
+                </MenuItem>
+                <MenuItem v-slot="{ active }">
+                  <a  @click="shopCart" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Your Shopping Cart</a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <a :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Your Orders</a>

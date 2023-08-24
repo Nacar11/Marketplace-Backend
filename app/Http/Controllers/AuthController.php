@@ -58,6 +58,7 @@ class AuthController extends Controller{
     }
 
     public function register(UserRequest $request){
+        try {
         $validatedData = $request->validated(); 
         $user = User::create($validatedData);
         
@@ -70,6 +71,12 @@ class AuthController extends Controller{
             'Message'=> 'Success',
             'User' => $user,
             ]);     
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Error',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
         }
 
     
@@ -90,5 +97,17 @@ class AuthController extends Controller{
 
     
         return $shoppingCart;
+        }
+    
+
+    public function getUserByID($id){
+
+        $user = User::find($id); 
+        if (!$user) {
+            return "User Not Found"; 
+        }
+       
+    
+        return $user;
         }
     }

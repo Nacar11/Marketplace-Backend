@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCartItemsVariationOptionsTable extends Migration
+class CreateCartItemVariationOptionTable extends Migration
 {
     /**
      * Run the migrations.
@@ -31,6 +31,6 @@ class CreateCartItemsVariationOptionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cart_items_variation_options');
+        Schema::dropIfExists('cart_item_variation_option');
     }
 }

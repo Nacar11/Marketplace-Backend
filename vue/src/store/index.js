@@ -82,12 +82,22 @@ const store  = createStore({
                 return data;
         })
          },
-         async addToCart({},form){
+        async addToCart({},form){
             return await api.post(`/addToCart`,form).then(({data}) => {
                 return data;
         })
          },
-        
+        async deleteShoppingCartItemByCart({},formIDs){
+            return await api.delete(`/deleteShoppingCartItemByCart/${formIDs.itemID}/${formIDs.cartID}`).then(({data}) => {
+                return data;
+        })
+         },
+         async getUser({}){
+            console.log(store.state.user.data.userID)
+            return await api.get(`/getUser/${store.state.user.data.userID}`).then(({data}) => {
+                return data;
+        })
+         },
     },
     mutations:{
         setProductCategories: (state, product_categories) =>{
