@@ -1,7 +1,10 @@
 <script setup>
-import {reactive, ref} from '@vue/reactivity'
+import {reactive, ref, computed} from '@vue/reactivity'
 import { useRouter } from 'vue-router'
-import store from '../store'
+import { useStore } from 'vuex';
+
+const store = useStore();
+const userState = computed(() => store.state.user.data);
 import agreement from '../components/modal/agreement.vue'
 const router = useRouter();
 
@@ -10,14 +13,27 @@ const isTermsAccepted = ref(false);
 
 const registerButton = async (ev) => {
   ev.preventDefault()
-  store.dispatch('register', state).then((data) => {
+  const formData = new FormData();
+  formData.append('username', state.username);
+  formData.append('first_name', state.first_name);
+  formData.append('last_name', state.last_name);
+  formData.append('email', state.email);
+  formData.append('contact_number', state.contact_number);
+  formData.append('password', state.password);
+  formData.append('confirm_password', state.confirm_password);
+  formData.append('gender', state.gender);
+  formData.append('date_of_birth', state.date_of_birth);
+  formData.append('google_id', state.google_id);
+
+  store.dispatch('register', formData).then((data) => {
 	console.log(data)
-	router.push({
-		name: 'login'
+	if(data.message === 'Success'){
+		router.push({
+		name: 'home'
 	}) 
+	}
   })
 };
-
 const show = ref(false);
 
 const showModal = () => {
@@ -26,14 +42,15 @@ const showModal = () => {
 
 const state = reactive({
   username: '',
-  first_name: '',
-  last_name: '',
-  email: '',
+  first_name: ref(userState.value.userFirstName),
+  last_name: ref(userState.value.userLastName),
+  email: ref(userState.value.userEmail),
   contact_number: '',
   password: '',
   confirm_password: '',
   gender: '',
   date_of_birth: '',
+  google_id: ref(userState.value.googleID)
 });
 </script>
 
@@ -42,137 +59,105 @@ const state = reactive({
     :show="show"
 	:showModal = "showModal"
   />
-	<div class="flex min-h-full flex-1 flex-col justify-center px-12 py-16 lg:px-8 bg-white rounded-lg shadow-lg">
-	  <img class="mx-auto h-12 w-auto rounded-full" src="https://via.placeholder.com/50" alt="Your Company" />
-	  <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-black">Create your Account</h2>
+  <section class="bg-white min-h-screen flex items-center justify-center">
+		<div class="bg-gray-50 flex rounded-2xl shadow-lg max-w-4xl p-8 items-center">
+		<div class="w-full px-8 md:px-16">
+
+		<h2 class="font-bold text-2xl text-[#002D74]">Hi, {{ userState.userFirstName }}! We'll help you setup your Account, this will only take a minute.</h2>
   
-	  <form class="space-y-6 mt-6">
-		<div>
-		  <label for="first_name" class="flex flex-col items-start block text-sm font-medium leading-6 text-black">First Name</label>
-		  
-		  <div class="mt-2">
+	  	<div class="flex flex-col gap-4">
 			<input v-model="state.first_name"
 			  id="first_name"
 			  name="first_name"
 			  type="text"
 			  required=""
-			  class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+			  class="p-2 mt-8 rounded-xl border"
+			  placeholder="First Name"
 			/>
-		  </div>
-		</div>
-		<div>
-		  <label for="last_name" class="flex flex-col items-start block text-sm font-medium leading-6 text-black">Last Name</label>
 		  
-		  <div class="mt-2">
 			<input v-model="state.last_name"
 			  id="last_name"
 			  name="last_name"
 			  type="text"
 			  required=""
-			  class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
-			/>
-		  </div>
-		</div>
-		<div>
-		  <label for="username" class="flex flex-col items-start block text-sm font-medium leading-6 text-black">Username</label>
+			  class="p-2 mt-8 rounded-xl border"	
+			  placeholder="Last Name"
+		/>
 		  
-		  <div class="mt-2">
 			<input v-model="state.username"
 			  id="username"
 			  name="username"
 			  type="text"
 			  required=""
-			  class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
-			/>
-		  </div>
-		</div>
-		<div>
-		  <label for="email" class="flex flex-col items-start block text-sm font-medium leading-6 text-black">Email address</label>
+			  class="p-2 mt-8 rounded-xl border"	
+			  placeholder="Username"
+		/>
 		  
-		  <div class="mt-2">
 			<input v-model="state.email"
 			  id="email"
 			  name="email"
 			  type="email"
 			  autocomplete="email"
 			  required=""
-			  class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+			  class="p-2 mt-8 rounded-xl border"
+			  placeholder="Email"
+
 			/>
-		  </div>
-		</div>
-		<div>
-        <label for="gender" class="flex flex-col items-start block text-sm font-medium leading-6 text-black">Gender</label>
-        <div class="mt-2">
           <select v-model="state.gender"
             id="gender"
             name="gender"
             required=""
-            class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+			class="p-2 mt-8 rounded-xl border"	
           >
             <option value="" disabled selected>Select Gender</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
           </select>
-        </div>
-      </div>
-		<div>
         <label for="date_of_birth" class="flex flex-col items-start block text-sm font-medium leading-6 text-black">Date of Birth</label>
-        <div class="mt-2">
           <input v-model="state.date_of_birth"
             id="date_of_birth"
             name="date_of_birth"
             type="date"
             required=""
-            class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+			class="p-2 rounded-xl border"	
+			placeholder="Date of Birth"
+
           />
-        </div>
-      </div>
-	  <div class="flex flex-col items-start">
-        <label for="country_code" class="block text-sm font-medium leading-6 text-black">Country Code</label>
+        <label for="country_code" class="block text-sm font-medium leading-6 text-black">Phone Number</label>
         <div class="mt-2 flex">
-          <span class="rounded-l-md bg-gray-200 px-3 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600">+63</span>
+          <span class="rounded-l-xl bg-gray-200 px-3 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600">+63</span>
           <input v-model="state.contact_number"
             id="country_code"
             name="country_code"
             type="tel" 
             pattern="[0-9]*"
             required=""
-            class="flex-1 rounded-r-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+            class="flex-1 rounded-r-xl border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
           />
-        </div>
       </div>
-		<div>
-		  <div class="flex items-center justify-between">
-			<label for="password" class="block text-sm font-medium leading-6 text-black">Password</label>
-		  </div>
-		  <div class="mt-2">
 			<input v-model="state.password"
 			  id="password"
 			  name="password"
 			  type="password"
 			  autocomplete="current-password"
 			  required=""
-			  class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+			  class="p-2 mt-8 rounded-xl border"
+			  placeholder="Password"
+	
 			/>
-		  </div>
-		</div>
-		<div>
-		  <div class="flex items-center justify-between">
-			<label for="confirm_password" class="block text-sm font-medium leading-6 text-black">Confirm Password</label>
-		  </div>
-		  <div class="mt-2">
 			<input v-model="state.confirm_password"
 			  id="confirm_password"
 			  name="confirm_password"
 			  type="password"
 			  autocomplete="current-password"
 			  required=""
-			  class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
-			/>
-		  </div>
-		</div>
+			  class="p-2 mt-8 rounded-xl border"
+			  placeholder="Confirm Password"			
+			  />
+
+
+
 		<div>
-			
 		  <div class="m-2">
 		  <input type="checkbox" v-model="isTermsAccepted" class="mx-2 border border-gray-400">
 				<span>I accept the <a class="text-[#5b6af2] font-semibold">Terms of Use</a> &  <a @click="showModal" class="text-[#5b6af2] font-semibold">Privacy Policy</a> 
@@ -189,7 +174,7 @@ const state = reactive({
 			Sign Up
 		  </button>
 		</div>
-	  </form>
+	</div>
   
 	  <p class="mt-10 text-center text-sm text-gray-500">
 		Already have an Account?
@@ -197,6 +182,8 @@ const state = reactive({
 		<router-link :to="{ name: 'login' }" class=" cursor-pointer font-semibold leading-6 text-black hover:text-gray-600">Login Here</router-link>
 	  </p>
 	</div>
+	</div>
+	</section>
   </template>
 
 <style>

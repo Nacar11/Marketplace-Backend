@@ -8,7 +8,6 @@ import store from '../store'
 const router = useRouter();
 const product_types = ref({})
 const variation_options = ref([])
-const checkedOptions = ref([]);
 
 
 onBeforeMount(async () => {
@@ -21,33 +20,28 @@ onBeforeMount(async () => {
 	})
 })
 
-const selectedOptionValues = computed(() => {
-  return checkedOptions.value.map(optionValue => {
-    return optionValue;
-  });
-});
+
 
 const submitButton = async (ev) => {
   ev.preventDefault()
-  console.log(selectedOptionValues.value)
+  console.log(variants_of_product_type.value)
   
   const formData = new FormData();
   formData.append('product_id', state.product_id);
   formData.append('price', parseFloat(state.price));
-  formData.append('qty_in_stock', parseFloat(state.qty_in_stock));
+  formData.append('description', state.description);
 
   for (const file of state.product_images) {
     formData.append('product_images[]', file);
   }
- 
   store.dispatch('addProductItem', formData).then((data) => {
 	console.log(data)
   
-  for (const option of selectedOptionValues.value){
-    console.log(typeof option)
+  for (const option of variants_of_product_type.value){
+    console.log(option)
     const form = ({
       product_item_id: data.id,
-      variation_option_id: option,
+      variation_option_id: option.selectedOption,
     });
   store.dispatch('addProductConfiguration',form).then((data2) => {
 	console.log(data2)
@@ -62,15 +56,13 @@ const submitButton = async (ev) => {
 	console.log(err)
 
   })
-
-
-
 };
+
 const variants_of_product_type = ref({})
 const state = reactive({
   product_id: null,
   price: "",
-  qty_in_stock: "",
+  description: "",
   product_images: [], 
 
 })
@@ -78,7 +70,6 @@ const showProductDetails = ref(true);
 const showProductAttributes = ref(false);
 
 const filterQuantityInput = () => {
-  state.qty_in_stock = state.qty_in_stock.replace(/\D/g, "");
   state.price = state.price.replace(/\D/g, "");
 };
 
@@ -88,6 +79,13 @@ const onProductTypeSelected = () => {
   if (selectedProductType) {
       store.dispatch('getVariantsByProductTypes', selectedProductType.id).then((data) => {
       state.product_id = selectedProductType.id
+
+
+      for (const variantId in data) {
+        if (data.hasOwnProperty(variantId)) {
+          data[variantId].selectedOption = ''; 
+        }
+      }
       variants_of_product_type.value = data
   });
 }
@@ -149,9 +147,9 @@ const filteredOptions = (variantId) => {
 </div>
 
       <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-        <dt class="ml-16 text-sm font-medium leading-6 text-gray-900 flex items-center">Quantity in Stock</dt>
+        <dt class="ml-16 text-sm font-medium leading-6 text-gray-900 flex items-center">Brief Description</dt>
         <dd class="mr-10 mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 flex items-center">
-          <input v-model="state.qty_in_stock" @input="filterQuantityInput" class="w-full pl-3 pr-10 py-2 text-base leading-6 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" type="text" />
+          <input v-model="state.description" class="w-full pl-3 pr-10 py-2 text-base leading-6 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" type="text" />
         </dd>
       </div>
 
@@ -196,16 +194,19 @@ const filteredOptions = (variantId) => {
         <h3 class="text-base font-semibold leading-7 text-gray-900">The Product Type Selected Has No Attributes.</h3>
       </div>
       <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0" v-for="variant in variants_of_product_type" :key="variant.id">
-        <dt class="ml-16 text-sm font-medium leading-6 text-gray-900 flex items-center">{{ variant.name }}</dt>
-        <dd class="mr-10 mt-1 text-sm leading-6 text-gray-700 sm:col-span-2">
-          <label v-for="option in filteredOptions(variant.id)" :key="option.variation_id" class="inline-flex items-center">
-            <input v-model="checkedOptions" :value="option.id" type="checkbox" class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300">
-            <span class="ml-2 text-gray-700">{{ option.value }}</span>
-          </label>
-          
-          
-        </dd>
+  <dt class="ml-16 text-sm font-medium leading-6 text-gray-900 flex items-center">{{ variant.name }}</dt>
+  <dd class="mr-10 mt-1 sm:col-span-2">
+    <div class="relative rounded-md shadow-sm">
+      <select v-model="variant.selectedOption" class="mr-10 block w-full pl-3 pr-10 py-2 text-base leading-6 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+        <option value="" disabled selected>Select An Option</option>
+        <option v-for="option in filteredOptions(variant.id)" :key="option.variation_id" :value="option.id">{{ option.value }}</option>
+      </select>
+      <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+       
       </div>
+    </div>
+  </dd>
+</div>
     </dl>
   </div>
 </div>
@@ -215,12 +216,5 @@ const filteredOptions = (variantId) => {
   Submit
 </button>
   </div>
-
-  
-  
-  
 </div>
-
-
-
 </template>

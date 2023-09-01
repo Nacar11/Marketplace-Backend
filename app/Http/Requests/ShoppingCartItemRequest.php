@@ -24,10 +24,7 @@ class ShoppingCartItemRequest extends FormRequest
     public function rules()
     {
         return [
-            'qty' => 'required|integer|min:1',
             'product_item_id' => 'required|exists:product_items,id',
-            'variation_options' => 'array',
-            'variation_options.*' => 'exists:variation_options,id',
         ];
     }
 }

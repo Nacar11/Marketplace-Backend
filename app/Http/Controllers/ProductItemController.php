@@ -15,7 +15,7 @@ class ProductItemController extends Controller
 {
     public function __invoke()
     {
-        $productItems = ProductItem::with('product', 'productImages', 'variationOptions')->get();    
+        $productItems = ProductItem::with('product', 'productImages', 'variationOptions.variation')->get();    
         return $productItems;
     }
 
@@ -56,7 +56,7 @@ class ProductItemController extends Controller
                 $productItem->productImages()->save($productImage);
             }
         }
-        $productItem->load('product', 'productImages', 'variationOptions');
+        $productItem->load('product', 'productImages', 'variationOptions.variation');
         
        
         return $productItem;

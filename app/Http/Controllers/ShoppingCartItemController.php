@@ -25,16 +25,11 @@ class ShoppingCartItemController extends Controller
     $validatedData = $request->validated();
 
     $shoppingCartItem = new ShoppingCartItem([
-        'cart_id' => $cartId,    
-        'qty' => $validatedData['qty'],
+        'cart_id' => $cartId,
         'product_item_id' => $validatedData['product_item_id'],
     ]);
     $shoppingCartItem->save();
 
-    $variationOptionIds = $validatedData['variation_options'] ?? [];
-    $shoppingCartItem->variationOptions()->attach($variationOptionIds);
-
-    $shoppingCartItem->load('variationOptions');
     return $shoppingCartItem;
 }
     }

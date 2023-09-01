@@ -18,9 +18,10 @@ class ProductItemFactory extends Factory
         return [
             'product_id' => $productId,
             'SKU' => $this->faker->unique()->bothify('??-########'),
-            'qty_in_stock' => $this->faker->numberBetween(10, 100),
             'price' => $this->faker->randomFloat(2, 10, 100),
             'user_id' => $userId,
+            'description' => $this->faker->paragraph,
+
         ];
     }
 }

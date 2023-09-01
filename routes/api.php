@@ -12,7 +12,8 @@ use App\Http\Controllers\VariationOptionController;
 use App\Http\Controllers\ProductConfigurationController;
 use App\Http\Controllers\ShoppingCartItemController;
 use App\Http\Controllers\ShoppingCartController;
-
+use App\Http\Controllers\CountryController;
+use App\Http\Controllers\AddressController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +33,7 @@ use App\Http\Controllers\ShoppingCartController;
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     // Route::get('user', UserController::class);
-    Route::get('getUser/{id}', [AuthController::class, 'getUserByID']);
+    Route::get('getUser', [AuthController::class, 'getUser']);
     Route::get('/logout', [AuthController::class, 'logout']);
     Route::get('product-item', ProductItemController::class);
     Route::get('product-item/{product}', [ProductItemController::class, 'show']);
@@ -67,6 +68,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::delete('deleteShoppingCartItemByCart/{itemID}/{cartID}', [ShoppingCartController::class, 'deleteShoppingCartItemByCart']);
 
 
+    Route::get('/countries', CountryController::class);
+    Route::post('/addAddress', [AddressController::class, 'store']);
+    Route::get('/getAddress', [AddressController::class, 'getAddress']);
+    Route::delete('/deleteAddress/{addressID}', [AddressController::class, 'destroy']);
+
+
+
 
 });
 
@@ -84,3 +92,5 @@ Route::get('getProductItemByCategory/{id}', [ProductCategoryController::class, '
 
 Route::get('product-item', ProductItemController::class);
 
+Route::get('auth/facebook', [AuthController::class, 'facebookpage']);
+Route::post('google/callback', [AuthController::class, 'googleRedirect']);

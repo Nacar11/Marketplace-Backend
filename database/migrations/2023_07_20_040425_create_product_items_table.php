@@ -18,8 +18,8 @@ class CreateProductItemsTable extends Migration
             $table->unsignedInteger('product_id');
             $table->unsignedInteger('user_id');
             $table->string('SKU')->unique();
-            $table->integer('qty_in_stock')->default(0);
             $table->decimal('price', 10, 2);
+            $table->string('description', 1000);
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('product_id')->references('id')->on('products');
             $table->timestamps();

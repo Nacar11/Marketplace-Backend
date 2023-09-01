@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-
+use Laravel\Socialite\Facades\Socialite;
+use Exception;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
@@ -42,7 +43,7 @@ class AuthController extends Controller{
         $user->load('shoppingCart');
         // dd($user);
         return response()->json([ 
-            'Message'=> 'Authorized',
+            'message'=> 'Authorized',
             'access_token' => $token,
             'token_type' => 'Bearer',
             'expires_in' => null,
@@ -60,16 +61,28 @@ class AuthController extends Controller{
     public function register(UserRequest $request){
         try {
         $validatedData = $request->validated(); 
-        $user = User::create($validatedData);
-        
-        if (!$user->shoppingCart) {
+        $userData = User::create($validatedData);
+        // dd($userData);
+        $shoppingCart = null; 
+
+        if (!$userData->shoppingCart) {
             $shoppingCart = ShoppingCart::create([
-                'user_id' => $user->id,
+                'user_id' => $userData->id,
             ]);
         }
+        $userData = User::with('shoppingCart')->find($userData->id);
+
+        $token = $userData->createToken('auth-token')->plainTextToken;
+        
         return response()->json([ 
-            'Message'=> 'Success',
-            'User' => $user,
+            'message'=> 'Success',
+            // 'User' => $userData,
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'expires_in' => null,
+            'username' => $userData->username,
+            'user_id' => $userData->id,
+            'ShoppingCart' => $shoppingCart,
             ]);     
         } catch (Exception $e) {
             return response()->json([
@@ -93,21 +106,58 @@ class AuthController extends Controller{
         if (!$shoppingCart) {
             return "Shopping Cart Not Found."; 
         }
-        $shoppingCart->load('items.productItem.productImages', 'items.variationOptions', 'items.productItem.product');
+        $shoppingCart->load('items.productItem.productImages', 'items.productItem.product', 'items.productItem.variationOptions.variation');
 
     
         return $shoppingCart;
         }
     
 
-    public function getUserByID($id){
+    public function getUser(){
 
-        $user = User::find($id); 
-        if (!$user) {
+        $userId = auth()->user();
+        if (!$userId) {
             return "User Not Found"; 
         }
        
     
-        return $user;
+        return $userId;
+        }
+
+    public function facebookpage(){
+        // return Socialite::driver('facebook')->stateless()->user();
+        return response()->json([
+            'redirect_url' => Socialite::driver('facebook')->stateless()->redirect()->getTargetUrl()
+        ]);
+    }
+
+    public function googleRedirect(Request $data){
+        try {
+            $user = User::where('email', $data->email)->first();
+            if ($user) {
+                // User with the provided email was found, log them in
+                Auth::login($user);
+    
+                // Generate token
+                $token = $user->createToken('auth-token')->plainTextToken;
+    
+                return response()->json([ 
+                    'message' => 'Success',
+                    'access_token' => $token,
+                    'token_type' => 'Bearer',
+                    'expires_in' => null,
+                    'username' => $user->username,
+                    'user_id' => $user->id,
+                    'shopping_cart' => $user->shoppingCart
+                ]);
+            }
+             else {
+                // No user found with the provided email
+                return response()->json(['message' => 'registerFirst']);
+            }
+        } catch (\Exception $e) {
+            // Handle exceptions if they occur
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+}

@@ -23,7 +23,7 @@ class ProductItemRequest extends FormRequest
     {
         return [
             'product_id' => 'required|exists:products,id',
-            'qty_in_stock' => 'required|integer|min:0',
+            'description' => 'required|string',
             'product_images' => '',
             'price' => 'required|numeric|min:0',
         ];

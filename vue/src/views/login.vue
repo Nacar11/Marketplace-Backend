@@ -1,11 +1,15 @@
 <script setup>
 import {ref} from '@vue/reactivity'
+import { onMounted } from '@vue/runtime-core'
 import { useRouter } from 'vue-router'
 import store from '../store'
+import { GoogleLogin } from 'vue3-google-login'
+
 
 
 const router = useRouter();
 const error= ref('')
+const userData= ref([])
 
 const loginButton = async (ev) => {
   ev.preventDefault()
@@ -20,6 +24,51 @@ const loginButton = async (ev) => {
 	error.value = err.response.data.message
   })
 };
+// const facebookLogin = async (ev) => {
+//   ev.preventDefault()
+//   store.dispatch('facebookLogin').then((data) => {
+// 	console.log(data)
+// 	const redirectUrl = data.redirect_url;
+// 	window.location.href = redirectUrl;
+	
+//   })
+//   .catch(err => {
+// 	console.log(err.response.data.message)
+// 	error.value = err.response.data.message
+//   })
+// }
+const googleCallback = async (user) => {
+  
+  console.log(user);
+  const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+    headers: {
+      Authorization: `Bearer ${user.access_token}`,
+    },
+  });
+
+  if (response.ok) {
+    userData.value = await response.json();
+    console.log('User Data:', userData.value.email);
+  	} 
+  else {
+    console.error('Failed to fetch user data:', response.status, response.statusText);
+  }
+
+  store.dispatch('googleLogin',userData.value).then((data) => {
+	console.log(data)
+	if(data.message === 'registerFirst'){
+		store.commit('setUserToRegister', userData.value);
+		router.push({
+		name: 'signup',
+	}) 	
+	}
+	else if(data.message === 'Success'){
+		router.push({
+		name: 'home',
+	}) 	
+	}
+  })
+};
 const user = {
 email:'',
 password :''
@@ -29,68 +78,77 @@ password :''
 
 
 <template>
-	<!-- <agreement :show="state.show"></agreement> -->
-
-	<div class="flex min-h-full flex-1 flex-col justify-center px-12 py-16 lg:px-8 bg-white rounded-lg shadow-lg">
-	  <img class="mx-auto h-12 w-auto rounded-full" src="https://via.placeholder.com/50" alt="Your Company" />
-	  <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-black">Log in to your account</h2>
-  
-	  <form class="space-y-6 mt-6">
-		<div v-if="error" class="py-3 px-5 bg-red-500 text-white rounded">
-			{{ error }}
-		</div>
-		<div>
-		  <label for="email" class="flex flex-col items-start block text-sm font-medium leading-6 text-black">Email address</label>
-		  
-		  <div class="mt-2">
+	<section class="bg-white min-h-screen flex items-center justify-center">
+		<div class="bg-gray-50 flex rounded-2xl shadow-lg max-w-4xl p-8 items-center">
+		<div class="w-full px-8 md:px-16">
+      <h2 class="font-bold text-2xl text-[#002D74]">Login</h2>
+	  <div class="flex flex-col gap-4">
 			<input
+			  class="p-2 mt-8 rounded-xl border"
 			  v-model="user.email"
 			  id="email"
 			  name="email"
 			  type="email"
 			  autocomplete="email"
 			  required=""
-			  class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+			  placeholder="Email"
 			/>
-		  </div>
-		</div>
   
-		<div>
-		  <div class="flex items-center justify-between">
-			<label for="password" class="block text-sm font-medium leading-6 text-black">Password</label>
-			<div class="text-sm">
-			  <a href="#" class="font-semibold text-black hover:text-blue-800">Forgot password?</a>
-			</div>
-		  </div>
-		  <div class="mt-2">
+			<div class="relative">
 			<input
+			  class="p-2 rounded-xl border w-full"
 			  v-model="user.password"
 			  id="password"
 			  name="password"
 			  type="password"
 			  autocomplete="current-password"
 			  required=""
-			  class="block w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-800 sm:text-sm sm:leading-6"
+			  placeholder="Password"
 			/>
-		  </div>
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray" class="bi bi-eye absolute top-1/2 right-3 -translate-y-1/2" viewBox="0 0 16 16">
+            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z" />
+            <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z" />
+          </svg>
 		</div>
-  
-		<div>
-		  <button
-			@click="loginButton"
-			class="flex w-full justify-center rounded-md bg-black px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-		  >
-			Sign in
+		<button class="bg-[#002D74] mt-2 rounded-xl text-white py-2"
+			@click="loginButton">
+			Login
 		  </button>
-		</div>
-	  </form>
   
-	  <p class="mt-10 text-center text-sm text-gray-500">
-		No Account yet?
-		{{ ' ' }}
-		<router-link :to="{ name: 'signup' }" class=" cursor-pointer font-semibold leading-6 text-black hover:text-gray-600">Register Here</router-link>
-	  </p>
+		  <div class="mt-6 grid grid-cols-3 items-center text-gray-400">
+        <hr class="border-gray-400">
+        <p class="text-center text-sm">OR</p>
+        <hr class="border-gray-400">
+      </div>
+	  <button @click="facebookLogin" class="bg-white border py-2 w-full rounded-xl mt-5 flex justify-center items-center text-sm text-[#002D74]">
+		<i class="fab fa-facebook mr-3"></i> 
+        Login with Facebook
+      </button>
+	  <GoogleLogin
+            :callback="googleCallback"
+            class="google-btn"
+            popup-type="TOKEN"
+          >
+            <button
+              class="login-google bg-white border py-2 w-full rounded-xl mt-5 flex justify-center items-center text-sm text-[#002D74]"
+            
+              size="large"
+              type="primary"
+            >
+			<i class="fab fa-google mr-3"></i> 
+			Login With Google
+              <!-- {{ loading ? 'Logging In' : ' Login With Google ' }} -->
+            </button>
+          </GoogleLogin>
+	  <div class="mt-5 text-xs py-4 text-[#002D74]">
+        <a href="#">Forgot your password?</a>
+      </div>
+
+      
+	  </div>
 	</div>
+	</div>
+	</section>
   </template>
   
   

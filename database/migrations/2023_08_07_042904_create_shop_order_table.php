@@ -26,7 +26,7 @@ class CreateShopOrderTable extends Migration
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('payment_method_id')->references('id')->on('user_payment_method')->onDelete('cascade');
-            $table->foreign('shipping_address_id')->references('id')->on('address_table')->onDelete('cascade');
+            $table->foreign('shipping_address_id')->references('id')->on('addresses')->onDelete('cascade');
         });
     }
 

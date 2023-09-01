@@ -21,7 +21,7 @@ class CreateUserAddressesTable extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('address_id')->references('id')->on('address_table')->onDelete('cascade');
+            $table->foreign('address_id')->references('id')->on('addresses')->onDelete('cascade');
         });
         
     }

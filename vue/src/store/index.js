@@ -7,6 +7,12 @@ const store  = createStore({
             data: {
                 username: '',
                 userID: sessionStorage.getItem('userID'),
+                userPic: '',
+                userFirstName: sessionStorage.getItem('FirstName'),
+                userLastName: sessionStorage.getItem('LastName'),
+                userEmail: sessionStorage.getItem('Email'),
+                googleID: sessionStorage.getItem('googleID')
+
             },
             token: sessionStorage.getItem('Token'),
         },
@@ -17,8 +23,14 @@ const store  = createStore({
     },
     getters:{},
     actions:{
-        register({}, user){
+        register({commit}, user){
+    //         console.log("FormData contents:");
+	//         for (const pair of user.entries()) {
+  	//         console.log(pair[0], pair[1]);
+	// }
             return api.post('/register', user).then(({data}) => {
+                sessionStorage.clear();
+                commit('setUser', data)
                 return data;
             })
         },
@@ -26,6 +38,22 @@ const store  = createStore({
             console.log(user)
             return api.post('/login', user).then(({data}) => {
                 commit('setUser', data)
+                return data;
+            })
+        },
+        facebookLogin({commit}, userData){
+            console.log(userData)
+            return api.post('/facebook/callback', userData).then(({data}) => {
+                console.log(data)
+                return data;
+            })
+        },
+        googleLogin({commit}, user){
+            console.log(user.email)
+            return api.post('/google/callback', user).then(({data}) => {
+                if(data.message === 'Success'){
+                    commit('setUser', data)
+                }
                 return data;
             })
         },
@@ -37,7 +65,7 @@ const store  = createStore({
         },
         getProductCategories({commit}){
             return api.get('/product-category').then(({data}) => {
-                commit('setProductCategories', data)
+                // commit('setProductCategories', data)
                 return data;
             })
         },
@@ -93,21 +121,51 @@ const store  = createStore({
         })
          },
          async getUser({}){
-            console.log(store.state.user.data.userID)
-            return await api.get(`/getUser/${store.state.user.data.userID}`).then(({data}) => {
+            return await api.get(`/getUser/`).then(({data}) => {
+                console.log(data)
+                return data;
+        })
+         },
+         async getCountries({}){
+            return await api.get(`/countries`).then(({data}) => {
+                return data;
+        })
+         },
+         async addAddress({}, details){
+            console.log(details)
+            return await api.post(`/addAddress`, details).then(({data}) => {
+                return data;
+        })
+         },
+         async getAddress({}){
+            return await api.get(`/getAddress`).then(({data}) => {
+                return data;
+        })
+         },
+         async deleteAddress({}, id){
+            return await api.delete(`/deleteAddress/${id}`).then(({data}) => {
                 return data;
         })
          },
     },
     mutations:{
-        setProductCategories: (state, product_categories) =>{
-            state.product_categories.data =  product_categories
+        setUserToRegister: (state, userData) => {
+            console.log(userData)
+            state.user.data.userFirstName = userData.given_name
+            sessionStorage.setItem('FirstName', userData.given_name)
+            state.user.data.userLastName = userData.family_name
+            sessionStorage.setItem('LastName', userData.family_name)
+            state.user.data.userEmail = userData.email
+            sessionStorage.setItem('Email', userData.email)
+            state.user.data.googleID = userData.sub
+            sessionStorage.setItem('googleID', userData.sub)
+            sessionStorage.setItem('LoginMethod', 'google')
         },
 
         logout: (state) => {
             state.user.token = null;
             state.user.data = {};
-            sessionStorage.removeItem('Token')
+            sessionStorage.clear();
         },
          setUser: (state, userData) => {
             state.user.token = userData.access_token;

@@ -73,6 +73,7 @@ const showProductItem = () => {
 const openProductModal = (product) => {
   productItem.value = product;
   showModal.value = true;
+  console.log(productItem.value)
 };
 
 

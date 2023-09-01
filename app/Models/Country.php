@@ -9,5 +9,9 @@ class Country extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $table = 'country'; // Set the correct table name
+
+    protected $fillable = ['name']; // Fillable attributes
+
+    // Other model methods, relationships, etc.
 }

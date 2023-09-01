@@ -8,7 +8,6 @@ const props = defineProps({
   productItem: Object,
   shopping_cart: Object,
 })
-
 const onClick = () => {
   props.showProductItem()
 }
@@ -20,46 +19,11 @@ const state = reactive({
 const userID = computed(() => {
   return parseInt(sessionStorage.getItem('userID'))
 })
-const checkedOptions = ref([]);
-const toggleOption = (option) => {
-  option.selected = !option.selected;
-  updateSelectedValues();
-};
-const updateSelectedValues = () => {
-  checkedOptions.value = [];
-  for (const options of Object.values(groupedVariationOptions.value)) {
-    for (const option of options) {
-      if (option.selected) {
-        checkedOptions.value.push(option.id);
-      }
-    }
-  }
-  console.log(checkedOptions.value)
-};
-const groupedVariationOptions = computed(() => {
-  const groupedOptions = {};
-  props.productItem.variation_options.forEach(variation_option => {
-    const variationId = variation_option.variation_id;
-    if (!groupedOptions[variationId]) {
-      groupedOptions[variationId] = [];
-    }
-    groupedOptions[variationId].push(variation_option);
-  });
-  console.log(groupedOptions)
-  return groupedOptions;
-});
-
-const hasSelectedOption = (groupedOptions, selectedOption) => {
-  return groupedOptions.some(option => option.selected && option !== selectedOption);
-};
-
 const addToCart = async() => {
   const formData = new FormData();
   formData.append('product_item_id', props.productItem.id);
   formData.append('qty', state.quantityToAdd);
-  for (const option of checkedOptions.value) {
-    formData.append('variation_options[]', option);
-  }
+  
   console.log(formData)
   store.dispatch('addToCart',formData).then((data) => {
     console.log(data)
@@ -111,33 +75,12 @@ const addToCart = async() => {
     <!-- Product Details -->
     <div class="w-1/2">
       <p>Price:  {{ productItem.price }}</p>
-      <p>Quantity in Stock: {{ productItem.qty_in_stock }}</p>
-      <div v-for="(groupedOptions, variationId) in groupedVariationOptions" :key="variationId">
-        <a v-for="variation_option in groupedOptions">
-          <button
-          @click="toggleOption(variation_option)"
-          :class="{
-            'bg-blue-500 text-white': variation_option.selected,
-            'bg-gray-200 text-gray-700': !variation_option.selected,
-          }"
-          class="px-2 py-1 rounded mr-2 mb-2 transition-colors duration-150 ease-in-out"
-          :disabled="hasSelectedOption(groupedOptions, variation_option)"
-          >
-          {{ variation_option.value }}
-        </button>
-        </a>
+      <p>Brief Description by the Owner: {{ productItem.description }}</p>
+      <div v-for="options in productItem.variation_options">
+          <span>{{ options.variation.name }}: </span>
+          <span>{{ options.value }}</span>
       </div>
-      <div class="mt-4 flex items-center">
-    <label for="quantity" class="mr-2">Quantity:</label>
-    <input
-      id="quantity"
-      v-model.number="state.quantityToAdd"
-      type="number"
-      min="1"
-      :max="productItem.qty_in_stock"
-      class="w-16 px-2 py-1 border rounded"
-    />
-  </div>
+     
     </div>
   </div>
   </div>

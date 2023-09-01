@@ -33,7 +33,7 @@ await store.dispatch('getShoppingCartByUser',userID.value).then((data) => {
     console.log(shopping_cart.value)
     let total = 0
     for (const item of data.items) {
-    total += parseFloat(item.product_item.price) * item.qty;
+    total += parseFloat(item.product_item.price);
     
   }
   console.log(total)
@@ -49,12 +49,7 @@ onMounted(async () => {
 
 })
 
-onBeforeRouteUpdate((to, from, next) => {
-  if (to.name === 'shoppingCart' && from.name !== 'shoppingCart') {
-    fetchShoppingCartData();
-  }
-  next();
-});
+
 </script>
 
 <template>
@@ -95,8 +90,6 @@ onBeforeRouteUpdate((to, from, next) => {
             <!-- <p class="mt-1 text-sm text-gray-500">{{ item.color }}</p> -->
         </div>
         <div class="flex flex-1 items-end justify-between text-sm">
-            <p class="text-gray-500">Qty {{ item.qty }}</p>
-  
             <div class="flex">
             <button @click="removeItem(item.id)" type="button" class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
             </div>

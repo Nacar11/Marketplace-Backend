@@ -41,9 +41,10 @@ const userProfile = async (ev) => {
 	  <div class="flex flex-wrap items-center justify-between mx-auto p-3">
 	    <a class="flex items-center">
 	        <img src="https://via.placeholder.com/50" alt="Placeholder Image" style="border-radius: 50%; border: 3px solid #ddd; margin-right: 10px;">
+      <router-link to="/">
 	        <span id="title" class="self-center text-2xl text-white font-semibold whitespace-nowrap ">MarketPlace</span>
-	    </a>
-      <router-link to="/" class="text-white hover:underline rounded-md px-3 py-2 text-m font-medium cursor-pointer relative inline-block">Home</router-link>
+        </router-link>
+        </a>
 
           <div v-if="store.state.user.token" class="absolute right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
 
