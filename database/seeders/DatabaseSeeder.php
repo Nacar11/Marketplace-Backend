@@ -9,6 +9,8 @@ use App\Models\ProductItem;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\Country;
+use App\Models\PaymentType;
+use App\Models\UserPaymentMethod;
 
 class DatabaseSeeder extends Seeder
 {
@@ -24,7 +26,9 @@ class DatabaseSeeder extends Seeder
         Product::factory(5)->create();
         ProductItem::factory(10)->create();
         ProductImage::factory(10)->create();
-        \App\Models\Country::factory(5)->create();
+        Country::factory(5)->create();
+        PaymentType::factory(5)->create();
+        UserPaymentMethod::factory(5)->create();
 
     }
 }

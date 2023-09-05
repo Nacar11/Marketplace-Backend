@@ -8,6 +8,7 @@ use App\Http\Resources\UserResource;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
 use App\Models\ShoppingCart;
+use App\Models\UserPaymentMethod;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -62,14 +63,26 @@ class AuthController extends Controller{
         try {
         $validatedData = $request->validated(); 
         $userData = User::create($validatedData);
+
+        $userPaymentMethodData = [
+            'user_id' => $userData->id,
+            'payment_type_id' => 1, // Assuming payment_type_id is 1
+            'provider' => ' ',
+            'account_number' => ' ',
+            'expiry_date' => ' ',
+            'is_default' => true,
+        ];
+        $userPaymentMethod = UserPaymentMethod::create($userPaymentMethodData);
+
         // dd($userData);
         $shoppingCart = null; 
-
         if (!$userData->shoppingCart) {
             $shoppingCart = ShoppingCart::create([
                 'user_id' => $userData->id,
             ]);
         }
+
+        
         $userData = User::with('shoppingCart')->find($userData->id);
 
         $token = $userData->createToken('auth-token')->plainTextToken;
@@ -90,7 +103,7 @@ class AuthController extends Controller{
                 'error' => $e->getMessage(),
             ], 500);
         }
-        }
+    }
 
     
 

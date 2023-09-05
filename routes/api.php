@@ -14,6 +14,11 @@ use App\Http\Controllers\ShoppingCartItemController;
 use App\Http\Controllers\ShoppingCartController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\PaymentTypeController;
+use App\Http\Controllers\UserPaymentMethodController;
+use App\Http\Controllers\ShopOrderController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -73,8 +78,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/getAddress', [AddressController::class, 'getAddress']);
     Route::delete('/deleteAddress/{addressID}', [AddressController::class, 'destroy']);
 
+    Route::get('/paymentTypes', PaymentTypeController::class);
+    Route::get('/userPaymentMethods', UserPaymentMethodController::class);
+    Route::put('/updateUPM', [UserPaymentMethodController::class, 'update']);
+    Route::get('/getUPMbyID', [UserPaymentMethodController::class, 'getUPMbyID']);
 
-
+    Route::get('/shopOrders', ShopOrderController::class);
+    Route::post('/addShopOrder', [ShopOrderController::class, 'store']);
 
 });
 

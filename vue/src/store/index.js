@@ -147,6 +147,22 @@ const store  = createStore({
                 return data;
         })
          },
+         async getPaymentTypes({}){
+            return await api.get(`/paymentTypes`).then(({data}) => {
+                return data;
+        })
+         },
+         async getUPMbyID({}){
+            return await api.get(`/getUPMbyID`).then(({data}) => {
+                return data;
+        })
+         },
+         async updateUPM({},data){
+            console.log(data)
+            return await api.put(`/updateUPM`,data).then(({data}) => {
+                return data;
+        })
+         },
     },
     mutations:{
         setUserToRegister: (state, userData) => {
