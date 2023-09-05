@@ -35,4 +35,14 @@ class ShopOrder extends Model
     {
         return $this->belongsTo(Address::class, 'shipping_address_id');
     }
+
+    public function orderStatus()
+    {
+        return $this->belongsTo(OrderStatus::class, 'order_status');
+    }
+
+    public function shippingMethod()
+    {
+        return $this->belongsTo(ShippingMethod::class, 'shipping_method');
+    }
 }

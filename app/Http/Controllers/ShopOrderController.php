@@ -15,12 +15,15 @@ class ShopOrderController extends Controller
     }
 
     public function store(ShopOrderRequest $request) 
-    {
-        $userId = auth()->user()->id;
-        $validatedData = $request->validated();
-        $validatedData['user_id'] = $userId;
+{
+    $userId = auth()->user()->id;
+    $validatedData = $request->validated();
+    $validatedData['user_id'] = $userId;
 
-        $shopOrder = ShopOrder::create($validatedData);
-        return response()->json($shopOrder, 201);
-    }
+    // Set the 'order_date' attribute to the current date and time
+    $validatedData['order_date'] = now()->format('Y-m-d');
+
+    $shopOrder = ShopOrder::create($validatedData);
+    return response()->json($shopOrder, 201);
+}
 }

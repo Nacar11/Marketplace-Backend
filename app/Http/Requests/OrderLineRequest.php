@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ShopOrderRequest extends FormRequest
+class OrderLineRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,9 @@ class ShopOrderRequest extends FormRequest
     public function rules()
     {
         return [
-            'payment_method_id' => 'required|integer',
-            'shipping_address_id' => 'required|integer',
-            'shipping_method' => 'required|string',
-            'order_total' => 'required|numeric',
+            'shop_order_id' => 'required|integer',
+            'product_item_id' => 'required|integer',
+            'price' => 'required|numeric',
         ];
     }
 }

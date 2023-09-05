@@ -17,7 +17,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\PaymentTypeController;
 use App\Http\Controllers\UserPaymentMethodController;
 use App\Http\Controllers\ShopOrderController;
-
+use App\Http\Controllers\OrderLineController;
 
 
 /*
@@ -85,6 +85,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('/shopOrders', ShopOrderController::class);
     Route::post('/addShopOrder', [ShopOrderController::class, 'store']);
+
+    Route::get('/orderLines', OrderLineController::class);
+    Route::post('/addOrderLine', [OrderLineController::class, 'store']);
 
 });
 

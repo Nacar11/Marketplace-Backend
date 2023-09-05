@@ -11,6 +11,8 @@ use App\Models\ProductImage;
 use App\Models\Country;
 use App\Models\PaymentType;
 use App\Models\UserPaymentMethod;
+use App\Models\ShippingMethod;
+use App\Models\OrderStatus;
 
 class DatabaseSeeder extends Seeder
 {
@@ -29,6 +31,8 @@ class DatabaseSeeder extends Seeder
         Country::factory(5)->create();
         PaymentType::factory(5)->create();
         UserPaymentMethod::factory(5)->create();
+        ShippingMethod::factory(5)->create();
+        OrderStatus::factory(5)->create();
 
     }
 }

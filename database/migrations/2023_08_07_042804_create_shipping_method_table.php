@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOrderLineTable extends Migration
+class CreateShippingMethodTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,11 @@ class CreateOrderLineTable extends Migration
      */
     public function up()
     {
-        Schema::create('order_line', function (Blueprint $table) {
+        Schema::create('shipping_method', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('shop_order_id');
-            $table->unsignedInteger('product_item_id');
             $table->decimal('price', 10, 2);
+            $table->string('name');
             $table->timestamps();
-
-            $table->foreign('shop_order_id')->references('id')->on('shop_order')->onDelete('cascade');
-            $table->foreign('product_item_id')->references('id')->on('product_items')->onDelete('cascade');
         });
     }
 
@@ -32,6 +28,6 @@ class CreateOrderLineTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_line');
+        Schema::dropIfExists('shipping_method');
     }
 }
