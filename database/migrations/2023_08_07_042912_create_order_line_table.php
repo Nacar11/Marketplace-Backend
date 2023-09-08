@@ -18,7 +18,10 @@ class CreateOrderLineTable extends Migration
             $table->unsignedInteger('shop_order_id');
             $table->unsignedInteger('product_item_id');
             $table->decimal('price', 10, 2);
+            $table->string('SKU')->unique();
+
             $table->timestamps();
+
 
             $table->foreign('shop_order_id')->references('id')->on('shop_order')->onDelete('cascade');
             $table->foreign('product_item_id')->references('id')->on('product_items')->onDelete('cascade');

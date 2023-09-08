@@ -18,6 +18,8 @@ use App\Http\Controllers\PaymentTypeController;
 use App\Http\Controllers\UserPaymentMethodController;
 use App\Http\Controllers\ShopOrderController;
 use App\Http\Controllers\OrderLineController;
+use App\Http\Controllers\ShippingMethodController;
+
 
 
 /*
@@ -84,10 +86,17 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/getUPMbyID', [UserPaymentMethodController::class, 'getUPMbyID']);
 
     Route::get('/shopOrders', ShopOrderController::class);
+    Route::get('/getShopOrderByID', [ShopOrderController::class, 'getShopOrderByID']);
+
     Route::post('/addShopOrder', [ShopOrderController::class, 'store']);
 
     Route::get('/orderLines', OrderLineController::class);
     Route::post('/addOrderLine', [OrderLineController::class, 'store']);
+    Route::get('/getOrderlinesFromProductListings', [OrderLineController::class, 'getOrderLinesFromProductListings']);
+
+    Route::get('/getFirstShipping', [ShippingMethodController::class, 'getFirst']);
+    Route::get('/getShippingMethods', ShippingMethodController::class);
+
 
 });
 

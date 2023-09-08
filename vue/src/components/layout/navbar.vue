@@ -32,6 +32,10 @@ const userProfile = async (ev) => {
 	router.push('/account');
 };
 
+const orders = async (ev) => {
+	router.push('/orders');
+};
+
 
 </script>
 
@@ -68,7 +72,7 @@ const userProfile = async (ev) => {
                   <a  @click="shopCart" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Your Shopping Cart</a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                  <a :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Your Orders</a>
+                  <a @click="orders" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Your Orders</a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <a :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Settings</a>

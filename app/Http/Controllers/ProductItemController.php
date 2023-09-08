@@ -38,9 +38,7 @@ class ProductItemController extends Controller
             'user_id' => $userId,
             'SKU' => $sku,
         ]));
-        // $productImages = $request->file('product_images');
         if($request->HasFile('product_images')){
-            // return "asdas";
             $uploadPath = 'uploads/products/';
             $i=1;
             foreach($request->file('product_images') as $imageFile){

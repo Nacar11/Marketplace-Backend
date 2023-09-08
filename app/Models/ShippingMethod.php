@@ -14,4 +14,8 @@ class ShippingMethod extends Model
         'price',
         'name',
     ];
+
+    protected $casts = [
+        'price' => 'float',
+    ];
 }

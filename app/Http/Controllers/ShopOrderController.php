@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\ShopOrder;
+use App\Models\ShippingMethod;
 use Illuminate\Http\Request;
 use App\Http\Requests\ShopOrderRequest;
 
@@ -20,10 +21,31 @@ class ShopOrderController extends Controller
     $validatedData = $request->validated();
     $validatedData['user_id'] = $userId;
 
-    // Set the 'order_date' attribute to the current date and time
+    $firstSM = ShippingMethod::first();
+    $validatedData['shipping_method_id'] = $firstSM ? $firstSM->id : null;
     $validatedData['order_date'] = now()->format('Y-m-d');
+    $validatedData['order_status_id'] = 1;
+
+    // Generate a unique SKU
+    $sku = uniqid();
+    $validatedData['SKU'] = $sku;
 
     $shopOrder = ShopOrder::create($validatedData);
-    return response()->json($shopOrder, 201);
+
+    return response()->json([
+        'message' => 'Success',
+        'shopOrder' => $shopOrder
+    ], 201);
 }
+
+    public function getShopOrderByID(Request $request)
+{
+    $userId = auth()->user()->id;
+    $shopOrders = ShopOrder::with('orderLines')
+        ->where('user_id', $userId)
+        ->get();
+
+    return response()->json($shopOrders);
+}
+
 }

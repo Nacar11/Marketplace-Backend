@@ -26,7 +26,6 @@ class ShopOrderRequest extends FormRequest
         return [
             'payment_method_id' => 'required|integer',
             'shipping_address_id' => 'required|integer',
-            'shipping_method' => 'required|string',
             'order_total' => 'required|numeric',
         ];
     }

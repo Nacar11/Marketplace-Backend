@@ -12,6 +12,10 @@ class ProductItem extends Model
 
     protected $fillable = ['product_id', 'SKU', 'price', 'user_id', 'description'];
 
+    protected $casts = [
+        'price' => 'float',
+    ];
+
     public function product()
     {
     return $this->belongsTo(Product::class, 'product_id');

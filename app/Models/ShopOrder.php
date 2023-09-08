@@ -14,11 +14,12 @@ class ShopOrder extends Model
     protected $fillable = [
         'user_id',
         'order_date',
+        'SKU',
         'payment_method_id',
         'shipping_address_id',
-        'shipping_method',
+        'shipping_method_id',
         'order_total',
-        'order_status',
+        'order_status_id',
     ];
 
     public function user()
@@ -38,11 +39,16 @@ class ShopOrder extends Model
 
     public function orderStatus()
     {
-        return $this->belongsTo(OrderStatus::class, 'order_status');
+        return $this->belongsTo(OrderStatus::class, 'order_status_id');
     }
 
     public function shippingMethod()
     {
-        return $this->belongsTo(ShippingMethod::class, 'shipping_method');
+        return $this->belongsTo(ShippingMethod::class, 'shipping_method_id');
+    }
+
+    public function orderLines()
+    {
+        return $this->hasMany(OrderLine::class, 'shop_order_id');
     }
 }

@@ -11,8 +11,8 @@ class OrderLine extends Model
     protected $fillable = [
         'shop_order_id',
         'product_item_id',
-        'qty',
         'price',
+        'SKU'
     ];
 
     public function shopOrder()

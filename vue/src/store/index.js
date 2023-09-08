@@ -163,6 +163,33 @@ const store  = createStore({
                 return data;
         })
          },
+         async getFirstShipping({}){
+            return await api.get(`/getFirstShipping`).then(({data}) => {
+                return data;
+        })
+         },
+         async addShopOrder({}, form){
+            console.log(form)
+            return await api.post(`/addShopOrder`, form).then(({data}) => {
+                return data;
+        })
+         },
+         async addOrderLine({}, form){
+            console.log(form)
+            return await api.post(`/addOrderLine`, form).then(({data}) => {
+                return data;
+        })
+         },
+         async getShopOrderByID({}){
+            return await api.get(`/getShopOrderByID`).then(({data}) => {
+                return data;
+        })
+         },
+         async getOrdersReceived({}){
+            return await api.get(`/getOrderlinesFromProductListings`).then(({data}) => {
+                return data;
+        })
+         },
     },
     mutations:{
         setUserToRegister: (state, userData) => {

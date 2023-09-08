@@ -1,7 +1,7 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import home from '../views/home.vue'
 import shop from '../views/shop.vue'
-import about from '../views/about.vue'
+import orders from '../views/orders.vue'
 import account from '../views/account.vue'
 import sale from '../views/sale.vue'
 import dashboardLayout from '../components/layout/dashboardLayout.vue'
@@ -30,9 +30,10 @@ const routes = [
 				component: shop
 						},
 				{
-				path: '/about',
-				name:'about',
-				component: about
+				path: '/orders',
+				meta: {requiresAuth: true},
+				name:'orders',
+				component: orders
 						},
 				{
 				path: '/sale',

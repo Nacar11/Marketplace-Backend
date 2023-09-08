@@ -11,6 +11,7 @@ onBeforeMount(async () => {
     await getPaymentTypes();
     await getaddresses();
     await getUPMbyID();
+    await getFirstShipping()
 
 })
 
@@ -23,20 +24,19 @@ const total_value = ref(0)
 const shopping_cart = ref([]);
 const payment_types = ref([]);
 const addresses = ref([]);
+const shipping_method = ref([]);
 const agreed = ref(false)
 
 
 const fetchShoppingCartData = async () => {
     await store.dispatch('getShoppingCartByUser',userID.value).then((data) => {
     shopping_cart.value = data  
-    console.log(shopping_cart.value)
-//     let total = 0
-//     for (const item of data.items) {
-//     total += parseFloat(item.product_item.price);
+    let total = 0
+    for (const item of data.items) {
+    total += parseFloat(item.product_item.price);
     
-//   }
-//   console.log(total)
-//   total_value.value = total.toFixed(2)
+  }
+  total_value.value = total
   })
   .catch(err => {
 	console.log(err)
@@ -49,34 +49,40 @@ const toggleAgreed = async () => {
 const getPaymentTypes = async () => {
     await store.dispatch('getPaymentTypes').then((data) => {
     payment_types.value = data  
-    console.log(payment_types.value)
     
     })
     .catch(err => {
 	console.log(err)
     })
 }
+const getFirstShipping = async () => {
+    await store.dispatch('getFirstShipping').then((data) => {
+    shipping_method.value = data  
+    
+    })
+    .catch(err => {
+	  console.log(err)
+    })
+}
 
 const getaddresses = async () => {
     await store.dispatch('getAddress').then((data) => {
     addresses.value = data.data
-    console.log(addresses.value)
     })
     .catch(err => {
-	console.log(err.response.data.message)
+	  console.log(err.response.data.message)
     })
 }
 
 const getUPMbyID = async () => {
     await store.dispatch('getUPMbyID').then((data) => {
-    console.log(data)
     selectedPaymentType.value = data[0].payment_type_id
     provider.value = data[0].provider
     account_number.value = data[0].account_number
     expiry_date.value = data[0].expiry_date    
     })
     .catch(err => {
-	console.log(err.response.data.message)
+	  console.log(err.response.data.message)
     })
 }
 
@@ -87,7 +93,6 @@ const getUPMbyID = async () => {
 
 
 const orderButton = async () => {
-    if(agreed.value === true){
     const form = {
     payment_type_id: selectedPaymentType.value,
     provider: provider.value,
@@ -100,15 +105,45 @@ const orderButton = async () => {
     console.log(data)
     })
     .catch(err => {
-	console.log(err.response.data.message)
+	  console.log(err.response.data.message)
     })
-}
+
+
+    const form1 = {
+      payment_method_id: selectedPaymentType.value,
+      shipping_address_id: selectedAddress.value,
+      order_total: computedTotalValue.value
+    }
+    await store.dispatch('addShopOrder', form1).then((data) => {
+    console.log(data)
+    if(data.message === 'Success'){
+      for (const item of shopping_cart.value.items) {
+      console.log(item);
+      const form2 = {
+        shop_order_id: data.shopOrder.id,
+        product_item_id: item.product_item.id,
+        price: item.product_item.price
+      }
+      console.log(form2)
+      store.dispatch('addOrderLine', form2).then((data) => {
+      console.log(data)
+      })
+      }
+    }
+    })
+    .catch(err => {
+	  console.log(err.response.data.message)
+    })
 
 
 
 }
 
+const computedTotalValue = computed(() => {
+  return total_value.value + shipping_method.value.price;
+});
 
+const selectedAddress = ref('')
 const selectedPaymentType = ref('')
 </script>
 
@@ -119,10 +154,11 @@ const selectedPaymentType = ref('')
     <section class="bg-white flex flex-col rounded-2xl shadow-lg max-w-4xl p-8 items-center">
         <!-- Content for the first section -->
        <a class="px-3 pb-3 font-semibold text-gray-900">Select Shipping Address</a>
-       <select class="block w-full text-base leading-6 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-        <option v-for="address in addresses" :key="address.id" :value="(address.address.address_line_1)">{{ address.address.address_line_1 }}</option>
+       <select v-model="selectedAddress" class="block w-full text-base leading-6 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+        <option v-for="address in addresses" :key="address.id" :value="address.id">{{ address.address.address_line_1  }}</option>
 
           </select>
+
     </section>
 
     <section class="bg-white flex rounded-2xl shadow-lg max-w-4xl p-8 items-center">
@@ -177,10 +213,6 @@ const selectedPaymentType = ref('')
                     <option v-for="payment in payment_types" :key="payment.id" :value="payment.id">{{ payment.value }}</option>
 
                 </select>
-                <div>
-                    Selected Payment Type: {{ selectedPaymentType }}
-                    {{ agreed }}
-                </div>
                 </dd>
             </div>
 
@@ -214,21 +246,41 @@ const selectedPaymentType = ref('')
             </div>
             </dd>
             </div>
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="ml-16 text-sm font-medium leading-6 text-gray-900 flex items-center">Shipping Fee</dt>
+            <dd class="mr-10 mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 flex items-center">
+                <div class="relative mt-2 rounded-md shadow-sm">
+                <a
+                    required=""
+			              class="w-full pl-3 pr-10 py-2 text-base leading-6 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"	
+			            >
+                  {{ shipping_method.price }}
+                  </a>
+            </div>
+            </dd>
+            </div>
+            <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <dt class="ml-16 text-sm font-medium leading-6 text-gray-900 flex items-center">Total Cost</dt>
+            <dd class="mr-10 mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 flex items-center">
+                <div class="relative mt-2 rounded-md shadow-sm">
+                <a
+                    required=""
+			              class="w-full pl-3 pr-10 py-2 text-base leading-6 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"	
+			            >
+                  {{computedTotalValue}}    
+                </a>
+            </div>
+            </dd>
+            </div>
 
             <div class="mt-6 items-center justify-center">
             <button @click="orderButton" class="w-full flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Order</button>
             </div>
-             <SwitchGroup as="div" class="flex gap-x-4 sm:col-span-2">
             <div class="flex h-6 items-center">
-              <Switch v-model="agreed" @click="toggleAgreed" :class="[agreed ? 'bg-indigo-600' : 'bg-gray-200', 'flex w-8 flex-none cursor-pointer rounded-full p-px ring-1 ring-inset ring-gray-900/5 transition-colors duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600']">
-                <span class="sr-only">Agree to policies</span>
-                <span aria-hidden="true" :class="[agreed ? 'translate-x-3.5' : 'translate-x-0', 'h-4 w-4 transform rounded-full bg-white shadow-sm ring-1 ring-gray-900/5 transition duration-200 ease-in-out']" />
-              </Switch>
+              <a class="w-full pl-3 pr-10 py-2 text-base leading-6 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                 Payment Details are Saved for Next Time
+                </a>
             </div>
-            <SwitchLabel class="text-sm leading-6 text-gray-600">
-              Save Payment Details for Next Time
-            </SwitchLabel>
-          </SwitchGroup>
     </dl>
     </div>
     </div>
