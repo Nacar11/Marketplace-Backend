@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('facebook_id')->unique()->nullable(); // Add Facebook ID column
             $table->string('google_id')->unique()->nullable();   // Add Google ID column
-            $table->string('login_method')->nullable();              $table->timestamp('email_verified_at')->nullable();
+            $table->string('login_method')->nullable();              
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();

@@ -15,13 +15,12 @@ const loginButton = async (ev) => {
   ev.preventDefault()
   store.dispatch('login', user).then((data) => {
 	console.log(data)
-	router.push({
-		name: 'home',
-	}) 	
+	// router.push({
+	// 	name: 'home',
+	// }) 	
   })
   .catch(err => {
-	console.log(err.response.data.message)
-	error.value = err.response.data.message
+	console.log(err.response.data.errors)
   })
 };
 // const facebookLogin = async (ev) => {

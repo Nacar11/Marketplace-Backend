@@ -13,6 +13,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
+
 
 
 class AuthController extends Controller{
@@ -25,29 +27,34 @@ class AuthController extends Controller{
     }
 
     public function login(Request $request){
-        $credentials = $request->validate([
-            'email' => 'required|string|email|exists:users,email',
-            'password' => 'required|string',
-            'remember' => 'boolean'
-        ]);
 
-        $remember = $credentials['remember'] ?? false;
-        unset($credentials['remember']);
+        try {
+            $credentials = $request->validate([
+                'email' => 'required|string|email|exists:users,email',
+                'password' => 'required|string',
+            ]);
+        } catch (ValidationException $e) {
+            return response([
+                'errors' => 'Invalid Email or Password'
+            ], 404);
+        }
 
-        if (!Auth::attempt($credentials, $remember)){
-            return response ([
-                'error' => 'Invalid Credentials'
-            ], 422);
+        
+        // $remember = $credentials['remember'] ?? false;
+        // unset($credentials['remember']);
+
+        if (!Auth::attempt($credentials)) {
+            return response([
+                'errors' => 'Invalid Password of Email'
+            ], 404);
         }
         $user = Auth::user();
         $token = $user->createToken('auth-token')->plainTextToken;
         $user->load('shoppingCart');
-        // dd($user);
         return response()->json([ 
             'message'=> 'Authorized',
             'access_token' => $token,
             'token_type' => 'Bearer',
-            'expires_in' => null,
             'username' => $user->username,
             'user_id' => $user->id,
             'shopping_cart' => $user->shoppingCart

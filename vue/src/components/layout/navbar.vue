@@ -46,7 +46,7 @@ const orders = async (ev) => {
 	    <a class="flex items-center">
 	        <img src="https://via.placeholder.com/50" alt="Placeholder Image" style="border-radius: 50%; border: 3px solid #ddd; margin-right: 10px;">
       <router-link to="/">
-	        <span id="title" class="self-center text-2xl text-white font-semibold whitespace-nowrap ">MarketPlace</span>
+	        <span id="title" class="self-center md:text-2xl text-l text-white font-semibold whitespace-nowrap ">MarketPlace</span>
         </router-link>
         </a>
 
