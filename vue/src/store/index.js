@@ -1,6 +1,26 @@
 import {createStore} from "vuex";
 import api from '../api'
 
+const organizeCategories = (data) => {
+    const categoriesMap = new Map();
+    const result = [];
+  
+    data.forEach((category) => {
+      if (!category.category_id) {
+        result.push(category);
+      } else {
+        const parentCategory = categoriesMap.get(category.category_id);
+        if (!parentCategory.children) {
+          parentCategory.children = [];
+        }
+        parentCategory.children.push(category);
+      }
+  
+      categoriesMap.set(category.id, category);
+    });
+    return result;
+  };
+
 const store  = createStore({
     state:{
         user:{
@@ -18,16 +38,16 @@ const store  = createStore({
         },
         product_categories:{
             data: "",
-
-        }
+        },
+        organizedCategories:[],
+        filteredProductItems:[],
     },
-    getters:{},
+    getters: {
+        organizedCategories: (state) => state.organizedCategories,
+        filteredProductItems: (state) => state.filteredProductItems,
+      },
     actions:{
         register({commit}, user){
-    //         console.log("FormData contents:");
-	//         for (const pair of user.entries()) {
-  	//         console.log(pair[0], pair[1]);
-	// }
             return api.post('/register', user).then(({data}) => {
                 sessionStorage.clear();
                 commit('setUser', data)
@@ -65,8 +85,8 @@ const store  = createStore({
         },
         getProductCategories({commit}){
             return api.get('/product-category').then(({data}) => {
-                // commit('setProductCategories', data)
-                return data;
+                const organizedCategories = organizeCategories(data);
+                commit('setOrganizedCategories', organizedCategories);
             })
         },
         logout({commit}){
@@ -76,7 +96,7 @@ const store  = createStore({
             })
         },
         getProductItems({}){
-            return api.get('/product-item').then(({data}) => {
+            return api.get('/productItems').then(({data}) => {
                 return data;
             })
         },
@@ -100,11 +120,15 @@ const store  = createStore({
                 return data;
             })
         },
-        async getProductItemByCategory({},id){
-            return await api.get(`/getProductItemByCategory/${id}`).then(({data}) => {
+        async getProductItemsByCategory({commit},id){
+            return await api.get(`/productItemsbyCategory/${id}`).then(({data}) => {
+                console.log(data)
+                commit('setFilteredProductItems', data.Body);
+
                 return data;
             })
         },
+
         async getShoppingCartByUser({},id){
             return await api.get(`/getShoppingCartByUser/${id}`).then(({data}) => {
                 return data;
@@ -122,7 +146,6 @@ const store  = createStore({
          },
          async getUser({}){
             return await api.get(`/getUser/`).then(({data}) => {
-                console.log(data)
                 return data;
         })
          },
@@ -132,7 +155,6 @@ const store  = createStore({
         })
          },
          async addAddress({}, details){
-            console.log(details)
             return await api.post(`/addAddress`, details).then(({data}) => {
                 return data;
         })
@@ -169,13 +191,11 @@ const store  = createStore({
         })
          },
          async addShopOrder({}, form){
-            console.log(form)
             return await api.post(`/addShopOrder`, form).then(({data}) => {
                 return data;
         })
          },
          async addOrderLine({}, form){
-            console.log(form)
             return await api.post(`/addOrderLine`, form).then(({data}) => {
                 return data;
         })
@@ -193,7 +213,6 @@ const store  = createStore({
     },
     mutations:{
         setUserToRegister: (state, userData) => {
-            console.log(userData)
             state.user.data.userFirstName = userData.given_name
             sessionStorage.setItem('FirstName', userData.given_name)
             state.user.data.userLastName = userData.family_name
@@ -216,7 +235,13 @@ const store  = createStore({
             state.user.data.userID = userData.user_id;
             sessionStorage.setItem('Token', userData.access_token);
             sessionStorage.setItem('userID', userData.user_id);
-        }
+        },
+        setOrganizedCategories(state, categories) {
+            state.organizedCategories = categories;
+          },
+        setFilteredProductItems(state, data) {
+            state.filteredProductItems = data;
+          },
     },
     modules:{}
 

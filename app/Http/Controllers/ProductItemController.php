@@ -19,12 +19,17 @@ class ProductItemController extends Controller
         return $productItems;
     }
 
-    public function getProductName()
+    public function getProductItemsByCategory($categoryId)
     {
-    $products = Product::with('Product')->get();
-
-    return $products;
-    
+        $productItems = ProductItem::with('product.productCategory', 'productImages', 'variationOptions.variation')
+        ->whereHas('product.productCategory', function ($query) use ($categoryId) {
+            $query->where('id', $categoryId);
+        })
+        ->get();        
+        return response()->json([
+            'status' => "Success",
+            'Body' => $productItems
+        ], 200);
     }
 
     public function store(ProductItemRequest $request)

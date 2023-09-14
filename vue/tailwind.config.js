@@ -8,6 +8,13 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        'sm': '640px',  // Small screens, like phones
+        'md': '768px',  // Medium screens, like tablets
+        'lg': '1024px', // Large screens, like laptops
+        'xl': '1280px', // Extra large screens, like desktops
+        // You can define additional breakpoints here if needed.
+      },
       fontFamily: {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
       },

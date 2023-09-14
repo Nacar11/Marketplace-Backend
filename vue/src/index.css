@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300&display=swap');
+
+*{
+  font-family: 'Poppins', sans-serif;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,6 +13,9 @@ body {
   background-color: #f9fafb;
 }
 
+.btn{
+  @apply uppercase rounded-full py-2 px-3 font-bold cursor-pointer tracking-wider;
+}
 @layer components {
   .cta-btn {
     @apply inline-flex w-full cursor-pointer items-center justify-center rounded-full px-8 py-2.5 text-base font-medium leading-6 shadow-sm transition duration-200 ease-in-out hover:scale-105 active:translate-y-1 md:w-auto md:py-3;

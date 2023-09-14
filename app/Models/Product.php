@@ -27,9 +27,9 @@ class Product extends Authenticatable
 
     ];
 
-    public function category()
+    public function productCategory()
     {
-        return $this->belongsTo(ProductCategory::class);
+        return $this->belongsTo(ProductCategory::class, 'category_id', 'id');
     }
     
     public function productItems()

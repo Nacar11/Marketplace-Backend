@@ -6,33 +6,13 @@ import { onBeforeMount } from '@vue/runtime-core'
 import productItemModal from '../components/modal/productItem.vue'
 
 
-const organizedCategories = ref([])
 const product_items = ref([])
 const openMenus = ref([])
-const organizeCategories = (data) => {
-    const categoriesMap = new Map();
-    const result = [];
-
-    data.forEach((category) => {
-    if (!category.category_id) {
-      result.push(category);
-    } else {
-      const parentCategory = categoriesMap.get(category.category_id);
-      if (!parentCategory.children) {
-        parentCategory.children = [];
-      }
-      parentCategory.children.push(category);
-    }
-
-    categoriesMap.set(category.id, category);
-  });
-
-  return result;
-};
-
+const organizedCategories = ref([]);
 onBeforeMount(async () => {
-	await store.dispatch('getProductCategories').then((data) => {
-  organizedCategories.value = organizeCategories(data);
+	await store.dispatch('getProductCategories').then(() => {
+  organizedCategories.value = store.getters.organizedCategories
+  console.log(organizedCategories.value)
   })
   .catch(err => {
 	console.log(err.response.data.message)
@@ -91,7 +71,7 @@ const handleSubCategoryClick = (id) => {
 
 <template>
   <div class="p-5 flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-    <div class="hidden sm:ml-6 sm:block">
+    <div class="hidden md:block">
       <div class="flex space-x-4">
         <template v-for="category in organizedCategories" :key="category.id">
           <div
