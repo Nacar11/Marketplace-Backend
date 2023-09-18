@@ -8,14 +8,14 @@
   
         <div class="fixed inset-0 overflow-hidden">
           <div class="absolute inset-0 overflow-hidden">
-            <div class="pointer-events-none fixed inset-y-0 left-0 flex max-w-full pr-10">
+            <div class="pointer-events-none fixed inset-y-0 left-0 flex max-w-xs md:max-w-md"  >
               <TransitionChild as="template" enter="transform transition ease-in-out duration-500 sm:duration-700" enter-from="-translate-x-full" enter-to="translate-x-0" leave="transform transition ease-in-out duration-500 sm:duration-700" leave-from="translate-x-0" leave-to="-translate-x-full">
-                <DialogPanel class="pointer-events-auto w-screen max-w-md">
+                <DialogPanel class="pointer-events-auto w-screen max-w-sm">
                   <div class="flex h-full flex-col bg-white shadow-xl">
                     <div class="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                       <div class="flex items-start justify-between">
                         <!-- <DialogTitle class="text-lg font-medium text-gray-900">Login</DialogTitle> -->
-                        <div class="ml-3 flex flex-row">
+                        <div v-if="!store.state.user.token" class="ml-3 flex flex-row">
                             <div class="icon facebook mr-6">
                                 <span class="flex items-center justify-center cursor-pointer block h-14 w-14 bg-white rounded-full relative z-20 shadow-md transition-transform transform hover:scale-110"><i class="fab fa-facebook-f fa-2x"></i></span>
                             </div>
@@ -25,17 +25,54 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="ml-3 flex h-7 items-center">
-                          <button type="button" class="relative -m-2 p-2 text-gray-400 hover:text-gray-500" @click="toggleSider">
-                            <span class="absolute -inset-0.5"/>
-                            <XMarkIcon class="h-6 w-6" aria-hidden="true"/>
-                          </button>
-                        </div>
-                      </div>
+                        <div v-else>
+                            <div class="flex items-center mb-4">
+                            <div class="w-14 h-14 rounded-full bg-gray-300 mr-4"></div> <!-- Placeholder profile picture -->
+                            <div class="flex items-start flex-col">
+                                <h2 class="text-lg font-semibold">{{ capitalize(userProfile.username) }}</h2> <!-- Name -->
+                                <p class="text-sm text-gray-600">{{ capitalize(userProfile.first_name) }} {{ capitalize(userProfile.last_name) }}</p>
+                                <p class="text-sm text-gray-600">{{ userProfile.email }}</p> <!-- Email -->
+             
+                            </div>
+                            </div>
+                <ul>
+                <li class="hover:bg-gray-100 hover:border rounded-lg sm:py-1 sm:pl-1 md:py-2 md:pl-2 cursor-pointer justify-between flex w-full items-center py-3">
+                  <router-link :to="{ name: 'home' }" @click="toggleSider" class="text-sm md:text-base">Home</router-link>
+                </li>
+                <li  class="hover:bg-gray-100 hover:border rounded-lg sm:py-1 sm:pl-1 md:py-2 md:pl-2 cursor-pointer justify-between flex w-full items-center py-3">
+                  <router-link :to="{ name: 'account' }" @click="toggleSider" class="text-sm md:text-base">View Profile</router-link>
+                </li>
+                <li  class="hover:bg-gray-100 hover:border rounded-lg sm:py-1 sm:pl-1 md:py-2 md:pl-2 cursor-pointer justify-between flex w-full items-center py-3">
+                  <router-link :to="{ name: 'addProduct' }" @click="toggleSider" class="text-sm md:text-base">List a Product</router-link>
+                </li>
+                <li class="hover:bg-gray-100 hover:border rounded-lg sm:py-1 sm:pl-1 md:py-2 md:pl-2 cursor-pointer justify-between flex w-full items-center py-3">
+                  <router-link :to="{ name: 'shoppingCart' }" @click="toggleSider" class="text-sm md:text-base">Your Shopping Cart</router-link>
+                </li>
+                <li  class="hover:bg-gray-100 hover:border rounded-lg sm:py-1 sm:pl-1 md:py-2 md:pl-2 cursor-pointer justify-between flex w-full items-center py-3">
+                  <router-link :to="{ name: 'orders' }" @click="toggleSider" class="text-sm md:text-base">Your Orders</router-link>
+                </li>
+                <li class="hover:bg-gray-100 hover:border rounded-lg sm:py-1 sm:pl-1 md:py-2 md:pl-2 cursor-pointer justify-between flex w-full items-center py-3">
+                  <a @click="toggleSider" class="text-sm md:text-base">Settings</a>
+                </li>
+                <li  class="hover:bg-gray-100 hover:border rounded-lg sm:py-1 sm:pl-1 md:py-2 md:pl-2 cursor-pointer justify-between flex w-full items-center py-3">
+                  <a @click="() => { toggleSider(); logoutButton(); }" class="text-sm md:text-base">Sign out</a>
+                </li>
+                 </ul>
+        </div>
+        <div class="ml-3 flex h-7 items-center">
+            <button type="button" class="relative -m-2 p-2 text-gray-400 hover:text-gray-500" @click="toggleSider">
+            <span class="absolute -inset-0.5"/>
+            <XMarkIcon class="h-6 w-6" aria-hidden="true"/>
+            </button>
+        </div>
+         </div>
   
 <div>
     <div class="mt-8 flow-root">
-    <div class="border-t border-b border-gray-200" 
+    <div class="mr-4 mb-5">
+    <h2 class="text-xl font-semibold">Browse MarketPlace</h2> <!-- Name -->
+    </div>
+    <div class="border-t border-b border-gray-200"
     v-for="parentCategory in organizedCategories" :key="parentCategory.id">
         <ul role="list" class=" divide-y divide-gray-200">
         <li @click="toggleSubMenu(parentCategory)" class="cursor-pointer justify-between flex w-full items-center py-2">
@@ -80,8 +117,24 @@
   const props = defineProps({
   visibility: Boolean,
   openSider: Function,
-
 })
+
+const logoutButton = async () => {
+  store.dispatch('logout').then((data) => {
+	console.log(data)
+	router.push({
+		name: 'login', 
+	}) 	
+  })
+  .catch(err => {
+	console.log(err)
+  })
+};
+
+const capitalize = (str) => {
+  return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+};
+
 const toggleSider = () => {
   props.openSider()
 };
@@ -91,12 +144,19 @@ const toggleSubMenu = (parentCategory) => {
 };
 
 const organizedCategories = ref([])
+const userProfile = ref([])
 
 onBeforeMount(async () => {
+await store.dispatch('getUser').then((data) => {
+userProfile.value = data
+})
+.catch(err => {
+console.log(err.response.data.message)
+})
 await store.dispatch('getProductCategories').then(() => {
-  organizedCategories.value = store.getters.organizedCategories
-  console.log(organizedCategories.value)
-  })
+organizedCategories.value = store.getters.organizedCategories
+console.log(organizedCategories.value)
+})
 console.log(organizedCategories.value)
 })
 

@@ -3,7 +3,6 @@ import { ref, computed} from '@vue/reactivity'
 import store from '../store'
 // import { useRouter } from 'vue-router'
 import { onBeforeMount } from '@vue/runtime-core'
-import productItemModal from '../components/modal/productItem.vue'
 
 
 const product_items = ref([])
@@ -50,15 +49,9 @@ const showProductItem = () => {
   showModal.value = !showModal.value;
 }
 
-const openProductModal = (product) => {
-  productItem.value = product;
-  showModal.value = true;
-  console.log(productItem.value)
-};
-
 
 const handleSubCategoryClick = (id) => {
-  store.dispatch('getProductItemByCategory',id).then((data) => {
+  store.dispatch('getProductItemsByCategory',id).then((data) => {
   product_items.value = data
   })
   .catch(err => {
@@ -82,7 +75,7 @@ const handleSubCategoryClick = (id) => {
             {{ category.category_name }}
             <div
               v-if="openMenus.includes(category.id)"
-              class="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+              class="absolute left-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
             >
               <a
                 v-for="subCategory in category.children"
@@ -101,14 +94,14 @@ const handleSubCategoryClick = (id) => {
   </div>
   <div class="p-5 bg-white">
     <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-      <div v-if="Object.keys(product_items).length === 0" class="px-4 py-6 text-sm text-gray-700">
-        <h3 class="text-base font-semibold text-gray-900">No Product Listing yet</h3>
+      <div v-if="Object.keys(product_items).length === 0" class="h-[80vh] items-center justify-center">
+        <span class="text-center">No Product Listing yet</span>
       </div>
       <div v-for="product in product_items" :key="product.id" class="group relative">
+        <router-link :to="{ name: 'product', params: { id: product.id } }">
         <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-48">  
           <div class="h-full w-full flex items-center justify-center">
             <img
-              @click="openProductModal(product)"
               v-if="product.product_images && product.product_images.length > 0"
               :src="product.product_images[0].product_image"
               :alt="product.product_images[0].product_image"
@@ -122,6 +115,8 @@ const handleSubCategoryClick = (id) => {
             />
           </div>
         </div>
+      </router-link>
+  
         <div class="mt-4 flex justify-between">
           <div>
             <h3 class="text-sm text-gray-700">{{ product.product.name }}</h3>
@@ -131,11 +126,7 @@ const handleSubCategoryClick = (id) => {
       </div>
     </div>
   </div>
-  <productItemModal
-    :show="showModal"
-	  :showProductItem = "showProductItem"
-    :productItem = "productItem"
-    />
+ 
 
 
 

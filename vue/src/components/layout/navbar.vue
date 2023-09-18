@@ -27,27 +27,39 @@ const openSider = () => {
 </script>
 
 <template>
+  
   <mobileMenu
   :show="showSider"
   :openSider="openSider"
-  ></mobileMenu>
-  <section class="bg-gray-800">
-	  <div class="flex flex-wrap items-center justify-between mx-auto p-3">
-	    <div class="flex items-center">
-        <!-- Leftmost button -->
-        <button  @click=openSider class="text-blue-100 md:hidden">
-            <i class="fa fa-list-ul fa-lg p-2"></i>
-          </button>
-      <a class="flex items-center">
-	        <img src="https://via.placeholder.com/50" alt="Placeholder Image" style="border-radius: 50%; border: 3px solid #ddd; margin-right: 10px;">
-          <router-link to="/">
-	        <span id="title" class="self-center md:text-2xl text-l text-white font-semibold whitespace-nowrap text-primary">MarketPlace</span>
-          </router-link>
-      </a>
+  >
+</mobileMenu>
+<div class="bg-gray-800">
+  <div class="flex items-center justify-between mx-auto p-3">
+    <div class="flex items-center">
+    <!-- Leftmost button -->
+    <button @click="openSider" class="text-blue-100 md:hidden">
+      <i class="fa fa-list-ul fa-lg p-2"></i>
+    </button>
+    <a class="flex items-center" href="/">
+      <img src="https://via.placeholder.com/50" alt="Placeholder Image" style="border-radius: 50%; border: 3px solid #ddd; margin-right: 10px;">
+      <span id="title" class="self-center md:text-2xl text-l text-white font-semibold whitespace-nowrap text-primary">MarketPlace</span>
+    </a>
     </div>
-      <div class="flex items-center">
-        <div v-if="store.state.user.token" class="absolute right-0 pr-2 hidden md:block">
-          <Menu as="nav" class="relative ml-3">
+    <!-- Search Bar -->
+    <div class="hidden md:flex items-center">
+
+  <!-- Input -->
+  <input type="text" class="w-96 h-10 font-medium focus:outline-none searchInput rounded-l-2xl" placeholder="Search Items">
+  <!-- Search button -->
+  <button class="w-14 h-10 bg-orange-600 flex justify-center items-center rounded-r-2xl text-white font-medium">
+    <i class="fas fa-search text-white"></i>
+  </button>
+</div>
+    <!-- Rightmost buttons -->
+    <div class="flex items-center">
+      <div v-if="store.state.user.token" class="absolute right-0 pr-2 hidden md:block">
+        <!-- User Menu -->
+        <Menu as="div" class="relative ml-3">
             <div>
               <MenuButton class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                 <span class="absolute -inset-1.5" />
@@ -58,16 +70,16 @@ const openSider = () => {
             <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
               <MenuItems class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <MenuItem v-slot="{ active }">
-                  <router-link :to="{ name: 'account' }" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">View Profile</router-link>
+                  <a @click="userProfile" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">View Profile</a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                  <router-link :to="{ name: 'addProduct' }" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">List a Product</router-link>
+                  <a  @click="addProduct" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">List a Product</a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                  <router-link :to="{ name: 'shoppingCart' }" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Your Shopping Cart</router-link>
+                  <a  @click="shopCart" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Your Shopping Cart</a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                  <router-link :to="{ name: 'orders' }" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Your Orders</router-link>
+                  <a @click="orders" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Your Orders</a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <a :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Settings</a>
@@ -79,17 +91,17 @@ const openSider = () => {
               </MenuItems>
             </transition>
           </Menu>
-        </div>
-        <div v-else>
-          <a class="btn md:text-base md:border-2 border-blue-400 text-blue-400 text-sm">
+      </div>
+      <div v-else>
+        <a class="btn md:text-base md:border-2 border-blue-400 text-blue-400 text-sm">
           <router-link :to="{ name: 'login' }">Login</router-link>
-      
-          </a>
-        </div>
+        </a>
       </div>
-      </div>
-      
-	</section>
+    </div>
+  </div>
+</div>
+
+  
 </template>
 
 <style>

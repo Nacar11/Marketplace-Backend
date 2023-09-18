@@ -3,7 +3,7 @@ import home from '../views/home.vue'
 import shop from '../views/shop.vue'
 import orders from '../views/orders.vue'
 import account from '../views/account.vue'
-import sale from '../views/sale.vue'
+import product from '../views/product.vue'
 import dashboardLayout from '../components/layout/dashboardLayout.vue'
 import authenticationLayout from '../components/layout/authenticationLayout.vue'
 import login from '../views/login.vue'
@@ -36,17 +36,12 @@ const routes = [
 				component: orders
 						},
 				{
-				path: '/sale',
-				name:'sale',
-				component: sale
-						},
-				{
 				path: '/account',
 				name:'account',
 				component: account
 						},
 				{
-				path: '/product',
+				path: '/addProduct',
 				meta: {requiresAuth: true},
 				name:'addProduct',
 				component: addProduct
@@ -69,6 +64,12 @@ const routes = [
 				name:'checkout',
 				component: checkout
 						},
+				{
+				path: '/product/:id', // Define the "id" route parameter
+				name: 'product',
+				component: product,
+				props: (route) => ({ id: Number(route.params.id) || 0 }), // Provide a default value if "id" is not present
+				},
 				],
 				},
 	{

@@ -45,6 +45,8 @@ const store  = createStore({
     getters: {
         organizedCategories: (state) => state.organizedCategories,
         filteredProductItems: (state) => state.filteredProductItems,
+        userID: (state) => state.user.data.userID,
+
       },
     actions:{
         register({commit}, user){
@@ -79,7 +81,7 @@ const store  = createStore({
         },
         addProductItem({commit},details){
             console.log(details)
-            return api.post('/product-item', details).then(({data}) => {
+            return api.post('/productItem', details).then(({data}) => {
                 return data;
             })
         },
@@ -134,8 +136,9 @@ const store  = createStore({
                 return data;
         })
          },
-        async addToCart({},form){
-            return await api.post(`/addToCart`,form).then(({data}) => {
+        async addToCart({},id){
+            console.log(id)
+            return await api.post(`/addToCart`,id).then(({data}) => {
                 return data;
         })
          },
@@ -207,6 +210,11 @@ const store  = createStore({
          },
          async getOrdersReceived({}){
             return await api.get(`/getOrderlinesFromProductListings`).then(({data}) => {
+                return data;
+        })
+         },
+         async getProductItemFullDetails({}, id){
+            return await api.get(`/getProductItem/${id}`).then(({data}) => {
                 return data;
         })
          },

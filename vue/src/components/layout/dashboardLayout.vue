@@ -9,9 +9,9 @@ import appFooter from '/src/components/layout/appFooter.vue';
     <navbar/>
         <router-view />
 		</div>
-	  <!-- <div class='foot1'>
+	  <div class='foot1'>
 		  <appFooter/>
-	  </div> -->
+	  </div>
 </template>
 
 

@@ -93,4 +93,16 @@ class ProductItemController extends Controller
         'msg' => $result ? 'success' : 'failed'
     ]);
     }
+
+    public function getProductItem($id)
+    {
+        $productItem = ProductItem::find($id);
+    
+        if (!$productItem) {
+            return response()->json(['message' => 'ProductItem not found'], 404);
+        }
+    
+        $productItem->load('user', 'product', 'product.productCategory', 'productImages', 'variationOptions.variation');
+        return response()->json(['data' => $productItem], 200);
+    }
 }
