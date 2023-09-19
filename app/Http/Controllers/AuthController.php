@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Notifications;
+use App\Notifications\welcomeEmailNotification;
 
 
 
@@ -91,8 +93,9 @@ class AuthController extends Controller{
 
         
         $userData = User::with('shoppingCart')->find($userData->id);
-
         $token = $userData->createToken('auth-token')->plainTextToken;
+
+        $userData->notify(new welcomeEmailNotification($userData));
         
         return response()->json([ 
             'message'=> 'Success',

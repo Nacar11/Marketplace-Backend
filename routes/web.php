@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Mail\UserRegisteredMail;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,4 +26,9 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+});
+
+
+Route::get('/email', function(){
+    return new UserRegisteredMail();
 });

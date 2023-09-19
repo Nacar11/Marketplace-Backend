@@ -3,12 +3,16 @@ import { onBeforeMount } from '@vue/runtime-core'
 import {reactive, ref, computed} from '@vue/reactivity'
 import store from '../store'
 
+
 const productItem = ref([])
 onBeforeMount(async () => {
+  console.log(userID.value)
   await store.dispatch('getProductItemFullDetails', props.id ).then((data) => {
   productItem.value = data
   console.log(productItem.value)
+
   })
+  
   .catch(err => {
 	console.log(err.response.data.message)
 	productItem.value = err.response.data.message
@@ -18,6 +22,8 @@ onBeforeMount(async () => {
 const props = defineProps({
   id: Number, 
 });
+
+
 
 const addToCart = async() => {
   const formData = new FormData();
@@ -32,6 +38,9 @@ const addToCart = async() => {
 	console.log(err)
 })
 }
+const userID = computed(() => {
+  return parseInt(sessionStorage.getItem('userID'))
+})
 
 
 </script>
@@ -41,7 +50,7 @@ const addToCart = async() => {
 <div>
 <div v-if="productItem.data">
   <div class="h-[80vh] container">
-  <div class="items-center justify-center flex flex-row p-5">
+  <div class=" justify-center flex flex-row p-5">
     
       <div class="m-4">
       <template v-for="(productImage, index) in productItem.data.product_images" :key="index">
@@ -58,9 +67,7 @@ const addToCart = async() => {
       <p>
         {{ productItem.data.description }}
       </p>
-      <div class="pl-2 py-3 sm:flex sm:flex-row-reverse" v-if="store.getters.userID !== productItem.user_id">
-        {{ store.getters.userID }}
-        {{ productItem.user_id }}
+      <div class="py-8" v-if="userID !== productItem.data.user_id">
       <button
         @click="addToCart"
         type="button"
@@ -69,8 +76,8 @@ const addToCart = async() => {
     </button>
     </div>
     
-    <div v-else>
-      asdhkj
+    <div class="mt-4" v-else>
+      <i>You own this Item</i>
     </div>
     </div>
   </div>
