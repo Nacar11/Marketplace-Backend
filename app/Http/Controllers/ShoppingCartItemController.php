@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Http\Requests\ShoppingCartItemRequest;
 use App\Models\ShoppingCartItem;
 use Illuminate\Http\Request;
+use App\Http\Requests\ShoppingCartItemRequest;
 
 class ShoppingCartItemController extends Controller
 {
@@ -17,7 +17,7 @@ class ShoppingCartItemController extends Controller
         return ShoppingCartItem::with('variationOptions')->get();
     }
     public function addToCart(ShoppingCartItemRequest $request)
-{
+    {
     $user = auth()->user();
     $cart = $user->shoppingCart;
     $cartId = $cart->id;
@@ -30,7 +30,11 @@ class ShoppingCartItemController extends Controller
     ]);
     $shoppingCartItem->save();
 
-    return $shoppingCartItem;
+    $response = [
+        'message' => 'success',
+    ];
+
+    return response()->json($response);
+    }       
 }
-    }
         

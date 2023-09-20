@@ -34,6 +34,7 @@ const store  = createStore({
                 googleID: sessionStorage.getItem('googleID')
 
             },
+            shoppingCart:[],
             token: sessionStorage.getItem('Token'),
         },
         product_categories:{
@@ -41,11 +42,13 @@ const store  = createStore({
         },
         organizedCategories:[],
         filteredProductItems:[],
+        
     },
     getters: {
         organizedCategories: (state) => state.organizedCategories,
         filteredProductItems: (state) => state.filteredProductItems,
         userID: (state) => state.user.data.userID,
+        shoppingCart: (state) => state.user.shoppingCart,
 
       },
     actions:{
@@ -131,14 +134,15 @@ const store  = createStore({
             })
         },
 
-        async getShoppingCartByUser({},id){
+        async getShoppingCartByUser({commit},id){
             return await api.get(`/getShoppingCartByUser/${id}`).then(({data}) => {
+                commit('setShoppingCart', data);
                 return data;
         })
          },
-        async addToCart({},id){
-            console.log(id)
-            return await api.post(`/addToCart`,id).then(({data}) => {
+        async addToCart({},formData){
+            console.log(formData)
+            return await api.post(`/addToCart`,formData).then(({data}) => {
                 return data;
         })
          },
@@ -193,18 +197,13 @@ const store  = createStore({
                 return data;
         })
          },
-         async addShopOrder({}, form){
-            return await api.post(`/addShopOrder`, form).then(({data}) => {
-                return data;
-        })
-         },
          async addOrderLine({}, form){
             return await api.post(`/addOrderLine`, form).then(({data}) => {
                 return data;
         })
          },
-         async getShopOrderByID({}){
-            return await api.get(`/getShopOrderByID`).then(({data}) => {
+         async getOrderLinesByID({}){
+            return await api.get(`/getOrderLinesByID`).then(({data}) => {
                 return data;
         })
          },
@@ -215,6 +214,11 @@ const store  = createStore({
          },
          async getProductItemFullDetails({}, id){
             return await api.get(`/getProductItem/${id}`).then(({data}) => {
+                return data;
+        })
+         },
+         async getSingleOrderline({}, id){
+            return await api.get(`/getSingleOrderLine/${id}`).then(({data}) => {
                 return data;
         })
          },
@@ -249,6 +253,9 @@ const store  = createStore({
           },
         setFilteredProductItems(state, data) {
             state.filteredProductItems = data;
+          },
+        setShoppingCart(state, data) {
+            state.user.shoppingCart = data;
           },
     },
     modules:{}

@@ -24,9 +24,10 @@ class OrderLineRequest extends FormRequest
     public function rules()
     {
         return [
-            'shop_order_id' => 'required|integer',
             'product_item_id' => 'required|integer',
             'price' => 'required|numeric',
+            'payment_method_id' => 'required|integer',
+            'shipping_address_id' => 'required|integer',
         ];
     }
 }

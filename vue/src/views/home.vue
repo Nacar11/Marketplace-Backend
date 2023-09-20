@@ -63,7 +63,7 @@ const handleSubCategoryClick = (id) => {
 
 
 <template>
-  <div class="p-5 flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+  <div class="p-5 flex flex-1 items-center justify-center">
     <div class="hidden md:block">
       <div class="flex space-x-4">
         <template v-for="category in organizedCategories" :key="category.id">

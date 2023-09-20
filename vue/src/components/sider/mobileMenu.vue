@@ -9,10 +9,10 @@
         <div class="fixed inset-0 overflow-hidden">
           <div class="absolute inset-0 overflow-hidden">
             <div class="pointer-events-none fixed inset-y-0 left-0 flex max-w-xs md:max-w-md"  >
-              <TransitionChild as="template" enter="transform transition ease-in-out duration-500 sm:duration-700" enter-from="-translate-x-full" enter-to="translate-x-0" leave="transform transition ease-in-out duration-500 sm:duration-700" leave-from="translate-x-0" leave-to="-translate-x-full">
+              <TransitionChild as="template" enter="transform transition ease-in-out duration-500" enter-from="-translate-x-full" enter-to="translate-x-0" leave="transform transition ease-in-out duration-500" leave-from="translate-x-0" leave-to="-translate-x-full">
                 <DialogPanel class="pointer-events-auto w-screen max-w-sm">
                   <div class="flex h-full flex-col bg-white shadow-xl">
-                    <div class="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
+                    <div class="flex-1 overflow-y-auto px-4 py-6">
                       <div class="flex items-start justify-between">
                         <!-- <DialogTitle class="text-lg font-medium text-gray-900">Login</DialogTitle> -->
                         <div v-if="!store.state.user.token" class="ml-3 flex flex-row">
@@ -36,26 +36,39 @@
                             </div>
                             </div>
                 <ul>
-                <li class="hover:bg-gray-100 hover:border rounded-lg sm:py-1 sm:pl-1 md:py-2 md:pl-2 cursor-pointer justify-between flex w-full items-center py-3">
-                  <router-link :to="{ name: 'home' }" @click="toggleSider" class="text-sm md:text-base">Home</router-link>
+                <li class="hover:bg-gray-100 hover:border rounded-lg  md:py-2 md:pl-2 cursor-pointer justify-between flex w-full items-center py-3">
+                  <router-link :to="{ name: 'home' }" @click="toggleSider" class="px-2 text-sm md:text-base">Home</router-link>
                 </li>
-                <li  class="hover:bg-gray-100 hover:border rounded-lg sm:py-1 sm:pl-1 md:py-2 md:pl-2 cursor-pointer justify-between flex w-full items-center py-3">
-                  <router-link :to="{ name: 'account' }" @click="toggleSider" class="text-sm md:text-base">View Profile</router-link>
+                <li  class="hover:bg-gray-100 hover:border rounded-lg md:py-2 md:pl-2 cursor-pointer justify-between flex w-full items-center py-3">
+                  <router-link :to="{ name: 'account' }" @click="toggleSider" class="px-2 text-sm md:text-base">View Profile</router-link>
                 </li>
-                <li  class="hover:bg-gray-100 hover:border rounded-lg sm:py-1 sm:pl-1 md:py-2 md:pl-2 cursor-pointer justify-between flex w-full items-center py-3">
-                  <router-link :to="{ name: 'addProduct' }" @click="toggleSider" class="text-sm md:text-base">List a Product</router-link>
+                <li  class="hover:bg-gray-100 hover:border rounded-lg md:py-2 md:pl-2 cursor-pointer justify-between flex w-full items-center py-3">
+                  <router-link :to="{ name: 'addProduct' }" @click="toggleSider" class="px-2 text-sm md:text-base">List a Product</router-link>
                 </li>
-                <li class="hover:bg-gray-100 hover:border rounded-lg sm:py-1 sm:pl-1 md:py-2 md:pl-2 cursor-pointer justify-between flex w-full items-center py-3">
-                  <router-link :to="{ name: 'shoppingCart' }" @click="toggleSider" class="text-sm md:text-base">Your Shopping Cart</router-link>
+                <li class="hover:bg-gray-100 hover:border rounded-lg md:py-2 md:pl-2 cursor-pointer justify-between flex w-full items-center py-3">
+                  <router-link :to="{ name: 'shoppingCart' }" @click="toggleSider" class="px-2 text-sm md:text-base">Your Shopping Cart</router-link>
                 </li>
-                <li  class="hover:bg-gray-100 hover:border rounded-lg sm:py-1 sm:pl-1 md:py-2 md:pl-2 cursor-pointer justify-between flex w-full items-center py-3">
-                  <router-link :to="{ name: 'orders' }" @click="toggleSider" class="text-sm md:text-base">Your Orders</router-link>
+                <li @click="toggleOrderSubMenu()" class="hover:bg-gray-100 pr-5 hover:border rounded-lg  md:py-2 md:pl-2 cursor-pointer justify-between flex w-full items-center py-3">
+                  <p class="px-2 text-sm md:text-base">Order</p>
+                  <span class="text-sm" :class="{'rotate-180': orderSideMenu }">
+                  <i class="fa fa-chevron-down text-gray-400"></i>
+                  </span>
                 </li>
-                <li class="hover:bg-gray-100 hover:border rounded-lg sm:py-1 sm:pl-1 md:py-2 md:pl-2 cursor-pointer justify-between flex w-full items-center py-3">
-                  <a @click="toggleSider" class="text-sm md:text-base">Settings</a>
+                <div class="text-left text-sm">
+                  <ul v-show="orderSideMenu" class="submenu">
+                  <li class='hover:bg-gray-100 hover:border rounded-lg py-3 pl-2 cursor-pointer'>
+                  <router-link :to="{ name: 'ordersPlaced' }" @click="toggleSider" class="px-2 text-sm md:text-base">Orders Placed</router-link>
+                  </li>
+                  <li class='hover:bg-gray-100 hover:border rounded-lg py-3 pl-2 cursor-pointer'>
+                    <router-link :to="{ name: 'ordersReceived' }" @click="toggleSider" class="px-2 text-sm md:text-base">Orders from Product Listings</router-link>
+                  </li>
+                  </ul>
+                </div>
+                <li class="hover:bg-gray-100 hover:border rounded-lg  md:py-2 md:pl-2 cursor-pointer justify-between flex w-full items-center py-3">
+                  <a @click="toggleSider" class="px-2 text-sm md:text-base">Settings</a>
                 </li>
-                <li  class="hover:bg-gray-100 hover:border rounded-lg sm:py-1 sm:pl-1 md:py-2 md:pl-2 cursor-pointer justify-between flex w-full items-center py-3">
-                  <a @click="() => { toggleSider(); logoutButton(); }" class="text-sm md:text-base">Sign out</a>
+                <li  class="hover:bg-gray-100 hover:border rounded-lg md:py-2 md:pl-2 cursor-pointer justify-between flex w-full items-center py-3">
+                  <a @click="() => { toggleSider(); logoutButton(); }" class="px-2 text-sm md:text-base">Sign out</a>
                 </li>
                  </ul>
         </div>
@@ -119,6 +132,8 @@
   openSider: Function,
 })
 
+const orderSideMenu = ref(false)
+
 const logoutButton = async () => {
   store.dispatch('logout').then((data) => {
 	console.log(data)
@@ -143,6 +158,9 @@ const toggleSubMenu = (parentCategory) => {
   parentCategory.showSubMenu = !parentCategory.showSubMenu;
 };
 
+const toggleOrderSubMenu = () => {
+  orderSideMenu.value = !orderSideMenu.value;
+};
 const organizedCategories = ref([])
 const userProfile = ref([])
 
@@ -155,9 +173,7 @@ console.log(err.response.data.message)
 })
 await store.dispatch('getProductCategories').then(() => {
 organizedCategories.value = store.getters.organizedCategories
-console.log(organizedCategories.value)
 })
-console.log(organizedCategories.value)
 })
 
 const filterByCategory = async(id) =>{
@@ -171,6 +187,4 @@ await store.dispatch('getProductItemsByCategory', id).then((data) => {
     }
   })
 }
-  
-  const open = ref(true)
   </script>

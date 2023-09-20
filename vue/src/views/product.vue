@@ -1,12 +1,34 @@
 <script setup>
 import { onBeforeMount } from '@vue/runtime-core'
-import {reactive, ref, computed} from '@vue/reactivity'
+import {ref, computed} from '@vue/reactivity'
 import store from '../store'
+import { useRouter } from 'vue-router'
 
+const router = useRouter();
 
 const productItem = ref([])
+const hasMatchingId = ref(false);
+const fetchShoppingCartData = async () => {
+  await store.dispatch('getShoppingCartByUser',userID.value).then((data) => {
+    console.log(store.getters.shoppingCart)
+    for(const item of store.getters.shoppingCart.items){
+      if (item.product_item_id === props.id) {
+          hasMatchingId.value = true;
+          break; 
+        }
+    }
+  })
+  .catch(err => {
+	console.log(err)
+  })
+}
 onBeforeMount(async () => {
-  console.log(userID.value)
+  getProductItemFullDetails()
+  fetchShoppingCartData()
+})
+
+
+const getProductItemFullDetails = async () => {
   await store.dispatch('getProductItemFullDetails', props.id ).then((data) => {
   productItem.value = data
   console.log(productItem.value)
@@ -18,7 +40,7 @@ onBeforeMount(async () => {
 	productItem.value = err.response.data.message
 	console.log(productItem.value)
   })
-})
+}
 const props = defineProps({
   id: Number, 
 });
@@ -28,10 +50,14 @@ const props = defineProps({
 const addToCart = async() => {
   const formData = new FormData();
   formData.append('product_item_id', props.id);
-  
-  console.log(formData)
-  store.dispatch('addToCart',props.id).then((data) => {
+  console.log(formData.value)
+  store.dispatch('addToCart',formData).then((data) => {
     console.log(data)
+    if(data.message === 'success'){
+      router.push({
+		  name: 'home',
+	    }) 	
+    }
 
   })
   .catch(err => {
@@ -67,14 +93,30 @@ const userID = computed(() => {
       <p>
         {{ productItem.data.description }}
       </p>
+      <p v-for="variationOptions in productItem.data.variation_options">
+        {{ variationOptions.variation.name }}: {{ variationOptions.value}}
+      </p>
+      
+      
       <div class="py-8" v-if="userID !== productItem.data.user_id">
-      <button
-        @click="addToCart"
-        type="button"
-        class="inline-flex mt-4 items-center justify-center rounded-md bg-green-500 pl-2 pr-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-600 sm:w-auto"
-      >Add To Cart
-    </button>
-    </div>
+            <div v-if="hasMatchingId">
+              <button
+              :disabled=true
+              type="button"
+              class="inline-flex mt-4 items-center justify-center rounded-md bg-green-500 pl-4 pr-4 py-2 text-sm font-semibold text-white cursor-not-allowed opacity-50"
+                >
+              Added to Cart
+            </button>
+            </div>
+            <div v-else>
+              <button
+              @click="addToCart"
+              type="button"
+              class="inline-flex mt-4 items-center justify-center rounded-md bg-green-500 pl-4 pr-4 py-2 text-sm font-semibold text-white  hover:bg-green-600"
+              >Add To Cart
+              </button>
+            </div>
+      </div>
     
     <div class="mt-4" v-else>
       <i>You own this Item</i>

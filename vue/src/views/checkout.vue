@@ -32,6 +32,7 @@ const fetchShoppingCartData = async () => {
     await store.dispatch('getShoppingCartByUser',userID.value).then((data) => {
     shopping_cart.value = data  
     let total = 0
+    console.log(shopping_cart.value)
     for (const item of data.items) {
     total += parseFloat(item.product_item.price);
     
@@ -43,9 +44,6 @@ const fetchShoppingCartData = async () => {
   })
 }
 
-const toggleAgreed = async () => {
-    console.log(agreed.value)
-}
 const getPaymentTypes = async () => {
     await store.dispatch('getPaymentTypes').then((data) => {
     payment_types.value = data  
@@ -92,52 +90,62 @@ const getUPMbyID = async () => {
   const is_default = ref(true);
 
 
-const orderButton = async () => {
-    const form = {
+  const orderButton = async () => {
+  const form = {
     payment_type_id: selectedPaymentType.value,
     provider: provider.value,
     account_number: account_number.value,
     expiry_date: expiry_date.value,
     is_default: is_default.value,
+  };
+
+  // Initialize a counter for successful responses
+  let successfulResponses = 0;
+
+  await store.dispatch('updateUPM', form)
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((err) => {
+      console.log(err.response.data.message);
+    });
+
+  const form1 = {
+    payment_method_id: selectedPaymentType.value,
+    shipping_address_id: selectedAddress.value,
+  };
+
+  for (const item of shopping_cart.value.items) {
+    console.log(item);
+    console.log(item.product_item.price);
+    const itemForm = {
+      ...form1,
+      product_item_id: item.product_item_id,
+      price: item.product_item.price,
     };
+    console.log(itemForm);
 
-    await store.dispatch('updateUPM', form).then((data) => {
-    console.log(data)
-    })
-    .catch(err => {
-	  console.log(err.response.data.message)
-    })
-
-
-    const form1 = {
-      payment_method_id: selectedPaymentType.value,
-      shipping_address_id: selectedAddress.value,
-      order_total: computedTotalValue.value
-    }
-    await store.dispatch('addShopOrder', form1).then((data) => {
-    console.log(data)
-    if(data.message === 'Success'){
-      for (const item of shopping_cart.value.items) {
-      console.log(item);
-      const form2 = {
-        shop_order_id: data.shopOrder.id,
-        product_item_id: item.product_item.id,
-        price: item.product_item.price
-      }
-      console.log(form2)
-      store.dispatch('addOrderLine', form2).then((data) => {
-      console.log(data)
+    await store.dispatch('addOrderLine', itemForm)
+      .then((data) => {
+        console.log(data);
+        if (data.message === 'success') {
+          successfulResponses++;
+          console.log(successfulResponses)
+          if (successfulResponses === shopping_cart.value.items.length) {
+            router.push({ name: 'home' });
+          }
+        }
       })
-      }
-    }
-    })
-    .catch(err => {
-	  console.log(err.response.data.message)
-    })
+      .catch((err) => {
+        console.log(err.response.data.message);
+      });
+  }
+};
+    
 
 
 
-}
+
 
 const computedTotalValue = computed(() => {
   return total_value.value + shipping_method.value.price;

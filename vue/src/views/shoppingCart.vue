@@ -31,6 +31,7 @@ const fetchShoppingCartData = async () => {
 await store.dispatch('getShoppingCartByUser',userID.value).then((data) => {
     shopping_cart.value = data
     console.log(shopping_cart.value)
+    console.log(store.getters.shoppingCart)
     let total = 0
     for (const item of data.items) {
     total += parseFloat(item.product_item.price);
@@ -58,7 +59,7 @@ onMounted(async () => {
     :show="show"
     :showDeleteModal="showModal"
     />
-<div class="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
+<div class="flex-1 overflow-y-auto px-4 py-6">
 <div class="flex items-start justify-between">
     <h2 class="text-lg font-medium text-gray-900" id="slide-over-title">Your Shopping cart</h2>
     <div class="ml-3 flex h-7 items-center">
