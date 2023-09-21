@@ -53,6 +53,15 @@ const store  = createStore({
       },
     actions:{
         register({commit}, user){
+
+            const formDataObject = {};
+  
+  // Iterate through the formData and convert it to an object
+        for (const [key, value] of user.entries()) {
+            formDataObject[key] = typeof(value);
+            }
+            console.log(formDataObject);
+            console.log(user)
             return api.post('/register', user).then(({data}) => {
                 sessionStorage.clear();
                 commit('setUser', data)

@@ -7,18 +7,31 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class OrderListedNotification extends Notification
+class OrderPlacedNotification extends Notification
 {
     use Queueable;
 
+    private $user;
+    private $orderLine;
+    private $userPaymentMethod;
+    private $shippingAddress;
+    private $shippingMethod;
+    private $productItem;
+    private $product;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($user, $orderLine, $userPaymentMethod, $shippingAddress, $shippingMethod, $productItem, $product)
     {
-        //
+        $this->user = $user;
+        $this->orderLine = $orderLine;
+        $this->userPaymentMethod = $userPaymentMethod;
+        $this->shippingAddress = $shippingAddress;
+        $this->shippingMethod = $shippingMethod;
+        $this->productItem = $productItem;
+        $this->product = $product;
     }
 
     /**
@@ -41,7 +54,15 @@ class OrderListedNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-        ->markdown('emails.OrderListed');
+        ->markdown('emails.OrderPlaced', [
+        'user'=>$this->user, 
+        'orderLine'=>$this->orderLine, 
+        'userPaymentMethod'=>$this->userPaymentMethod, 
+        'shippingAddress'=>$this->shippingAddress,
+        'shippingMethod'=>$this->shippingMethod,
+        'productItem'=>$this->productItem,
+        'product'=>$this->product,
+    ]);
     }
 
     /**

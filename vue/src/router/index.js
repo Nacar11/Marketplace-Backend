@@ -98,7 +98,16 @@ const routes = [
 				{
 				path: '/signup',
 				name:'signup',
-				component: signup
+				component: signup,
+				beforeEnter: (to, from, next) => {
+					// Check if the user is logged in with Google
+					if (sessionStorage.getItem('LoginMethod')) {
+					  next(); // Allow access to /signup
+					} else {
+					  // Redirect to another route or show an error message
+					  next('/login'); // Redirect to the login page
+					}
+				  }
 						},
 			],
 			}

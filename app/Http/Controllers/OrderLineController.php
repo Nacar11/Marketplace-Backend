@@ -5,6 +5,10 @@ use App\Models\Orderline;
 use App\Http\Requests\OrderLineRequest;
 use Illuminate\Http\Request;
 use App\Models\ShippingMethod;
+use Notifications;
+use App\Notifications\welcomeEmailNotification;
+use App\Notifications\OrderPlacedNotification;
+use App\Notifications\OrderReceivedNotification;
 
 
 class OrderLineController extends Controller
@@ -54,12 +58,25 @@ class OrderLineController extends Controller
 
     // Attempt to create the OrderLine
     try {
+        //buyer
         $orderLine = OrderLine::create($validatedData);
-        // Return a success response
+        $orderLine->load('paymentMethod', 'shippingAddress', 'shippingMethod', 'productItem');
+    // Notify the user who placed the order and include additional data
+        $userPaymentMethod = $orderLine->paymentMethod;
+        $shippingAddress = $orderLine->shippingAddress;
+        $shippingMethod = $orderLine->shippingMethod;
+        $productItem = $orderLine->productItem;
+        $product = $orderLine->productItem->product;
+        $user = auth()->user();
+        
+        $user->notify(new OrderPlacedNotification($user, $orderLine, $userPaymentMethod, $shippingAddress, $shippingMethod, $productItem, $product));
+        //seller
+        $productOwner = $orderLine->productItem->user;
+        $productOwner->notify(new OrderReceivedNotification($productOwner, $orderLine, $userPaymentMethod, $shippingAddress, $shippingMethod, $productItem, $product));
+        
         return response()->json(['message' => 'success'], 201);
     } catch (\Exception $e) {
-        // Handle any exceptions that may occur during creation
-        return response()->json(['message' => 'error'], 500); // You can customize the error response as needed
+        return response()->json(['message' => 'error'], 500); 
     }
     }   
 

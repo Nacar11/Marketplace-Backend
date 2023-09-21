@@ -9,13 +9,20 @@ class UserRequest extends FormRequest
 {
 
     protected function prepareForValidation()
-{
+    {
     if ($this->has('password')) {
         $this->merge([
             'password' => Hash::make($this->input('password')),
         ]);
     }
-}
+
+    $this->merge([
+        'is_subscribe_to_newsletters' => $this->boolean('is_subscribe_to_newsletters'),
+        'is_subscribe_to_promotions' => $this->boolean('is_subscribe_to_promotions'),
+    ]);
+    }
+
+    
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -35,14 +42,13 @@ class UserRequest extends FormRequest
             'username' => ['required', 'string', 'unique:users,username,' . $this->id . ',id'],
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'contact_number' => ['string', "max:255"],
+            'contact_number' => ['string', 'max:255'],
             'date_of_birth' => ['required', 'date_format:Y-m-d'],
             'email' => ['required', 'email', "unique:users,email,$this->id,id"],
-            'gender' => ['required', 'string', 'max: 10'],
+            'gender' => ['required', 'string', 'max:10'],
             'password' => ['min:10'],
-            //reg ex (?=.*[A-Z]) = one uppercase
-            //(?=.*\d)) = one digit
-            // (?=.*[$@$!%*?&]) = one special
+            'is_subscribe_to_newsletters' => ['required', 'boolean'],
+            'is_subscribe_to_promotions' => ['required', 'boolean'],
         ];
     }
 

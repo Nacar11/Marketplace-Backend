@@ -2,13 +2,14 @@
 import {reactive, ref, computed} from '@vue/reactivity'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex';
+import { Switch, SwitchGroup, SwitchLabel } from '@headlessui/vue'
 
 const store = useStore();
 const userState = computed(() => store.state.user.data);
 import agreement from '../components/modal/agreement.vue'
 const router = useRouter();
 
-
+const agreed = ref(false)
 const isTermsAccepted = ref(false);
 
 const registerButton = async (ev) => {
@@ -24,6 +25,8 @@ const registerButton = async (ev) => {
   formData.append('gender', state.gender);
   formData.append('date_of_birth', state.date_of_birth);
   formData.append('google_id', state.google_id);
+  formData.append('is_subscribe_to_promotions', state.is_subscribe_to_promotions);
+  formData.append('is_subscribe_to_newsletters', state.is_subscribe_to_newsletters);
 
   store.dispatch('register', formData).then((data) => {
 	console.log(data)
@@ -50,7 +53,10 @@ const state = reactive({
   confirm_password: '',
   gender: '',
   date_of_birth: '',
-  google_id: ref(userState.value.googleID)
+  google_id: ref(userState.value.googleID),
+  is_subscribe_to_newsletters: false,
+  is_subscribe_to_promotions: false,
+
 });
 </script>
 
@@ -157,12 +163,41 @@ const state = reactive({
 
 
 
-		<div>
-		  <div class="m-2">
-		  <input type="checkbox" v-model="isTermsAccepted" class="mx-2 border border-gray-400">
-				<span>I accept the <a class="text-[#5b6af2] font-semibold">Terms of Use</a> &  <a @click="showModal" class="text-[#5b6af2] font-semibold">Privacy Policy</a> 
+		<div clas="">
+			<SwitchGroup as="div" class="flex my-6 gap-x-4">
+          <div class="flex h-6 items-center">
+            <Switch v-model="state.is_subscribe_to_newsletters" :class="[state.is_subscribe_to_newsletters ? 'bg-indigo-600' : 'bg-gray-200', 'flex w-8 flex-none cursor-pointer rounded-full p-px ring-1 ring-inset ring-gray-900/5 transition-colors duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600']">
+              <span class="sr-only">Agree to policies</span>
+              <span aria-hidden="true" :class="[state.is_subscribe_to_newsletters ? 'translate-x-3.5' : 'translate-x-0', 'h-4 w-4 transform rounded-full bg-white shadow-sm ring-1 ring-gray-900/5 transition duration-200 ease-in-out']" />
+            </Switch>
+          </div>
+          <SwitchLabel class="text-lg leading-6 text-black md:text-xl">
+           Subscribe to MarketPlace Newsletters
+          </SwitchLabel>
+        </SwitchGroup>
+		<SwitchGroup as="div" class="flex my-6 gap-x-4">
+          <div class="flex h-6 items-center">
+            <Switch v-model="state.is_subscribe_to_promotions" :class="[state.is_subscribe_to_promotions ? 'bg-indigo-600' : 'bg-gray-200', 'flex w-8 flex-none cursor-pointer rounded-full p-px ring-1 ring-inset ring-gray-900/5 transition-colors duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600']">
+              <span class="sr-only">Agree to policies</span>
+              <span aria-hidden="true" :class="[state.is_subscribe_to_promotions ? 'translate-x-3.5' : 'translate-x-0', 'h-4 w-4 transform rounded-full bg-white shadow-sm ring-1 ring-gray-900/5 transition duration-200 ease-in-out']" />
+            </Switch>
+          </div>
+          <SwitchLabel class="text-lg leading-6 text-black md:text-xl">
+           Subscribe to MarketPlace Promotions
+          </SwitchLabel>
+        </SwitchGroup>
+		<SwitchGroup as="div" class="flex my-6 gap-x-4">
+          <div class="flex h-6 items-center">
+            <Switch v-model="isTermsAccepted" :class="[isTermsAccepted ? 'bg-indigo-600' : 'bg-gray-200', 'flex w-8 flex-none cursor-pointer rounded-full p-px ring-1 ring-inset ring-gray-900/5 transition-colors duration-200 ease-in-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600']">
+              <span class="sr-only"></span>
+              <span aria-hidden="true" :class="[isTermsAccepted ? 'translate-x-3.5' : 'translate-x-0', 'h-4 w-4 transform rounded-full bg-white shadow-sm ring-1 ring-gray-900/5 transition duration-200 ease-in-out']" />
+            </Switch>
+          </div>
+          <SwitchLabel class="text-lg leading-6 text-black md:text-xl">
+			<span>I accept the <a class="text-[#5b6af2] font-semibold">Terms of Use</a> &  <a @click="showModal" class="text-[#5b6af2] font-semibold">Privacy Policy</a> 
 					</span>
-				</div>
+          </SwitchLabel>
+        </SwitchGroup>
 		  <button
 		 	:disabled="!isTermsAccepted"
 			@click="registerButton"

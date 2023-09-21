@@ -33,7 +33,9 @@ class User extends Authenticatable
         'email',
         'password',
         'facebook_id',
-        'google_id'
+        'google_id',
+        'is_subscribe_to_newsletters',
+        'is_subscribe_to_promotions',  
     ];
 
     /**
@@ -77,6 +79,10 @@ class User extends Authenticatable
     public function userPaymentMethod()
     {
         return $this->hasOne(userPaymentMethod::class);
+    }
+    public function userAddresses()
+    {
+        return $this->hasMany(UserAddress::class);
     }
 
 }
