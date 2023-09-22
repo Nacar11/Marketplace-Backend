@@ -5,7 +5,9 @@ use App\Models\Orderline;
 use App\Http\Requests\OrderLineRequest;
 use Illuminate\Http\Request;
 use App\Models\ShippingMethod;
+use App\Models\ShoppingCart;
 use Notifications;
+use App\http\Controllers\ShoppingCartController;
 use App\Notifications\welcomeEmailNotification;
 use App\Notifications\OrderPlacedNotification;
 use App\Notifications\OrderReceivedNotification;
@@ -23,6 +25,19 @@ class OrderLineController extends Controller
         'productItem.productImages',
         'productItem.product'
     ])->where('user_id', $userId)->get();
+    return response()->json($orderLines);
+    }
+
+    public function getAllOrderLines()
+    {
+    $orderLines = OrderLine::with([
+        'user',
+        // 'shippingAddress',
+        // 'orderStatus',
+        // 'productItem.productImages',
+        'productItem.product'
+    ])->get();
+
     return response()->json($orderLines);
     }
 
@@ -54,16 +69,23 @@ class OrderLineController extends Controller
     $validatedData['user_id'] = $userId;
     $firstSM = ShippingMethod::first();
     $validatedData['shipping_method_id'] = $firstSM ? $firstSM->id : null;
-    $validatedData['order_date'] = now()->format('Y-m-d H:i:s');    $validatedData['order_status_id'] = 1;
+    $validatedData['order_date'] = now()->format('Y-m-d');    
+    $validatedData['order_status_id'] = 1;
 
-    // Attempt to create the OrderLine
+    // create orderLine
     try {
         //buyer
         $orderLine = OrderLine::create($validatedData);
         $orderLine->load('user', 'paymentMethod', 'shippingAddress.country', 'shippingMethod', 'productItem.user', 'productItem.product');        
         $user = auth()->user();
-        
         $user->notify(new OrderPlacedNotification($orderLine));
+        
+        //clear shopping cart
+        // $shoppingCartController = new ShoppingCartController();
+        // $shoppingCartController->deleteAllShoppingCartItems($user->id);    
+        $shoppingCart = ShoppingCart::where('user_id', $userId)->first();
+        $shoppingCart->items()->delete();
+
         //seller
         $productOwner = $orderLine->productItem->user;
         $productOwner->notify(new OrderReceivedNotification($orderLine));
@@ -78,7 +100,6 @@ class OrderLineController extends Controller
     {
     $userId = auth()->user()->id;
 
-    // Retrieve the order lines associated with product items of the user
     $orderLines = OrderLine::whereIn('product_item_id', function ($query) use ($userId) {
         $query->select('id')
             ->from('product_items')

@@ -87,6 +87,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
  
     Route::get('/getOrderLinesByID', OrderLineController::class);
+    Route::get('/getAllOrderLines', [OrderLineController::class, 'getAllOrderLines']);
     Route::get('/getSingleOrderLine/{id}', [OrderLineController::class, 'getSingleOrderLine']);
     Route::post('/addOrderLine', [OrderLineController::class, 'store']);
     Route::get('/getOrderlinesFromProductListings', [OrderLineController::class, 'getOrderLinesFromProductListings']);

@@ -25,15 +25,14 @@ class ShoppingCartController extends Controller
     
     public function deleteShoppingCartItemByCart($itemID, $cartID)
     {
-        // Find the shopping cart based on its ID
         $shoppingCart = ShoppingCart::findOrFail($cartID);
     
-        // Find the shopping cart item within the specified shopping cart
         $shoppingCartItem = $shoppingCart->items()->findOrFail($itemID);
     
-        // Delete the shopping cart item
         $shoppingCartItem->delete();
     
         return response()->json(['message' => 'Success']);
     }
+
+
 }

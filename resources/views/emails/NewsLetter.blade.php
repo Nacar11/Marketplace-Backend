@@ -1,9 +1,9 @@
 @component('mail::message')
-# Thank you for your Order!
+# NewsLetter Email Notification!
 
 
 
-asdasd
+NewsLetter Email Notification!
 
 
 @endcomponent

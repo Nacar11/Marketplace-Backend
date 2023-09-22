@@ -37,7 +37,7 @@
                             </div>
                 <ul>
                 <li class="hover:bg-gray-100 hover:border rounded-lg  md:py-2 md:pl-2 cursor-pointer justify-between flex w-full items-center py-3">
-                  <router-link :to="{ name: 'home' }" @click="toggleSider" class="px-2 text-sm md:text-base">Home</router-link>
+                  <a href="/" @click="toggleSider" class="px-2 text-sm md:text-base">Home</a>
                 </li>
                 <li  class="hover:bg-gray-100 hover:border rounded-lg md:py-2 md:pl-2 cursor-pointer justify-between flex w-full items-center py-3">
                   <router-link :to="{ name: 'account' }" @click="toggleSider" class="px-2 text-sm md:text-base">View Profile</router-link>

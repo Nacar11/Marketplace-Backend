@@ -74,6 +74,7 @@ const getaddresses = async () => {
 
 const getUPMbyID = async () => {
     await store.dispatch('getUPMbyID').then((data) => {
+    UMPID.value = data[0].id
     selectedPaymentType.value = data[0].payment_type_id
     provider.value = data[0].provider
     account_number.value = data[0].account_number
@@ -84,6 +85,7 @@ const getUPMbyID = async () => {
     })
 }
 
+  const UMPID = ref('');
   const provider = ref('');
   const account_number = ref('');
   const expiry_date = ref('');
@@ -111,7 +113,7 @@ const getUPMbyID = async () => {
     });
 
   const form1 = {
-    payment_method_id: selectedPaymentType.value,
+    payment_method_id: UMPID.value,
     shipping_address_id: selectedAddress.value,
   };
 

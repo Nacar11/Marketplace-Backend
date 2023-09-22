@@ -42,6 +42,7 @@ const store  = createStore({
         },
         organizedCategories:[],
         filteredProductItems:[],
+        orderLines:[],
         
     },
     getters: {
@@ -49,6 +50,7 @@ const store  = createStore({
         filteredProductItems: (state) => state.filteredProductItems,
         userID: (state) => state.user.data.userID,
         shoppingCart: (state) => state.user.shoppingCart,
+        orderLines: (state) => state.orderLines
 
       },
     actions:{
@@ -211,6 +213,12 @@ const store  = createStore({
                 return data;
         })
          },
+         async getAllOrderLines({commit}){
+            return await api.get(`/getAllOrderLines`).then(({data}) => {
+                commit('setOrderLines', data);
+                return data;
+        })
+         },
          async getOrderLinesByID({}){
             return await api.get(`/getOrderLinesByID`).then(({data}) => {
                 return data;
@@ -265,6 +273,9 @@ const store  = createStore({
           },
         setShoppingCart(state, data) {
             state.user.shoppingCart = data;
+          },
+        setOrderLines(state, data) {
+            state.orderLines= data;
           },
     },
     modules:{}

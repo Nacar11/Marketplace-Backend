@@ -3,25 +3,24 @@
 namespace App\Console\Commands;
 use App\Models\User;
 use Notifications;
-use App\Notifications\NewsLetterNotification;
-
+use App\Notifications\PromotionEmailNotification;
 use Illuminate\Console\Command;
 
-class SendNewsLetter extends Command
+class SendPromotion extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'newsletter:send';
+    protected $signature = 'promotion:send';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Send newsletter notifications to all users';
+    protected $description = 'Promotion Email sent to all users';
 
     /**
      * Create a new command instance.
@@ -40,11 +39,11 @@ class SendNewsLetter extends Command
      */
     public function handle()
     {
-        $users = User::where('is_subscribe_to_newsletters', true)->get();
+        $users = User::where('is_subscribe_to_promotions', true)->get();
         
         foreach ($users as $user) {
             // Send the newsletter notification to each user
-            $user->notify(new NewsLetterNotification());
+            $user->notify(new PromotionEmailNotification());
         }
 
         $this->info('Newsletter notifications sent to all users.');

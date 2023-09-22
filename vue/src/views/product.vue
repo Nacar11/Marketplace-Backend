@@ -25,8 +25,24 @@ const fetchShoppingCartData = async () => {
 onBeforeMount(async () => {
   getProductItemFullDetails()
   fetchShoppingCartData()
+  getAllOrderLines()
 })
+const productOrdered = ref(false);
 
+const getAllOrderLines = async () => {
+  await store.dispatch('getAllOrderLines').then((data) => {
+    console.log(store.getters.orderLines)
+    for(const item of store.getters.orderLines){
+      if (item.product_item.id === props.id) {
+          productOrdered.value = true;
+          break; 
+        }
+    }
+  
+  })
+  .catch(err => {
+  })
+}
 
 const getProductItemFullDetails = async () => {
   await store.dispatch('getProductItemFullDetails', props.id ).then((data) => {
@@ -38,7 +54,6 @@ const getProductItemFullDetails = async () => {
   .catch(err => {
 	console.log(err.response.data.message)
 	productItem.value = err.response.data.message
-	console.log(productItem.value)
   })
 }
 const props = defineProps({
@@ -99,7 +114,16 @@ const userID = computed(() => {
       
       
       <div class="py-8" v-if="userID !== productItem.data.user_id">
-            <div v-if="hasMatchingId">
+          <div v-if="productOrdered">
+            <button
+              :disabled=true
+              type="button"
+              class="inline-flex mt-4 items-center justify-center rounded-md bg-green-500 pl-4 pr-4 py-2 text-sm font-semibold text-white cursor-not-allowed opacity-50"
+                >
+              Unavailable
+            </button>
+          </div>
+            <div v-else-if="hasMatchingId">
               <button
               :disabled=true
               type="button"
@@ -115,7 +139,7 @@ const userID = computed(() => {
               class="inline-flex mt-4 items-center justify-center rounded-md bg-green-500 pl-4 pr-4 py-2 text-sm font-semibold text-white  hover:bg-green-600"
               >Add To Cart
               </button>
-            </div>
+          </div>
       </div>
     
     <div class="mt-4" v-else>
