@@ -60,19 +60,13 @@ class OrderLineController extends Controller
     try {
         //buyer
         $orderLine = OrderLine::create($validatedData);
-        $orderLine->load('paymentMethod', 'shippingAddress', 'shippingMethod', 'productItem');
-    // Notify the user who placed the order and include additional data
-        $userPaymentMethod = $orderLine->paymentMethod;
-        $shippingAddress = $orderLine->shippingAddress;
-        $shippingMethod = $orderLine->shippingMethod;
-        $productItem = $orderLine->productItem;
-        $product = $orderLine->productItem->product;
+        $orderLine->load('user', 'paymentMethod', 'shippingAddress.country', 'shippingMethod', 'productItem.user', 'productItem.product');        
         $user = auth()->user();
         
-        $user->notify(new OrderPlacedNotification($user, $orderLine, $userPaymentMethod, $shippingAddress, $shippingMethod, $productItem, $product));
+        $user->notify(new OrderPlacedNotification($orderLine));
         //seller
         $productOwner = $orderLine->productItem->user;
-        $productOwner->notify(new OrderReceivedNotification($productOwner, $orderLine, $userPaymentMethod, $shippingAddress, $shippingMethod, $productItem, $product));
+        $productOwner->notify(new OrderReceivedNotification($orderLine));
         
         return response()->json(['message' => 'success'], 201);
     } catch (\Exception $e) {

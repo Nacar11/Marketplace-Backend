@@ -11,28 +11,17 @@ class OrderReceivedNotification extends Notification
 {
     use Queueable;
     
-    private $productOwner;
     private $orderLine;
-    private $userPaymentMethod;
-    private $shippingAddress;
-    private $shippingMethod;
-    private $productItem;
-    private $product;
+    
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($productOwner, $orderLine, $userPaymentMethod, $shippingAddress, $shippingMethod, $productItem, $product)
+    public function __construct($orderLine)
     {
-        $this->productOwner = $productOwner;
         $this->orderLine = $orderLine;
-        $this->userPaymentMethod = $userPaymentMethod;
-        $this->shippingAddress = $shippingAddress;
-        $this->shippingMethod = $shippingMethod;
-        $this->productItem = $productItem;
-        $this->product = $product;
     }
 
     /**
@@ -56,13 +45,7 @@ class OrderReceivedNotification extends Notification
     {
         return (new MailMessage)
         ->markdown('emails.OrderReceived', [
-        'user'=>$this->productOwner, 
         'orderLine'=>$this->orderLine, 
-        'userPaymentMethod'=>$this->userPaymentMethod, 
-        'shippingAddress'=>$this->shippingAddress,
-        'shippingMethod'=>$this->shippingMethod,
-        'productItem'=>$this->productItem,
-        'product'=>$this->product,
     ]);
     }
 

@@ -7,19 +7,19 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class OrderPlacedNotification extends Notification
+class NewsLetterNotification extends Notification
 {
     use Queueable;
 
-    private $orderLine;
+    // private $orderLine;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($orderLine)
+    public function __construct()
     {
-        $this->orderLine = $orderLine;
+        // $this->orderLine = $orderLine;
     }
 
     /**
@@ -42,9 +42,7 @@ class OrderPlacedNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-        ->markdown('emails.OrderPlaced', [
-        'orderLine'=>$this->orderLine, 
-    ]);
+        ->markdown('emails.NewsLetter');
     }
 
     /**
