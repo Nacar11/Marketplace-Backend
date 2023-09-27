@@ -5,23 +5,22 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Messages\NexmoMessage;
+use Illuminate\Notifications\Messages\VonageMessage;
 
 use Illuminate\Notifications\Notification;
 
-class OrderPlacedNotification extends Notification
+class WelcomeSMSNotification extends Notification
 {
     use Queueable;
 
-    private $orderLine;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($orderLine)
+    public function __construct()
     {
-        $this->orderLine = $orderLine;
+        //
     }
 
     /**
@@ -32,30 +31,18 @@ class OrderPlacedNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['vonage'];
     }
 
-    // public function toNexmo($notifiable)
-    // {
-    //     return (new NexmoMessage)->content('Hello, thank you for subscription');
-    // }
-
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
-     */
-    public function toMail($notifiable)
+    public function toVonage($notifiable)
     {
-        return (new MailMessage)
-        ->markdown('emails.OrderPlaced', [
-        'orderLine'=>$this->orderLine, 
-    ]);
-
-
+    
+        $vonage = new Client(new Vonage\Client\Credentials\Basic(env('VONAGE_KEY'), env('VONAGE_SECRET')));
+        $message = $vonage->message()->send([   
+            'text' => 'Hello from Laravel!'
+        ]);
+        return $message;
     }
-
     /**
      * Get the array representation of the notification.
      *

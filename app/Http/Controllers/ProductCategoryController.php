@@ -11,7 +11,34 @@ class ProductCategoryController extends Controller
 {
     public function __invoke()
     {
-        return ProductCategory::query()->get();
+        $categories = ProductCategory::query()->get();
+
+        $organizedCategories = [];
+
+        foreach ($categories as $category) {
+            if (!$category->category_id) {
+                $organizedCategories[$category->id] = [
+                    'id' => $category->id,
+                    'name' => $category->category_name,
+                    'children' => [],
+                ];
+            } else {
+                if (!isset($organizedCategories[$category->category_id])) {
+                    $organizedCategories[$category->category_id] = [
+                        'id' => $category->category_id,
+                        'children' => [],
+                    ];
+                }
+                $organizedCategories[$category->category_id]['children'][] = [
+                    'id' => $category->id,
+                    'name' => $category->category_name,
+                ];
+            }
+        }
+    
+        $result = array_values($organizedCategories);
+    
+        return response()->json($result);
     }
 
     public function show($id)

@@ -18,6 +18,8 @@ use App\Http\Controllers\PaymentTypeController;
 use App\Http\Controllers\UserPaymentMethodController;
 use App\Http\Controllers\OrderLineController;
 use App\Http\Controllers\ShippingMethodController;
+use App\Http\Controllers\NotificationController;
+
 
 
 
@@ -116,3 +118,4 @@ Route::get('/getProductItem/{id}', [ProductItemController::class, 'getProductIte
 
 Route::get('auth/facebook', [AuthController::class, 'facebookpage']);
 Route::post('google/callback', [AuthController::class, 'googleRedirect']);
+Route::get('/sendSMS', [NotificationController::class, 'sms']);

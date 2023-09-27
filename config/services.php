@@ -36,4 +36,7 @@ return [
         'redirect' => 'http://localhost:8000/auth/facebook/callback',
     ],
 
+    'vonage' => [
+        'sms_from' => '155556212'
+    ]
 ];

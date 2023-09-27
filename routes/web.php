@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Mail\UserRegisteredMail;
+use App\Http\Controllers\NotificationController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,5 @@ Route::middleware([
 });
 
 
-Route::get('/email', function(){
-    return new UserRegisteredMail();
-});
+
+

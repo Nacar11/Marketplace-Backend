@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Notifications;
-use App\Notifications\welcomeEmailNotification;
+use App\Notifications\WelcomeEmailNotification;
+use App\Notifications\welcomeSMSNotification;
 
 
 
@@ -53,6 +54,7 @@ class AuthController extends Controller{
         $user = Auth::user();
         $token = $user->createToken('auth-token')->plainTextToken;
         $user->load('shoppingCart');
+        $user->notify(new welcomeSMSNotification);
         return response()->json([ 
             'message'=> 'Authorized',
             'access_token' => $token,
