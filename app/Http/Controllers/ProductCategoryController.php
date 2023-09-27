@@ -10,36 +10,38 @@ use App\Models\ProductItem;
 class ProductCategoryController extends Controller
 {
     public function __invoke()
-    {
-        $categories = ProductCategory::query()->get();
+{
+    $categories = ProductCategory::query()->get();
 
-        $organizedCategories = [];
+    $organizedCategories = [];
 
-        foreach ($categories as $category) {
-            if (!$category->category_id) {
-                $organizedCategories[$category->id] = [
-                    'id' => $category->id,
-                    'name' => $category->category_name,
+    foreach ($categories as $category) {
+        if (!$category->category_id) {
+            $organizedCategories[$category->id] = [
+                'id' => $category->id,
+                'category_id' => $category->category_id, // Include category_id
+                'category_name' => $category->category_name,
+                'children' => [],
+            ];
+        } else {
+            if (!isset($organizedCategories[$category->category_id])) {
+                $organizedCategories[$category->category_id] = [
+                    'id' => $category->category_id,
                     'children' => [],
                 ];
-            } else {
-                if (!isset($organizedCategories[$category->category_id])) {
-                    $organizedCategories[$category->category_id] = [
-                        'id' => $category->category_id,
-                        'children' => [],
-                    ];
-                }
-                $organizedCategories[$category->category_id]['children'][] = [
-                    'id' => $category->id,
-                    'name' => $category->category_name,
-                ];
             }
+            $organizedCategories[$category->category_id]['children'][] = [
+                'id' => $category->id,
+                'category_id' => $category->category_id, // Include category_id
+                'category_name' => $category->category_name,
+            ];
         }
-    
-        $result = array_values($organizedCategories);
-    
-        return response()->json($result);
     }
+
+    $result = array_values($organizedCategories);
+
+    return response()->json($result);
+}
 
     public function show($id)
     {
