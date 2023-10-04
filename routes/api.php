@@ -119,3 +119,6 @@ Route::get('/getProductItem/{id}', [ProductItemController::class, 'getProductIte
 Route::get('auth/facebook', [AuthController::class, 'facebookpage']);
 Route::post('google/callback', [AuthController::class, 'googleRedirect']);
 Route::get('/sendSMS', [NotificationController::class, 'sms']);
+
+Route::post('/checkEmail', [AuthController::class, 'checkEmail']);
+Route::post('/checkUsername', [AuthController::class, 'checkUsername']);

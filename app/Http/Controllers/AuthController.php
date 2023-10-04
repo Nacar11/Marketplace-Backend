@@ -15,8 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Notifications;
-use App\Notifications\WelcomeEmailNotification;
-use App\Notifications\welcomeSMSNotification;
+use App\Notifications\welcomeEmailNotification;
 
 
 
@@ -54,7 +53,6 @@ class AuthController extends Controller{
         $user = Auth::user();
         $token = $user->createToken('auth-token')->plainTextToken;
         $user->load('shoppingCart');
-        $user->notify(new welcomeSMSNotification);
         return response()->json([ 
             'message'=> 'Authorized',
             'access_token' => $token,
@@ -67,7 +65,7 @@ class AuthController extends Controller{
 
     public function logout(){
         auth()->user()->tokens()->delete();
-        return response()->json(['Success' => 'Logged out']);
+        return response()->json(['message' => 'Logged out Successfully']);
     }
 
     public function register(UserRequest $request){
@@ -76,16 +74,16 @@ class AuthController extends Controller{
     $validatedData = $request->validated(); 
     $user = User::create($validatedData);
 
-    $userPaymentMethodData = [
-        'user_id' => $user->id,
-        'payment_type_id' => 1, // Assuming payment_type_id is 1
-        'provider' => ' ',
-        'account_number' => ' ',
-        'expiry_date' => ' ',
-        'is_default' => true,
-    ];
-    $userPaymentMethod = UserPaymentMethod::create($userPaymentMethodData);
-
+    // $userPaymentMethodData = [
+    //     'user_id' => $user->id,
+    //     'payment_type_id' => 1, // Assuming payment_type_id is 1
+    //     'provider' => ' ',
+    //     'account_number' => ' ',
+    //     'expiry_date' => ' ',
+    //     'is_default' => true,
+    // ];
+    // $userPaymentMethod = UserPaymentMethod::create($userPaymentMethodData);
+;
     // dd($userData);
         $shoppingCart = null; 
     if (!$user->shoppingCart) {
@@ -115,6 +113,47 @@ class AuthController extends Controller{
         'message' => 'Error',
         'error' => $e->getMessage(),
         ], 500);
+    }
+}
+public function checkEmail(Request $request)
+{
+    try {
+        $email = $request->input('email');
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return response()->json(['message' => 'Input should be a valid email address'], 422);
+        }
+
+        $existingUser = User::where('email', $email)->first();
+
+        if ($existingUser) {
+            return response()->json(['message' => 'Email already taken'], 422);
+        }
+
+        return response()->json(['success' => 'Email is available'], 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'An error occurred while checking email'], 500);
+    }
+}
+
+public function checkUsername(Request $request)
+{
+    try {
+        $username = $request->input('username');
+
+        if (!preg_match('/\d/', $username)) {
+            return response()->json(['message' => 'Username should contain numbers'], 422);
+        }
+
+        $existingUser = User::where('username', $username)->first();
+
+        if ($existingUser) {
+            return response()->json(['message' => 'Username already taken'], 422);
+        }
+
+        return response()->json(['success' => 'Username is available'], 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'An error occurred while checking the username'], 500);
     }
 }
 
