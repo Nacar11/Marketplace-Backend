@@ -37,26 +37,33 @@ class AddressController extends Controller
     }
 
     public function getAddress()
-    {
-        try {
-            $userId = auth()->user()->id;
+{
+    try {
+        $userId = auth()->user()->id;
 
-            // Retrieve user addresses with their associated addresses
-            $userAddresses = UserAddress::where('user_id', $userId)
-                ->with('address')
-                ->get();
+        // Retrieve addresses associated with the user
+        $userAddresses = Address::whereHas('userAddresses', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->get();
 
-            return response()->json([
-                'message' => 'Success',
-                'data' => $userAddresses,
-            ]);
-        } catch (\Exception $e) {
+        if ($userAddresses->isEmpty()) {
             return response()->json([
                 'message' => 'Error',
-                'error' => $e->getMessage(),
-            ], 500);
+                'data' => null,
+            ]);
         }
+
+        return response()->json([
+            'message' => 'Success',
+            'data' => $userAddresses,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Error',
+            'error' => $e->getMessage(),
+        ], 500);
     }
+}
 
     public function destroy($userAddressId)
     {
