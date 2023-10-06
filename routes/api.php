@@ -80,6 +80,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/countries', CountryController::class);
     Route::post('/addAddress', [AddressController::class, 'store']);
     Route::get('/getAddress', [AddressController::class, 'getAddress']);
+    Route::get('/userHasAddress', [AddressController::class, 'userHasAddress']);
+
     Route::delete('/deleteAddress/{addressID}', [AddressController::class, 'destroy']);
 
     Route::get('/paymentTypes', PaymentTypeController::class);

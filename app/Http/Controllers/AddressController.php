@@ -64,7 +64,31 @@ class AddressController extends Controller
         ], 500);
     }
 }
+public function userHasAddress()
+{
+    try {
+        $userId = auth()->user()->id;
 
+        // Retrieve addresses associated with the user
+        $userAddresses = Address::whereHas('userAddresses', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->get();
+
+        if ($userAddresses->isEmpty()) {
+            return response()->json([
+                'message' => 'false',
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'true',
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'false',
+        ], 500);
+    }
+}
     public function destroy($userAddressId)
     {
         try {
