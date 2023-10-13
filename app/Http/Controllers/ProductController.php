@@ -25,7 +25,7 @@ class ProductController extends Controller
         $categoryId = $productType->category_id;
         $category = ProductCategory::find($categoryId);
         
-        $variants = $category->variations;
+        $variants = $category->variations->load('variationOptions');
         
         return $variants;
     }

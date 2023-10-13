@@ -119,7 +119,6 @@ public function checkEmail(Request $request)
 {
     try {
         $email = $request->input('email');
-
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return response()->json(['message' => 'Input should be a valid email address'], 422);
         }
@@ -196,16 +195,14 @@ public function checkUsername(Request $request)
         ]);
     }
 
-    public function googleRedirect(Request $data){
+    public function googleRedirect(Request $request){
         try {
-            $user = User::where('email', $data->email)->first();
+            $email = $request->input('email');
+            $user = User::where('email', $email)->first();   
+            
             if ($user) {
-                // User with the provided email was found, log them in
                 Auth::login($user);
-    
-                // Generate token
                 $token = $user->createToken('auth-token')->plainTextToken;
-    
                 return response()->json([ 
                     'message' => 'Success',
                     'access_token' => $token,
@@ -218,7 +215,7 @@ public function checkUsername(Request $request)
             }
              else {
                 // No user found with the provided email
-                return response()->json(['message' => 'registerFirst']);
+                return response()->json(['message' => 'registerFirst'], 200);
             }
         } catch (\Exception $e) {
             // Handle exceptions if they occur

@@ -33,37 +33,36 @@ class ProductItemController extends Controller
     }
 
     public function store(ProductItemRequest $request)
-    {
-        
-        $user = auth()->user();
-        
-        $userId = $user->id;
-        $sku = uniqid();
-        $productItem = ProductItem::create(array_merge($request->validated(), [
-            'user_id' => $userId,
-            'SKU' => $sku,
-        ]));
-        if($request->HasFile('product_images')){
-            $uploadPath = 'uploads/products/';
-            $i=1;
-            foreach($request->file('product_images') as $imageFile){
-                $extension = $imageFile->getClientOriginalExtension();
-                $fileName = time().$i++.'.'.$extension;
-                $imageFile->move($uploadPath,$fileName);
-                $finalImagePath = $uploadPath.$fileName;
+{
+    $user = auth()->user();
+    $userId = $user->id;
+    $sku = uniqid();
+    $productItem = ProductItem::create(array_merge($request->validated(), [
+        'user_id' => $userId,
+        'SKU' => $sku,
+    ]));
 
-                $productImage = new ProductImage([
-                    'product_id' => $productItem->id,
-                    'product_image' => asset($finalImagePath),
-                ]);
-                $productItem->productImages()->save($productImage);
-            }
+    // Handle product images
+    if ($request->hasFile('product_images')) {
+        $uploadPath = 'uploads/products/';
+        $i = 1;
+        foreach ($request->file('product_images') as $imageFile) {
+            $extension = $imageFile->getClientOriginalExtension();
+            $fileName = time() . $i++ . '.' . $extension;
+            $imageFile->move($uploadPath, $fileName);
+            $finalImagePath = $uploadPath . $fileName;
+
+            $productImage = new ProductImage([
+                'product_id' => $productItem->id,
+                'product_image' => asset($finalImagePath),
+            ]);
+            $productItem->productImages()->save($productImage);
         }
-        $productItem->load('product', 'productImages', 'variationOptions.variation');
-        
-       
-        return $productItem;
     }
+    $productItem->load('product', 'productImages', 'variationOptions.variation');
+
+    return $productItem;
+}
 
     public function show($id)
     {

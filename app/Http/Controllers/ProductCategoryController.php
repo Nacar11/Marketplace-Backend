@@ -76,4 +76,18 @@ class ProductCategoryController extends Controller
 
         return $productItems;
     }
+
+    public function getProductTypesByCategory($id)
+{
+    $productCategory = ProductCategory::find($id);
+    if (!$productCategory) {
+        return response()->json(['message' => 'Product category not found'], 404);
+    }
+
+    $product_types = $productCategory->products;
+    return  $product_types;
+    return response()->json([
+        'product_types' => $product_types,
+    ], 200);
+}
 }
