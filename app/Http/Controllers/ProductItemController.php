@@ -19,18 +19,15 @@ class ProductItemController extends Controller
         return $productItems;
     }
 
-    public function getProductItemsByCategory($categoryId)
-    {
-        $productItems = ProductItem::with('product.productCategory', 'productImages', 'variationOptions.variation')
-        ->whereHas('product.productCategory', function ($query) use ($categoryId) {
-            $query->where('id', $categoryId);
-        })
-        ->get();        
-        return response()->json([
-            'status' => "Success",
-            'Body' => $productItems
-        ], 200);
-    }
+    public function getProductItemsByProductType($productId)
+{
+    $productItems = ProductItem::with('product.productCategory', 'productImages', 'variationOptions.variation')
+        ->where('product_id', $productId)
+        ->get();
+    
+    return $productItems;
+    
+}
 
     public function store(ProductItemRequest $request)
 {
@@ -44,20 +41,17 @@ class ProductItemController extends Controller
 
     // Handle product images
     if ($request->hasFile('product_images')) {
-        $uploadPath = 'uploads/products/';
+        $uploadedImages = $request->file('product_images');
+        $imagePaths = [];
         $i = 1;
-        foreach ($request->file('product_images') as $imageFile) {
-            $extension = $imageFile->getClientOriginalExtension();
-            $fileName = time() . $i++ . '.' . $extension;
-            $imageFile->move($uploadPath, $fileName);
-            $finalImagePath = $uploadPath . $fileName;
-
-            $productImage = new ProductImage([
-                'product_id' => $productItem->id,
-                'product_image' => asset($finalImagePath),
-            ]);
-            $productItem->productImages()->save($productImage);
+        foreach ($uploadedImages as $image) {
+            $imagePath = $image->store('uploads/products'); // Store the uploaded image
+            $imagePaths[] = asset($imagePath); // Store the image URL
         }
+
+        $productItem->productImages()->createMany([
+            ['product_image' => $imagePaths],
+        ]);
     }
     $productItem->load('product', 'productImages', 'variationOptions.variation');
 
