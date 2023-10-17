@@ -118,19 +118,32 @@ class ProductItemController extends Controller
 
 public function imageUpload(Request $request)
 {
-    $responseMessages = [];
+    // $user = auth()->user();
+    // $userId = $user->id;
+    // $sku = uniqid();
+    // $productItem = ProductItem::create(array_merge($request->validated(), [
+    //     'user_id' => $userId,
+    //     'SKU' => $sku,
+    // ]));
+    
 
     foreach ($request->allFiles() as $fieldName => $file) {
         if ($file->isValid()) {
             $uniqueFileName = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
             $file->move(public_path('uploads'), $uniqueFileName);
-            $responseMessages[] = 'File "' . $file->getClientOriginalName() . '" uploaded successfully';
+          
+            // $finalImagePath = 'uploads/' . $uniqueFileName; 
+            // $productImage = new ProductImage([
+            //     'product_id' => $productItem->id,
+            //     'product_image' => asset($finalImagePath),
+            // ]);
+            // $productItem->productImages()->save($productImage);
         } else {
-            $responseMessages[] = 'File "' . $file->getClientOriginalName() . '" is not valid';
+             return response()->json(['messages' => 'image not valid'], 200);
         }
     }
 
-    return response()->json(['messages' => $responseMessages], 200);
+    return response()->json(['messages' => 'success'], 200);
 }
 
 

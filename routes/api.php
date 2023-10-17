@@ -101,6 +101,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('/getFirstShipping', [ShippingMethodController::class, 'getFirst']);
     Route::get('/getShippingMethods', ShippingMethodController::class);
+    Route::post('/imageUpload', [ProductItemController::class, 'imageUpload']);
 
 
 });
@@ -128,4 +129,3 @@ Route::get('/sendSMS', [NotificationController::class, 'sms']);
 Route::post('/checkEmail', [AuthController::class, 'checkEmail']);
 Route::post('/checkUsername', [AuthController::class, 'checkUsername']);
 
-Route::post('/imageUpload', [ProductItemController::class, 'imageUpload']);
