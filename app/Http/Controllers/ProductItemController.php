@@ -103,17 +103,40 @@ class ProductItemController extends Controller
         return response()->json(['data' => $productItem], 200);
     }
 
-    public function imageUpload(Request $request)
+//     public function imageUpload(Request $request)
+// {
+//     // return $request;
+//     if ($request->hasFile('File')) {
+//         $file = $request->file('File');
+//         $fileName = time() . '_' . $file->getClientOriginalName();
+//         $file->move(public_path('uploads'), $fileName); // Save the file to the public/uploads directory
+//         return response()->json(['message' => 'File uploaded successfully'],200);
+//     } else {    
+//         return response()->json(['message' => 'File not provided'], 400);
+//     }
+// }
+
+public function imageUpload(Request $request)
 {
-    // return $request;
-    if ($request->hasFile('File')) {
-        $file = $request->file('File');
-        $fileName = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('uploads'), $fileName); // Save the file to the public/uploads directory
-        return response()->json(['message' => 'File uploaded successfully'],200);
-    } else {    
-        return response()->json(['message' => 'File not provided'], 400);
+    $responseMessages = [];
+
+    foreach ($request->allFiles() as $fieldName => $file) {
+        if ($file->isValid()) {
+            $uniqueFileName = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads'), $uniqueFileName);
+            $responseMessages[] = 'File "' . $file->getClientOriginalName() . '" uploaded successfully';
+        } else {
+            $responseMessages[] = 'File "' . $file->getClientOriginalName() . '" is not valid';
+        }
     }
+
+    return response()->json(['messages' => $responseMessages], 200);
 }
+
+
+
+
+
+
 
 }
