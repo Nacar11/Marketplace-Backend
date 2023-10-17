@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ProductItemResource;
 use App\Http\Requests\ProductItemRequest;
+use App\Http\Requests\ImageFileRequest;
 use App\Models\ProductItem;
 use App\Models\ProductImage;
 use Carbon\Carbon;
@@ -40,19 +41,22 @@ class ProductItemController extends Controller
     ]));
 
     // Handle product images
-    if ($request->hasFile('product_images')) {
-        $uploadedImages = $request->file('product_images');
-        $imagePaths = [];
-        $i = 1;
-        foreach ($uploadedImages as $image) {
-            $imagePath = $image->store('uploads/products'); // Store the uploaded image
-            $imagePaths[] = asset($imagePath); // Store the image URL
-        }
+     if($request->HasFile('product_images')){
+            $uploadPath = 'uploads/products/';
+            $i=1;
+            foreach($request->file('product_images') as $imageFile){
+                $extension = $imageFile->getClientOriginalExtension();
+                $fileName = time().$i++.'.'.$extension;
+                $imageFile->move($uploadPath,$fileName);
+                $finalImagePath = $uploadPath.$fileName;
 
-        $productItem->productImages()->createMany([
-            ['product_image' => $imagePaths],
-        ]);
-    }
+                $productImage = new ProductImage([
+                    'product_id' => $productItem->id,
+                    'product_image' => asset($finalImagePath),
+                ]);
+                $productItem->productImages()->save($productImage);
+            }
+        }
     $productItem->load('product', 'productImages', 'variationOptions.variation');
 
     return $productItem;
@@ -98,4 +102,18 @@ class ProductItemController extends Controller
         $productItem->load('user', 'product', 'product.productCategory', 'productImages', 'variationOptions.variation');
         return response()->json(['data' => $productItem], 200);
     }
+
+    public function imageUpload(Request $request)
+{
+    // return $request;
+    if ($request->hasFile('File')) {
+        $file = $request->file('File');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('uploads'), $fileName); // Save the file to the public/uploads directory
+        return response()->json(['message' => 'File uploaded successfully'],200);
+    } else {    
+        return response()->json(['message' => 'File not provided'], 400);
+    }
+}
+
 }

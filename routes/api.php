@@ -111,7 +111,7 @@ Route::get('/users', AuthController::class);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('test',function(){
-    return 'Success';
+    return 'asdadasd';
 });
 Route::get('product-category', ProductCategoryController::class);
 Route::get('product-category/{id}', [ProductCategoryController::class, 'show']);
@@ -127,3 +127,5 @@ Route::get('/sendSMS', [NotificationController::class, 'sms']);
 
 Route::post('/checkEmail', [AuthController::class, 'checkEmail']);
 Route::post('/checkUsername', [AuthController::class, 'checkUsername']);
+
+Route::post('/imageUpload', [ProductItemController::class, 'imageUpload']);
