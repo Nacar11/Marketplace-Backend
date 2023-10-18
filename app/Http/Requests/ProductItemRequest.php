@@ -6,6 +6,13 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ProductItemRequest extends FormRequest
 {
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'price' => (double) $this->input('price'), // Cast the 'price' input to double
+        ]);
+    }
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -24,7 +31,6 @@ class ProductItemRequest extends FormRequest
         return [
             'product_id' => 'required|exists:products,id',
             'description' => 'required|string',
-            'product_images' => '',
             'price' => 'required|numeric|min:0',
         ];
     }

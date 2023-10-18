@@ -116,15 +116,15 @@ class ProductItemController extends Controller
 //     }
 // }
 
-public function imageUpload(Request $request)
+public function imageUpload(ProductItemRequest $request)
 {
-    // $user = auth()->user();
-    // $userId = $user->id;
-    // $sku = uniqid();
-    // $productItem = ProductItem::create(array_merge($request->validated(), [
-    //     'user_id' => $userId,
-    //     'SKU' => $sku,
-    // ]));
+    $user = auth()->user();
+    $userId = $user->id;
+    $sku = uniqid();
+    $productItem = ProductItem::create(array_merge($request->validated(), [
+        'user_id' => $userId,
+        'SKU' => $sku,
+    ]));
     
 
     foreach ($request->allFiles() as $fieldName => $file) {
@@ -132,12 +132,12 @@ public function imageUpload(Request $request)
             $uniqueFileName = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
             $file->move(public_path('uploads'), $uniqueFileName);
           
-            // $finalImagePath = 'uploads/' . $uniqueFileName; 
-            // $productImage = new ProductImage([
-            //     'product_id' => $productItem->id,
-            //     'product_image' => asset($finalImagePath),
-            // ]);
-            // $productItem->productImages()->save($productImage);
+            $finalImagePath = 'uploads/' . $uniqueFileName; 
+            $productImage = new ProductImage([
+                'product_id' => $productItem->id,
+                'product_image' => asset($finalImagePath),
+            ]);
+            $productItem->productImages()->save($productImage);
         } else {
              return response()->json(['messages' => 'image not valid'], 200);
         }
