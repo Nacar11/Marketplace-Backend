@@ -101,7 +101,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('/getFirstShipping', [ShippingMethodController::class, 'getFirst']);
     Route::get('/getShippingMethods', ShippingMethodController::class);
-    Route::post('/imageUpload', [ProductItemController::class, 'imageUpload']);
+    Route::post('/addListing', [ProductItemController::class, 'addListing']);
 
 
 });

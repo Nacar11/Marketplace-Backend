@@ -116,7 +116,7 @@ class ProductItemController extends Controller
 //     }
 // }
 
-public function imageUpload(ProductItemRequest $request)
+public function addListing(ProductItemRequest $request)
 {
     $user = auth()->user();
     $userId = $user->id;
