@@ -175,7 +175,8 @@ public function checkUsername(Request $request)
         $shoppingCart->load('items.productItem.productImages', 'items.productItem.product', 'items.productItem.variationOptions.variation');
 
     
-        return $shoppingCart;
+        return $shoppingCart;  
+        return response()->json(['success' =>  $shoppingCart], 200);
         }
     
 
@@ -230,8 +231,9 @@ public function checkUsername(Request $request)
         $userEmail = $email->input('email');
         // return $userEmail;
 
-        if($userEmail != null){
-            $verificationCode = rand(10, 100..'2022');
+        if ($userEmail !== null) {
+            $verificationCode = rand(100000, 999999);
+        
 
             
             $notification = new EmailVerificationCodeNotification($verificationCode); 
