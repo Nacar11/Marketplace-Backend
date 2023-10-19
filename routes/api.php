@@ -108,6 +108,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 
 Route::get('/users', AuthController::class);
+Route::post('/getEmailVerificationCode', [AuthController::class, 'getEmailVerificationCode']);
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);

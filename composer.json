@@ -10,6 +10,7 @@
         "guzzlehttp/guzzle": "^7.8",
         "laravel/framework": "^8.75",
         "laravel/jetstream": "^2.9",
+        "laravel/nexmo-notification-channel": "^3.2",
         "laravel/sanctum": "^2.11",
         "laravel/socialite": "^5.8",
         "laravel/tinker": "^2.5",

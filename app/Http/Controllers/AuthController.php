@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Notifications;
 use App\Notifications\welcomeEmailNotification;
+use App\Notifications\EmailVerificationCodeNotification;
+
 
 
 
@@ -220,6 +222,29 @@ public function checkUsername(Request $request)
         } catch (\Exception $e) {
             // Handle exceptions if they occur
             return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getEmailVerificationCode(Request $email){
+
+        $userEmail = $email->input('email');
+        // return $userEmail;
+
+        if($userEmail != null){
+            $verificationCode = rand(10, 100..'2022');
+
+            
+            $notification = new EmailVerificationCodeNotification($verificationCode); 
+            \Notification::route('mail', $userEmail)->notify($notification);
+
+            return response()->json([
+                'success' =>$verificationCode
+            ],200);
+        }
+        else{
+            return response()->json([
+                'message' =>'Error in Verification Code, request, cant find email'
+            ]);
         }
     }
 }
