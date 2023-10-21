@@ -36,6 +36,25 @@ class ShoppingCartItemController extends Controller
 
     return response()->json($response);
     }       
+
+    public function getCartItemsForUser()
+    {
+        $user = auth()->user();
+    
+        $cartItems = ShoppingCartItem::with('productItem')
+            ->whereHas('cart', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->get();
+    
+        return response()->json($cartItems, 200);
+    }
+    
+    
+    
+    
+    
+    
 }
         
 //update

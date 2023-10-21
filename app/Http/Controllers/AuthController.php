@@ -172,8 +172,7 @@ public function checkUsername(Request $request)
         if (!$shoppingCart) {
             return "Shopping Cart Not Found."; 
         }
-        $shoppingCart->load('items.productItem.productImages', 'items.productItem.product', 'items.productItem.variationOptions.variation');
-
+        $shoppingCart->load('items.productItem.productImages');
     
         return $shoppingCart;  
         return response()->json(['success' =>  $shoppingCart], 200);
