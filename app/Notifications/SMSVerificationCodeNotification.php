@@ -9,18 +9,18 @@ use Illuminate\Notifications\Messages\VonageMessage;
 
 use Illuminate\Notifications\Notification;
 
-class WelcomeSMSNotification extends Notification
+class SMSVerificationCodeNotification extends Notification
 {
     use Queueable;
-
+    private $verificationCode;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($verificationCode)
     {
-        //
+        $this->verificationCode = $verificationCode;
     }
 
     /**
@@ -38,7 +38,7 @@ class WelcomeSMSNotification extends Notification
     {
     
         return (new VonageMessage)
-                ->content('Your SMS message content');
+        ->content("Verification Code: {$this->verificationCode}");
     }
     /**
      * Get the array representation of the notification.

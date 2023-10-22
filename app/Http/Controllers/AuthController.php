@@ -17,6 +17,10 @@ use Illuminate\Validation\ValidationException;
 use Notifications;
 use App\Notifications\welcomeEmailNotification;
 use App\Notifications\EmailVerificationCodeNotification;
+use App\Notifications\WelcomeSMSNotification;
+
+use App\Notifications\SMSVerificationCodeNotification;
+
 
 
 
@@ -55,6 +59,10 @@ class AuthController extends Controller{
         $user = Auth::user();
         $token = $user->createToken('auth-token')->plainTextToken;
         $user->load('shoppingCart');
+
+        $user->notify(new WelcomeSMSNotification($user));
+
+
         return response()->json([ 
             'message'=> 'Authorized',
             'access_token' => $token,
@@ -245,6 +253,29 @@ public function checkUsername(Request $request)
         else{
             return response()->json([
                 'message' =>'Error in Verification Code, request, cant find email'
+            ]);
+        }
+    }
+    public function SMSVerificationCode(Request $contact_number){
+
+        $user_contact_number = $contact_number->input('contact_number');
+        // return $userEmail;
+
+        if ($user_contact_number !== null) {
+            $verificationCode = rand(100000, 999999);
+        
+
+            
+            $notification = new SMSVerificationCodeNotification($verificationCode); 
+            \Notification::route('vonage', $user_contact_number)->notify($notification);
+
+            return response()->json([
+                'success' =>$verificationCode
+            ],200);
+        }
+        else{
+            return response()->json([
+                'message' =>'Error in Verification Code, request, cant find contact number'
             ]);
         }
     }

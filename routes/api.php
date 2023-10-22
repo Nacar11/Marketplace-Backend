@@ -111,7 +111,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 Route::get('/users', AuthController::class);
 Route::post('/getEmailVerificationCode', [AuthController::class, 'getEmailVerificationCode']);
-
+Route::post('/SMSVerificationCode', [AuthController::class, 'SMSVerificationCode']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('test',function(){
@@ -127,7 +127,6 @@ Route::get('/getProductItem/{id}', [ProductItemController::class, 'getProductIte
 
 Route::get('auth/facebook', [AuthController::class, 'facebookpage']);
 Route::post('google/callback', [AuthController::class, 'googleRedirect']);
-Route::get('/sendSMS', [NotificationController::class, 'sms']);
 
 Route::post('/checkEmail', [AuthController::class, 'checkEmail']);
 Route::post('/checkUsername', [AuthController::class, 'checkUsername']);
