@@ -60,7 +60,7 @@ class AuthController extends Controller{
         $token = $user->createToken('auth-token')->plainTextToken;
         $user->load('shoppingCart');
 
-        $user->notify(new WelcomeSMSNotification($user));
+        // $user->notify(new WelcomeSMSNotification($user));
 
 
         return response()->json([ 
