@@ -198,14 +198,37 @@ public function checkUsername(Request $request)
         return $userId;
         }
 
-    public function facebookpage(){
-        // return Socialite::driver('facebook')->stateless()->user();
-        return response()->json([
-            'redirect_url' => Socialite::driver('facebook')->stateless()->redirect()->getTargetUrl()
-        ]);
-    }
+   
 
     public function googleRedirect(Request $request){
+        try {
+            $email = $request->input('email');
+            $user = User::where('email', $email)->first();   
+            
+            if ($user) {
+                Auth::login($user);
+                $token = $user->createToken('auth-token')->plainTextToken;
+                return response()->json([ 
+                    'message' => 'Success',
+                    'access_token' => $token,
+                    'token_type' => 'Bearer',
+                    'expires_in' => null,
+                    'username' => $user->username,
+                    'user_id' => $user->id,
+                    'shopping_cart' => $user->shoppingCart
+                ]);
+            }
+             else {
+                // No user found with the provided email
+                return response()->json(['message' => 'registerFirst'], 200);
+            }
+        } catch (\Exception $e) {
+            // Handle exceptions if they occur
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function facebookRedirect(Request $request){
         try {
             $email = $request->input('email');
             $user = User::where('email', $email)->first();   

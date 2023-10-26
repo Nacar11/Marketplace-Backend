@@ -21,13 +21,24 @@ class ProductItemController extends Controller
     }
 
     public function getProductItemsByProductType($productId)
-{
+    {
     $productItems = ProductItem::with('product.productCategory', 'productImages', 'variationOptions.variation')
         ->where('product_id', $productId)
         ->get();
     
     return $productItems;
     
+    }
+
+    public function getProductItemsByUser()
+{
+    $userId = auth()->user()->id;
+
+    $productItems = ProductItem::with('product.productCategory', 'productImages', 'variationOptions.variation')
+        ->where('user_id', $userId)
+        ->get();
+    
+    return $productItems;
 }
 
     public function store(ProductItemRequest $request)

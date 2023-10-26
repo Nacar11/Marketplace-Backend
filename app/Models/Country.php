@@ -11,7 +11,7 @@ class Country extends Model
 
     protected $table = 'country'; // Set the correct table name
 
-    protected $fillable = ['name']; // Fillable attributes
+    protected $fillable = ['name', 'code']; // Fillable attributes
 
     // Other model methods, relationships, etc.
 }

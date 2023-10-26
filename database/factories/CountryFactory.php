@@ -14,9 +14,11 @@ class CountryFactory extends Factory
 
     public function definition(): array
     {
+        $country = $this->faker->country;
+        $code = strtoupper(substr($country, 0, 2));
         return [
-            'name' => $this->faker->country,
-
+            'name' => $country,
+            'code' => $code,
         ];
     }
 

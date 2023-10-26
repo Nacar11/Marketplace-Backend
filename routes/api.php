@@ -54,6 +54,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('product', ProductController::class);
     Route::get('getProductTypesByCategory/{id}', [ProductCategoryController::class, 'getProductTypesByCategory']);
     Route::get('getProductItemsByProductType/{id}', [ProductItemController::class, 'getProductItemsByProductType']);
+    Route::get('getProductItemsByUser', [ProductItemController::class, 'getProductItemsByUser']);
+
     Route::get('getVariantsByProductTypes/{id}', [ProductController::class, 'getVariantsByProductTypes']);
     // Route::get('product-category', ProductCategoryController::class);
     // Route::get('product-category/{id}', [ProductCategoryController::class, 'show']);
@@ -127,6 +129,7 @@ Route::get('/getProductItem/{id}', [ProductItemController::class, 'getProductIte
 
 Route::get('auth/facebook', [AuthController::class, 'facebookpage']);
 Route::post('google/callback', [AuthController::class, 'googleRedirect']);
+Route::post('facebook/callback', [AuthController::class, 'facebookRedirect']);
 
 Route::post('/checkEmail', [AuthController::class, 'checkEmail']);
 Route::post('/checkUsername', [AuthController::class, 'checkUsername']);
