@@ -117,7 +117,39 @@ class OrderLineController extends Controller
     return response()->json($orderLines);
     }
 
+    public function getOrderLinesByUser()
+{
+    // Get the authenticated user's ID
+    $userId = auth()->user()->id;
 
+    $orderLines = OrderLine::with([
+        'user' => function ($query) {
+            $query->select('id', 'username', 'first_name', 'last_name', 'date_of_birth', 'email', 'contact_number', 'gender' );
+        },
+        'paymentMethod',
+        'shippingAddress',
+        'orderStatus',
+        'shippingMethod',
+        'productItem.productImages',
+        'productItem.product'
+    ])->where('user_id', $userId)
+      ->get();
+
+    if ($orderLines->isEmpty()) {
+        return response()->json(['message' => 'No order lines found for the user'], 404);
+    }
+
+    return $orderLines;
+}
+
+public function deleteOrderLine($ID)
+{
+$result = OrderLine::where('id', '=', $ID)->delete();
+return response()->json([
+    'status' => $result,
+    'msg' => $result ? 'success' : 'fuck'
+]);
+}
 
 
 

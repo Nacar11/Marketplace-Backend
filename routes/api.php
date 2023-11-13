@@ -95,15 +95,19 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/getUPMbyID', [UserPaymentMethodController::class, 'getUPMbyID']);
 
  
-    Route::get('/getOrderLinesByID', OrderLineController::class);
+    Route::get('getOrderLinesByID', [OrderLineController::class,'getOrderLinesByUser']);
     Route::get('/getAllOrderLines', [OrderLineController::class, 'getAllOrderLines']);
     Route::get('/getSingleOrderLine/{id}', [OrderLineController::class, 'getSingleOrderLine']);
     Route::post('/addOrderLine', [OrderLineController::class, 'store']);
     Route::get('/getOrderlinesFromProductListings', [OrderLineController::class, 'getOrderLinesFromProductListings']);
+    Route::delete('deleteOrderLinesByID/{ID}', [OrderLineController::class, 'deleteOrderLine']);
+
 
     Route::get('/getFirstShipping', [ShippingMethodController::class, 'getFirst']);
     Route::get('/getShippingMethods', ShippingMethodController::class);
     Route::post('/addListing', [ProductItemController::class, 'addListing']);
+    Route::delete('deleteListingByID/{itemID}', [ProductItemController::class, 'deleteListing']);
+
 
     Route::get('getCartItemsForUser', [ShoppingCartItemController::class, 'getCartItemsForUser']);
 
