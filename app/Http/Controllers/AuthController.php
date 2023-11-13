@@ -116,6 +116,10 @@ class AuthController extends Controller{
         'expires_in' => null,
         'username' => $user->username,
         'user_id' => $user->id,
+        'email' => $user->email,
+        'first_name' => $user->first_name,
+        'last_name' => $user->last_name,
+        'contact_number' => $user->contact_number,
         'ShoppingCart' => $shoppingCart,
         ]);     
     } catch (Exception $e) {
