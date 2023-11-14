@@ -286,7 +286,7 @@ public function checkUsername(Request $request)
     public function SMSVerificationCode(Request $contact_number){
 
         $user_contact_number = $contact_number->input('contact_number');
-        // return $userEmail;
+        // return $user_contact_number;
 
         if ($user_contact_number !== null) {
             $verificationCode = rand(100000, 999999);

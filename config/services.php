@@ -37,6 +37,7 @@ return [
     ],
 
     'vonage' => [
-        'sms_from' => '155556212'
+        'api_key' => env('VONAGE_API_KEY'),
+        'api_secret' => env('VONAGE_API_SECRET'),
     ]
 ];
