@@ -136,5 +136,7 @@ Route::post('google/callback', [AuthController::class, 'googleRedirect']);
 Route::post('facebook/callback', [AuthController::class, 'facebookRedirect']);
 
 Route::post('/checkEmail', [AuthController::class, 'checkEmail']);
+Route::post('/getUserByEmail', [AuthController::class, 'getUserByEmail']);
+
 Route::post('/checkUsername', [AuthController::class, 'checkUsername']);
 

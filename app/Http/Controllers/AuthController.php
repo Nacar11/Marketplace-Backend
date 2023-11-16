@@ -148,6 +148,25 @@ public function checkEmail(Request $request)
         return response()->json(['message' => 'An error occurred while checking email'], 500);
     }
 }
+public function getUserByEmail(Request $request){
+
+    try {
+        $email = $request->input('email');
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return response()->json(['message' => 'Input should be a valid email address'], 422);
+        }
+
+        $existingUser = User::where('email', $email)->first();
+
+        if ($existingUser) {
+            return response()->json(['message' => $existingUser], 200);
+        }
+
+        return response()->json(['message' => 'Cannot Find Email'], 422);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'An error occurred while checking email'], 500);
+    }
+}
 
 public function checkUsername(Request $request)
 {
@@ -201,8 +220,6 @@ public function checkUsername(Request $request)
     
         return $userId;
         }
-
-   
 
     public function googleRedirect(Request $request){
         try {
