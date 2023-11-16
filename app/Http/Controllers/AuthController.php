@@ -159,7 +159,7 @@ public function getUserByEmail(Request $request){
         $existingUser = User::where('email', $email)->first();
 
         if ($existingUser) {
-            return response()->json(['message' => $existingUser], 200);
+            return response()->json(['message' => $existingUser->contact_number], 200);
         }
 
         return response()->json(['message' => 'Cannot Find Email'], 422);
