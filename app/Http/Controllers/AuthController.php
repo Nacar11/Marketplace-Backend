@@ -148,6 +148,26 @@ public function checkEmail(Request $request)
         return response()->json(['message' => 'An error occurred while checking email'], 500);
     }
 }
+
+public function changePassword(Request $request)
+{
+    try {
+        $newPassword = $request->input('email');
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return response()->json(['message' => 'Input should be a valid email address'], 422);
+        }
+
+        $existingUser = User::where('email', $email)->first();
+
+        if ($existingUser) {
+            return response()->json(['message' => 'Email already taken'], 422);
+        }
+
+        return response()->json(['success' => 'Email is available'], 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'An error occurred while checking email'], 500);
+    }
+}
 public function getUserByEmail(Request $request){
 
     try {
@@ -159,7 +179,7 @@ public function getUserByEmail(Request $request){
         $existingUser = User::where('email', $email)->first();
 
         if ($existingUser) {
-            return response()->json(['message' => $existingUser->contact_number], 200);
+            return response()->json(['success' => $existingUser->contact_number], 200);
         }
 
         return response()->json(['message' => 'Cannot Find Email'], 422);
