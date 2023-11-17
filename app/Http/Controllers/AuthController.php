@@ -152,7 +152,9 @@ public function checkEmail(Request $request)
 public function changePassword(Request $request)
 {
     try {
-        $newPassword = $request->input('email');
+        $email = $request->input('email');
+        $newPassword = $request->input('new_password');
+
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return response()->json(['message' => 'Input should be a valid email address'], 422);
         }
@@ -160,12 +162,18 @@ public function changePassword(Request $request)
         $existingUser = User::where('email', $email)->first();
 
         if ($existingUser) {
-            return response()->json(['message' => 'Email already taken'], 422);
+            // Update the user's password
+            $existingUser->password = bcrypt($newPassword); // Assuming password is hashed using bcrypt
+
+            // Save the updated password
+            $existingUser->save();
+
+            return response()->json(['message' => 'Password changed successfully'], 200);
         }
 
-        return response()->json(['success' => 'Email is available'], 200);
+        return response()->json(['message' => 'User not found'], 404);
     } catch (\Exception $e) {
-        return response()->json(['message' => 'An error occurred while checking email'], 500);
+        return response()->json(['message' => 'An error occurred while changing password'], 500);
     }
 }
 public function getUserByEmail(Request $request){

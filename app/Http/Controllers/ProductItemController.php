@@ -139,7 +139,7 @@ public function addListing(ProductItemRequest $request)
     
 
     foreach ($request->allFiles() as $fieldName => $file) {
-        if ($file->isValid()) {
+        
             $uniqueFileName = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
             $file->move(public_path('uploads'), $uniqueFileName);
           
@@ -149,9 +149,7 @@ public function addListing(ProductItemRequest $request)
                 'product_image' => asset($finalImagePath),
             ]);
             $productItem->productImages()->save($productImage);
-        } else {
-             return response()->json(['messages' => 'image not valid'], 200);
-        }
+        
     }
 
     return response()->json(['messages' => 'success'], 200);

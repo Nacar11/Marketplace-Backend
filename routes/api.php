@@ -46,6 +46,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('productItem/{product}', [ProductItemController::class, 'show']);
     Route::post('productItem', [ProductItemController::class, 'store']);
 
+
     // Route::put('product-item/{product}', [ProductItemController::class, 'update']);
     // Route::delete('/product-item/{product}', [ProductItemController::class, 'destroy']);
     Route::get('productItemsbyCategory/{id}', [ProductItemController::class, 'getProductItemsByCategory']);
@@ -114,7 +115,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 });
 
-
+Route::post('changePass', [AuthController::class, 'changePassword']);
 Route::get('/users', AuthController::class);
 Route::post('/getEmailVerificationCode', [AuthController::class, 'getEmailVerificationCode']);
 Route::post('/SMSVerificationCode', [AuthController::class, 'SMSVerificationCode']);
