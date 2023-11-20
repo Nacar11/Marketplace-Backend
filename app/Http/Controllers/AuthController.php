@@ -68,6 +68,9 @@ class AuthController extends Controller{
             'access_token' => $token,
             'token_type' => 'Bearer',
             'username' => $user->username,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'email' => $user->email,
             'user_id' => $user->id,
             'shopping_cart' => $user->shoppingCart
             ]);     
@@ -231,7 +234,7 @@ public function checkUsername(Request $request)
         if (!$shoppingCart) {
             return "Shopping Cart Not Found."; 
         }
-        $shoppingCart->load('items.productItem.productImages');
+        $shoppingCart->load('items.productItem.productImages', 'items.productItem.product');
     
         return $shoppingCart;  
         return response()->json(['success' =>  $shoppingCart], 200);
