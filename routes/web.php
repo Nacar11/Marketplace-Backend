@@ -16,7 +16,7 @@ use App\Http\Controllers\NotificationController;
 */
 
 Route::get('/', function () {
-    return 'PHP Version: ' . phpversion();
+    return 'PHP Version: ' . phpinfo();
 });
 
 Route::middleware([

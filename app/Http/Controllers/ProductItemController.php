@@ -142,7 +142,7 @@ public function addListing(ProductItemRequest $request)
         if ($file->isValid()) {
             $uniqueFileName = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
             $file->move(public_path('uploads'), $uniqueFileName);
-          
+            
             $finalImagePath = 'uploads/' . $uniqueFileName; 
             $productImage = new ProductImage([
                 'product_id' => $productItem->id,
