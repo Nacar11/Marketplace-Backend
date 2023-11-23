@@ -29,10 +29,14 @@ class AuthController extends Controller{
 
 
     public function __invoke()
-    {
-        $users = User::with('shoppingCart')->get();    
-        return $users;
-    }
+{
+    $users = User::with('shoppingCart')->get();
+    
+    return response()->json([
+        'message' => 'success',
+        'data' => $users
+    ]);
+}
 
     public function login(Request $request){
 
@@ -43,17 +47,14 @@ class AuthController extends Controller{
             ]);
         } catch (ValidationException $e) {
             return response([
-                'errors' => 'Invalid Email or Password'
+                'message' => 'Invalid Email or Password'
             ], 404);
         }
 
-        
-        // $remember = $credentials['remember'] ?? false;
-        // unset($credentials['remember']);
 
         if (!Auth::attempt($credentials)) {
             return response([
-                'errors' => 'Invalid Password of Email'
+                'message' => 'Invalid Password of Email'
             ], 404);
         }
         $user = Auth::user();
@@ -112,7 +113,7 @@ class AuthController extends Controller{
     $user->notify(new welcomeEmailNotification($user));
         
     return response()->json([ 
-        'message'=> 'Success',
+        'message'=> 'success',
         // 'User' => $userData,
         'access_token' => $token,
         'token_type' => 'Bearer',
@@ -128,7 +129,6 @@ class AuthController extends Controller{
     } catch (Exception $e) {
         return response()->json([
         'message' => 'Error',
-        'error' => $e->getMessage(),
         ], 500);
     }
 }
@@ -146,7 +146,7 @@ public function checkEmail(Request $request)
             return response()->json(['message' => 'Email already taken'], 422);
         }
 
-        return response()->json(['success' => 'Email is available'], 200);
+        return response()->json(['message' => 'Email is available'], 200);
     } catch (\Exception $e) {
         return response()->json(['message' => 'An error occurred while checking email'], 500);
     }
