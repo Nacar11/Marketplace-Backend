@@ -141,7 +141,7 @@ public function checkEmail(Request $request)
         }
 
         $existingUser = User::where('email', $email)->first();
-
+        
         if ($existingUser) {
             return response()->json(['message' => 'Email already taken'], 422);
         }
@@ -214,7 +214,7 @@ public function checkUsername(Request $request)
             return response()->json(['message' => 'Username already taken'], 422);
         }
 
-        return response()->json(['success' => 'Username is available'], 200);
+        return response()->json(['message' => 'Username is available'], 200);
     } catch (\Exception $e) {
         return response()->json(['message' => 'An error occurred while checking the username'], 500);
     }

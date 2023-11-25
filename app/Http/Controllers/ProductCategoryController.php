@@ -39,8 +39,9 @@ class ProductCategoryController extends Controller
     }
 
     $result = array_values($organizedCategories);
-
-    return response()->json($result);
+    
+    return response()->json(['message' => 'success',
+                             'data' => $result], 200);
 }
 
     public function show($id)
@@ -81,13 +82,13 @@ class ProductCategoryController extends Controller
 {
     $productCategory = ProductCategory::find($id);
     if (!$productCategory) {
-        return response()->json(['message' => 'Product category not found'], 404);
+        return response()->json(['message' => 'No Product Types in this Category'], 404);
     }
 
     $product_types = $productCategory->products;
-    return  $product_types;
     return response()->json([
-        'product_types' => $product_types,
+        'message' => 'success',
+        'data' => $product_types,
     ], 200);
 }
 }
