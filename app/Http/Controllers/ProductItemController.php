@@ -154,7 +154,7 @@ public function addListing(ProductItemRequest $request)
         }
     }
 
-    return response()->json(['messages' => 'success'], 200);
+    return response()->json(['message' => 'success', 'data' => $productItem], 200);
 }
 
 

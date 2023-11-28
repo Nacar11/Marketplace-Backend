@@ -20,8 +20,5 @@ class ProductConfiguration extends Model
         return $this->belongsTo(VariationOption::class, 'variation_option_id');
     }
 
-    public function shoppingCartItem()
-    {
-        return $this->belongsTo(ShoppingCartItem::class);
-    }
+    
 }

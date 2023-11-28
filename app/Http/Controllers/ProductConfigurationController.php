@@ -19,6 +19,6 @@ class ProductConfigurationController extends Controller
     {
         $productConfiguration = ProductConfiguration::create($request->validated());
 
-        return response()->json($productConfiguration, 201);
+        return response()->json(['message' => 'success', 'data' => $productConfiguration], 201);
     }
 }
