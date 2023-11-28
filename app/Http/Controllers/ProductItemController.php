@@ -16,13 +16,13 @@ class ProductItemController extends Controller
 {
     public function __invoke()
     {
-        $productItems = ProductItem::with('product', 'productImages', 'variationOptions.variation')->get();    
+        $productItems = ProductItem::with('product', 'productImages', 'productConfigurations.variationOption.variation')->get();    
         return $productItems;
     }
 
     public function getProductItemsByProductType($productId)
     {
-    $productItems = ProductItem::with('product.productCategory', 'productImages', 'variationOptions.variation')
+    $productItems = ProductItem::with('product.productCategory', 'productImages', 'productConfigurations.variationOption.variation')
         ->where('product_id', $productId)
         ->get();
     
@@ -34,7 +34,7 @@ class ProductItemController extends Controller
 {
     $userId = auth()->user()->id;
 
-    $productItems = ProductItem::with('product.productCategory', 'productImages', 'variationOptions.variation')
+    $productItems = ProductItem::with('product.productCategory', 'productImages', 'productConfigurations.variationOption.variation')
         ->where('user_id', $userId)
         ->get();
     

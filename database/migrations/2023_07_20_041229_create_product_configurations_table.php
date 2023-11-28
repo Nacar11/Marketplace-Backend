@@ -17,7 +17,7 @@ class CreateProductConfigurationsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('product_item_id');
             $table->unsignedInteger('variation_option_id');
-            $table->foreign('product_item_id')->references('id')->on('product_items');
+            $table->foreign('product_item_id')->references('id')->on('product_items')->onDelete('cascade');
             $table->foreign('variation_option_id')->references('id')->on('variation_options');
             $table->timestamps();
         });

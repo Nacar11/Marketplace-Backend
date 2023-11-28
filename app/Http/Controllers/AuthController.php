@@ -267,6 +267,10 @@ public function checkUsername(Request $request)
                     'expires_in' => null,
                     'username' => $user->username,
                     'user_id' => $user->id,
+                    'email' => $user->email,
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
+                    'contact_number' => $user->contact_number,
                     'shopping_cart' => $user->shoppingCart
                 ]);
             }
@@ -295,6 +299,10 @@ public function checkUsername(Request $request)
                     'expires_in' => null,
                     'username' => $user->username,
                     'user_id' => $user->id,
+                    'email' => $user->email,
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
+                    'contact_number' => $user->contact_number,
                     'shopping_cart' => $user->shoppingCart
                 ]);
             }
