@@ -349,8 +349,8 @@ public function checkUsername(Request $request)
         
 
             
-            $notification = new SMSVerificationCodeNotification($verificationCode); 
-            \Notification::route('vonage', $user_contact_number)->notify($notification);
+            // $notification = new SMSVerificationCodeNotification($verificationCode); 
+            // \Notification::route('vonage', $user_contact_number)->notify($notification);
 
             return response()->json([
                 'success' =>$verificationCode
