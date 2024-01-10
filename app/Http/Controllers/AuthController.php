@@ -316,29 +316,34 @@ public function checkUsername(Request $request)
         }
     }
 
-    public function getEmailVerificationCode(Request $email){
+   public function getEmailVerificationCode(Request $request){
+    $userEmail = $request->input('email');
 
-        $userEmail = $email->input('email');
-        // return $userEmail;
+    // Check if the user with the given email exists in the database
+    $existingUser = User::where('email', $userEmail)->first();
 
-        if ($userEmail !== null) {
-            $verificationCode = rand(100000, 999999);
-        
-
-            
-            $notification = new EmailVerificationCodeNotification($verificationCode); 
-            \Notification::route('mail', $userEmail)->notify($notification);
-
-            return response()->json([
-                'success' =>$verificationCode
-            ],200);
-        }
-        else{
-            return response()->json([
-                'message' =>'Error in Verification Code, request, cant find email'
-            ]);
-        }
+    if ($existingUser === null) {
+        return response()->json([
+            'error' => 'User not found'
+        ], 404);
     }
+
+    if ($userEmail !== null) {
+        $verificationCode = rand(100000, 999999);
+
+        $notification = new EmailVerificationCodeNotification($verificationCode);
+        \Notification::route('mail', $userEmail)->notify($notification);
+
+        return response()->json([
+            'code' =>$verificationCode,
+            'message' => 'success'
+        ], 200);
+    } else {
+        return response()->json([
+            'message' => 'Error in Verification Code request, cannot find email'
+        ], 400);
+    }
+}
     public function SMSVerificationCode(Request $contact_number){
 
         $user_contact_number = $contact_number->input('contact_number');
