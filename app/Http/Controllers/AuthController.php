@@ -61,19 +61,15 @@ class AuthController extends Controller{
         $token = $user->createToken('auth-token')->plainTextToken;
         $user->load('shoppingCart');
 
-        // $user->notify(new WelcomeSMSNotification($user));
+        // $user->notify(new WelcomeEmailNotification($user));
 
 
         return response()->json([ 
-            'message'=> 'Authorized',
+            'message' => 'success',
             'access_token' => $token,
             'token_type' => 'Bearer',
             'username' => $user->username,
-            'first_name' => $user->first_name,
-            'last_name' => $user->last_name,
-            'email' => $user->email,
             'user_id' => $user->id,
-            'shopping_cart' => $user->shoppingCart
             ]);     
         }
 
@@ -84,21 +80,10 @@ class AuthController extends Controller{
 
     public function register(UserRequest $request){
     try {
-    
     $validatedData = $request->validated(); 
     $user = User::create($validatedData);
 
-    // $userPaymentMethodData = [
-    //     'user_id' => $user->id,
-    //     'payment_type_id' => 1, // Assuming payment_type_id is 1
-    //     'provider' => ' ',
-    //     'account_number' => ' ',
-    //     'expiry_date' => ' ',
-    //     'is_default' => true,
-    // ];
-    // $userPaymentMethod = UserPaymentMethod::create($userPaymentMethodData);
 ;
-    // dd($userData);
         $shoppingCart = null; 
     if (!$user->shoppingCart) {
         $shoppingCart = ShoppingCart::create([
@@ -114,17 +99,10 @@ class AuthController extends Controller{
         
     return response()->json([ 
         'message'=> 'success',
-        // 'User' => $userData,
         'access_token' => $token,
         'token_type' => 'Bearer',
-        'expires_in' => null,
         'username' => $user->username,
         'user_id' => $user->id,
-        'email' => $user->email,
-        'first_name' => $user->first_name,
-        'last_name' => $user->last_name,
-        'contact_number' => $user->contact_number,
-        'ShoppingCart' => $shoppingCart,
         ]);     
     } catch (Exception $e) {
         return response()->json([
@@ -261,7 +239,7 @@ public function checkUsername(Request $request)
                 Auth::login($user);
                 $token = $user->createToken('auth-token')->plainTextToken;
                 return response()->json([ 
-                    'message' => 'Success',
+                    'message' => 'success',
                     'access_token' => $token,
                     'token_type' => 'Bearer',
                     'expires_in' => null,
@@ -324,7 +302,7 @@ public function checkUsername(Request $request)
 
     if ($existingUser === null) {
         return response()->json([
-            'error' => 'User not found'
+            'message' => 'Email does not Exist/User not Found.'
         ], 404);
     }
 
@@ -338,11 +316,7 @@ public function checkUsername(Request $request)
             'code' =>$verificationCode,
             'message' => 'success'
         ], 200);
-    } else {
-        return response()->json([
-            'message' => 'Error in Verification Code request, cannot find email'
-        ], 400);
-    }
+    } 
 }
     public function SMSVerificationCode(Request $contact_number){
 
