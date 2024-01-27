@@ -21,6 +21,8 @@ class CreateShoppingCartItemsTable extends Migration
 
             $table->foreign('cart_id')->references('id')->on('shopping_carts');
             $table->foreign('product_item_id')->references('id')->on('product_items');
+
+            $table->unique(['cart_id', 'product_item_id']);
         });
     }
 

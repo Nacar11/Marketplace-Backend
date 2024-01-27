@@ -9,7 +9,7 @@ use App\Models\ProductItem;
 
 class ProductCategoryController extends Controller
 {
-    public function __invoke()
+public function __invoke()
 {
     $categories = ProductCategory::query()->get();
 
@@ -19,8 +19,9 @@ class ProductCategoryController extends Controller
         if (!$category->category_id) {
             $organizedCategories[$category->id] = [
                 'id' => $category->id,
-                'category_id' => $category->category_id, // Include category_id
+                'category_id' => $category->category_id,
                 'category_name' => $category->category_name,
+                'product_image' => $category->product_image, // Include product_image
                 'children' => [],
             ];
         } else {
@@ -32,16 +33,16 @@ class ProductCategoryController extends Controller
             }
             $organizedCategories[$category->category_id]['children'][] = [
                 'id' => $category->id,
-                'category_id' => $category->category_id, // Include category_id
+                'category_id' => $category->category_id,
                 'category_name' => $category->category_name,
+                'product_image' => $category->product_image, // Include product_image
             ];
         }
     }
 
     $result = array_values($organizedCategories);
     
-    return response()->json(['message' => 'success',
-                             'data' => $result], 200);
+    return response()->json(['message' => 'success', 'data' => $result], 200);
 }
 
     public function show($id)

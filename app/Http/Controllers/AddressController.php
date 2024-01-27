@@ -76,16 +76,16 @@ public function userHasAddress()
 
         if ($userAddresses->isEmpty()) {
             return response()->json([
-                'message' => 'false',
+                'message' => false,
             ]);
         }
 
         return response()->json([
-            'message' => 'true',
+            'message' => true,
         ]);
     } catch (\Exception $e) {
         return response()->json([
-            'message' => 'false',
+            'message' => false,
         ], 500);
     }
 }

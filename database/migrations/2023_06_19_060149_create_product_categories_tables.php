@@ -18,6 +18,7 @@ class CreateProductCategoriesTables extends Migration
             $table->string('category_name');
             $table->timestamps();
             $table->unsignedInteger('category_id')->nullable(); 
+            $table->string('product_image')->nullable();
             $table->foreign('category_id')->references('id')->on('product_categories')->onDelete('cascade');
         });
     }

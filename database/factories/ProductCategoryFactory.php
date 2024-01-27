@@ -18,6 +18,7 @@ class ProductCategoryFactory extends Factory
         return [
             'category_name' => $this->faker->word,
             'category_id' => $this->faker->boolean(30) ? $this->faker->randomElement(ProductCategory::pluck('id')->toArray()) : null,
+             'product_image' => $this->faker->imageUrl(640, 480, 'products', true),
 
         ];
     }

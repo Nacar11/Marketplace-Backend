@@ -219,16 +219,6 @@ public function checkUsername(Request $request)
         }
     
 
-    public function getUser(){
-
-        $userId = auth()->user();
-        if (!$userId) {
-            return "User Not Found"; 
-        }
-       
-    
-        return $userId;
-        }
 
     public function googleRedirect(Request $request){
         try {
