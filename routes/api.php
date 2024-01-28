@@ -20,6 +20,7 @@ use App\Http\Controllers\OrderLineController;
 use App\Http\Controllers\ShippingMethodController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\FavoriteController;
 
 
 
@@ -45,6 +46,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/logout', [AuthController::class, 'logout']);
     Route::get('productItem/{product}', [ProductItemController::class, 'show']);
     Route::post('productItem', [ProductItemController::class, 'store']);
+    Route::get('getFavoritesByUser', [FavoriteController::class, 'getFavoritesByUser']);
+    Route::post('addToFavorites', [FavoriteController::class, 'addToFavorites']);
+    Route::delete('removeFromFavorites', [FavoriteController::class, 'removeFromFavorites']);
 
 
     // Route::put('product-item/{product}', [ProductItemController::class, 'update']);
