@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateShippingMethodTable extends Migration
+class CreateShippingMethodsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateShippingMethodTable extends Migration
      */
     public function up()
     {
-        Schema::create('shipping_method', function (Blueprint $table) {
+        Schema::create('shipping_methods', function (Blueprint $table) {
             $table->increments('id');
             $table->decimal('price', 10, 2);
             $table->string('name');

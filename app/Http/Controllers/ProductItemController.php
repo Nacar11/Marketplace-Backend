@@ -73,14 +73,22 @@ class ProductItemController extends Controller
     return $productItem;
 }
 
-    public function show($id)
-    {
-        $product_item = ProductItem::where('id', '=', $id)->first();
+ public function show($id)
+{
+    $product_item = ProductItem::with('product.productCategory', 'productImages', 'productConfigurations.variationOption.variation')
+        ->find($id);
+
+    if (!$product_item) {
         return response()->json([
-            'status' => "Success",
-            'Body' => $product_item,
-        ], 200);
+            'message' => "Product item not found",
+        ], 404);
     }
+
+    return response()->json([
+        'message' => "success",
+        'data' => $product_item,
+    ], 200);
+}
 
     public function update(ProductItemRequest $request, $id)
     {

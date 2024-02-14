@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOrderLineTable extends Migration
+class CreateOrderLinesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateOrderLineTable extends Migration
      */
     public function up()
     {
-        Schema::create('order_line', function (Blueprint $table) {
+        Schema::create('order_lines', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('product_item_id');
@@ -26,10 +26,10 @@ class CreateOrderLineTable extends Migration
             $table->unsignedInteger('shipping_method_id');
             $table->dateTime('order_date');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('payment_method_id')->references('id')->on('user_payment_method')->onDelete('cascade');
+            $table->foreign('payment_method_id')->references('id')->on('user_payment_methods')->onDelete('cascade');
             $table->foreign('shipping_address_id')->references('id')->on('addresses')->onDelete('cascade');
-            $table->foreign('order_status_id')->references('id')->on('order_status')->onDelete('cascade');
-            $table->foreign('shipping_method_id')->references('id')->on('shipping_method')->onDelete('cascade');
+            $table->foreign('order_status_id')->references('id')->on('order_statuses')->onDelete('cascade');
+            $table->foreign('shipping_method_id')->references('id')->on('shipping_methods')->onDelete('cascade');
             $table->foreign('product_item_id')->references('id')->on('product_items')->onDelete('cascade');
         });
     }

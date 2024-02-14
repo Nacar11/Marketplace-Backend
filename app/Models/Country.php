@@ -9,9 +9,12 @@ class Country extends Model
 {
     use HasFactory;
 
-    protected $table = 'country'; // Set the correct table name
+    protected $table = 'countries'; 
 
-    protected $fillable = ['name', 'code']; // Fillable attributes
+    protected $fillable = ['name', 'code']; 
 
-    // Other model methods, relationships, etc.
+    public function regions()
+    {
+        return $this->hasMany(Region::class);
+    }
 }

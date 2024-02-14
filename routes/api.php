@@ -21,6 +21,8 @@ use App\Http\Controllers\ShippingMethodController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\RegionController;
+use App\Http\Controllers\CityController;
 
 
 
@@ -41,7 +43,6 @@ use App\Http\Controllers\FavoriteController;
 
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    // Route::get('user', UserController::class);
     Route::get('getUserData', [UserController::class, 'getUserData']);
     Route::get('/logout', [AuthController::class, 'logout']);
     Route::get('productItem/{product}', [ProductItemController::class, 'show']);
@@ -50,33 +51,27 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('addToFavorites', [FavoriteController::class, 'addToFavorites']);
     Route::delete('removeFromFavorites', [FavoriteController::class, 'removeFromFavorites']);
 
-
-    // Route::put('product-item/{product}', [ProductItemController::class, 'update']);
-    // Route::delete('/product-item/{product}', [ProductItemController::class, 'destroy']);
+    Route::get('getRegionsByCountryId/{id}', [RegionController::class, 'getRegionsByCountryId']);
+    Route::get('getCitiesByRegionId/{id}', [CityController::class, 'getCitiesByRegionId']);
     Route::get('productItemsbyCategory/{id}', [ProductItemController::class, 'getProductItemsByCategory']);
-
-    Route::get('product', ProductController::class);
     Route::get('product', ProductController::class);
     Route::get('getProductTypesByCategory/{id}', [ProductCategoryController::class, 'getProductTypesByCategory']);
     Route::get('getProductItemsByProductType/{id}', [ProductItemController::class, 'getProductItemsByProductType']);
     Route::get('getProductItemsByUser', [ProductItemController::class, 'getProductItemsByUser']);
 
     Route::get('getVariantsByProductTypes/{id}', [ProductController::class, 'getVariantsByProductTypes']);
-    // Route::get('product-category', ProductCategoryController::class);
-    // Route::get('product-category/{id}', [ProductCategoryController::class, 'show']);
-    // Route::get('/logout', [AuthController::class, 'logout']);
+ 
     Route::get('variationOptions/{id}', [VariationController::class, 'getVariationOptions']);
     Route::get('variation', VariationController::class);
     Route::get('variation/{variation}', [VariationController::class, 'show']);
-    Route::post('variation/', [VariationController::class, 'store']);
-    // Route::put('variation/{variation}', [VariationController::class, 'update']);
-    // Route::delete('variation/{variation}', [VariationController::class, 'destroy']);
+
+
     Route::get('product-configuration', [ProductConfigurationController::class, 'getAll']);
-    Route::post('product-configuration', [ProductConfigurationController::class, 'add']);
+    
 
     Route::get('variation-option', VariationOptionController::class);
     Route::get('variation-option/{id}', [VariationOptionController::class, 'show']);
-    Route::post('variation-option/', [VariationOptionController::class, 'store']);
+ 
     Route::put('variation-option/{id}', [VariationOptionController::class, 'update']);
     Route::delete('variation-option/{id}', [VariationOptionController::class, 'destroy']);
 
@@ -143,3 +138,8 @@ Route::post('facebook/callback', [AuthController::class, 'facebookRedirect']);
 Route::post('/checkEmail', [AuthController::class, 'checkEmail']);
 Route::post('/getUserByEmail', [AuthController::class, 'getUserByEmail']);
 Route::post('/checkUsername', [AuthController::class, 'checkUsername']);
+
+
+Route::post('variation/', [VariationController::class, 'store']);
+Route::post('product-configuration', [ProductConfigurationController::class, 'add']);
+Route::post('variation-option/', [VariationOptionController::class, 'store']);

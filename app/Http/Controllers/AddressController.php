@@ -18,9 +18,9 @@ class AddressController extends Controller
             $address = Address::create($validatedData);
 
             $userAddress = UserAddress::create([
-                'user_id' => auth()->user()->id, // You may need to change this depending on how you manage user authentication
+                'user_id' => auth()->user()->id, 
                 'address_id' => $address->id,
-                'is_default' => false, // You may need to adjust this value
+                'is_default' => false, 
             ]);
 
             return response()->json([

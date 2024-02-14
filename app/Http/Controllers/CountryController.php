@@ -7,14 +7,9 @@ use Illuminate\Http\Request;
 
 class CountryController extends Controller
 {
-    /**
-     * Get all countries.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function __invoke()
     {
-        $countries = Country::all();
-        return response()->json($countries);
+        $countries = Country::with('regions.cities')->get();
+        return response()->json(['message' => 'success', 'data' => $countries]);
     }
 }

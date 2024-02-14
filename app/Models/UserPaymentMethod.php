@@ -9,7 +9,7 @@ class UserPaymentMethod extends Model
 {
     use HasFactory;
 
-    protected $table = 'user_payment_method'; // Specify the table name if it's not following Laravel's naming conventions
+    protected $table = 'user_payment_methods'; // Specify the table name if it's not following Laravel's naming conventions
 
     protected $fillable = [
         'user_id',

@@ -6,11 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateAddressesTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+   
     public function up()
     {
         Schema::create('addresses', function (Blueprint $table) {
@@ -18,21 +14,20 @@ class CreateAddressesTable extends Migration
             $table->string('unit_number')->nullable();
             $table->string('address_line_1');
             $table->string('address_line_2')->nullable();
-            $table->string('city');
-            $table->string('region');
+            $table->string('contact_number');
             $table->string('postal_code');
             $table->unsignedInteger('country_id');
+            $table->unsignedInteger('city_id');
+            $table->unsignedInteger('region_id');
             $table->timestamps();
 
-            $table->foreign('country_id')->references('id')->on('country')->onDelete('cascade');
+            $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade');
+            $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
+            $table->foreign('region_id')->references('id')->on('regions')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+    
     public function down()
     {
         Schema::dropIfExists('addresses');
