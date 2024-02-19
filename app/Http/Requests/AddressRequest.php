@@ -6,31 +6,24 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class AddressRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
+   
     public function authorize()
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
+    
     public function rules()
     {
-        return [
+         return [
+            'contact_number' => 'required|string',
             'unit_number' => 'nullable|string',
             'address_line_1' => 'required|string',
             'address_line_2' => 'nullable|string',
-            'city' => 'required|string',
-            'region' => 'required|string',
+            'city_id' => 'required|exists:cities,id',
+            'region_id' => 'required|exists:regions,id', 
             'postal_code' => 'required|string',
-            'country_id' => 'required|exists:country,id',
+            'country_id' => 'required|exists:countries,id',
         ];
     }
 }

@@ -303,8 +303,9 @@ public function checkUsername(Request $request)
         \Notification::route('mail', $userEmail)->notify($notification);
 
         return response()->json([
-            'code' =>$verificationCode,
-            'message' => 'success'
+            'message' => 'success',
+            'data' =>$verificationCode,
+           
         ], 200);
     } 
 }
@@ -322,7 +323,8 @@ public function checkUsername(Request $request)
             // \Notification::route('vonage', $user_contact_number)->notify($notification);
 
             return response()->json([
-                'success' =>$verificationCode
+                'message' =>'success',
+                'data' =>$verificationCode,
             ],200);
         }
         else{

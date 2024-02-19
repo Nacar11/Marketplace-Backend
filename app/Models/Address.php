@@ -10,11 +10,12 @@ class Address extends Model
     use HasFactory;
 
     protected $fillable = [
+        'contact_number', 
         'unit_number',
         'address_line_1',
         'address_line_2',
-        'city',
-        'region',
+        'city_id', 
+        'region_id', 
         'postal_code',
         'country_id',
     ];
@@ -22,6 +23,16 @@ class Address extends Model
     public function country()
     {
         return $this->belongsTo(Country::class);
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class);
+    }
+
+    public function region()
+    {
+        return $this->belongsTo(Region::class);
     }
 
     public function userAddresses()

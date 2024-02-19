@@ -11,42 +11,54 @@ class AddressController extends Controller
     public function store(AddressRequest $request)
     {
         try {
-            // Validated data will be available from the $request object
             $validatedData = $request->validated();
 
             // Create a new address
-            $address = Address::create($validatedData);
+            $address = Address::create([
+                'contact_number'=> $validatedData['contact_number'],
+                'unit_number' => $validatedData['unit_number'],
+                'address_line_1' => $validatedData['address_line_1'],
+                'address_line_2' => $validatedData['address_line_2'],
+                'city_id' => $validatedData['city_id'],
+                'region_id' => $validatedData['region_id'],
+                'postal_code' => $validatedData['postal_code'],
+                'country_id' => $validatedData['country_id'],
+            ]);
+
+             // Check if the user has any existing addresses
+            $existingUserAddressesCount = auth()->user()->userAddresses()->count();
+
+            // Set is_default to true if the user doesn't have any existing addresses
+            $isDefault = $existingUserAddressesCount === 0;
 
             $userAddress = UserAddress::create([
                 'user_id' => auth()->user()->id, 
                 'address_id' => $address->id,
-                'is_default' => false, 
+                'is_default' => $isDefault,
             ]);
 
             return response()->json([
-                'message' => 'Success',
-                'data' => $address,
-                'user_address' => $userAddress,
+                'message' => 'success',
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Error',
+                'message' => 'error',
                 'error' => $e->getMessage(),
             ], 500);
         }
     }
 
-    public function getAddress()
+public function getAddress()
 {
     try {
         $userId = auth()->user()->id;
 
-        // Retrieve addresses associated with the user
-        $userAddresses = Address::whereHas('userAddresses', function ($query) use ($userId) {
-            $query->where('user_id', $userId);
-        })->get();
+        // Retrieve the default user address with associated details
+        $userAddress = UserAddress::where('user_id', $userId)
+                                  ->with('address.country', 'address.region', 'address.city')
+                                  ->first();
 
-        if ($userAddresses->isEmpty()) {
+        if (!$userAddress) {
             return response()->json([
                 'message' => 'Error',
                 'data' => null,
@@ -54,8 +66,8 @@ class AddressController extends Controller
         }
 
         return response()->json([
-            'message' => 'Success',
-            'data' => $userAddresses,
+            'message' => 'success',
+            'data' => $userAddress,
         ]);
     } catch (\Exception $e) {
         return response()->json([
