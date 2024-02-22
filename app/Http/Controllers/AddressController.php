@@ -48,30 +48,30 @@ class AddressController extends Controller
         }
     }
 
-public function getAddress()
+public function getAddresses()
 {
     try {
         $userId = auth()->user()->id;
 
-        // Retrieve the default user address with associated details
-        $userAddress = UserAddress::where('user_id', $userId)
+       
+        $userAddresses = UserAddress::where('user_id', $userId)
                                   ->with('address.country', 'address.region', 'address.city')
-                                  ->first();
+                                  ->get();
 
-        if (!$userAddress) {
+        if (!$userAddresses) {
             return response()->json([
-                'message' => 'Error',
+                'message' => 'error',
                 'data' => null,
             ]);
         }
 
         return response()->json([
             'message' => 'success',
-            'data' => $userAddress,
+            'data' => $userAddresses,
         ]);
     } catch (\Exception $e) {
         return response()->json([
-            'message' => 'Error',
+            'message' => 'error',
             'error' => $e->getMessage(),
         ], 500);
     }
@@ -101,23 +101,58 @@ public function userHasAddress()
         ], 500);
     }
 }
-    public function destroy($userAddressId)
+    public function deleteAddress($addressId)
     {
         try {
-            $userAddress = UserAddress::findOrFail($userAddressId);
+            $address = Address::findOrFail($addressId);
 
-            // Delete the user address
-            $userAddress->delete();
+           
+            $address->delete();
 
             return response()->json([
-                'message' => 'User address deleted successfully',
+                'message' => 'success',
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Error',
+                'message' => 'error',
                 'error' => $e->getMessage(),
             ], 500);
         }
     }
+
+    public function setDefaultAddress($addressId)
+{
+    try {
+        // Get the address associated with the given addressId
+        $address = Address::findOrFail($addressId);
+
+        // Get the user's default address
+        $defaultUserAddress = UserAddress::where('user_id', auth()->user()->id)
+            ->where('is_default', true)
+            ->first();
+
+        // If there is a default address, set it to false
+        if ($defaultUserAddress) {
+            $defaultUserAddress->update(['is_default' => false]);
+        }
+
+        // Get the user_address for the specified address
+        $userAddress = UserAddress::where('user_id', auth()->user()->id)
+            ->where('address_id', $address->id)
+            ->first();
+
+        // Update the specified user_address to true
+        $userAddress->update(['is_default' => true]);
+
+        return response()->json([
+            'message' => 'success',
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'error',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
 
 }

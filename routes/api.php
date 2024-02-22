@@ -84,10 +84,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('/countries', CountryController::class);
     Route::post('/addAddress', [AddressController::class, 'store']);
-    Route::get('/getAddress', [AddressController::class, 'getAddress']);
+    Route::get('/getAddresses', [AddressController::class, 'getAddresses']);
     Route::get('/userHasAddress', [AddressController::class, 'userHasAddress']);
-
-    Route::delete('/deleteAddress/{addressID}', [AddressController::class, 'destroy']);
+    Route::delete('/deleteAddress/{id}', [AddressController::class, 'deleteAddress']);
+    Route::post('/setDefaultAddress/{id}', [AddressController::class, 'setDefaultAddress']);
 
     Route::get('/paymentTypes', PaymentTypeController::class);
     Route::get('/userPaymentMethods', UserPaymentMethodController::class);
