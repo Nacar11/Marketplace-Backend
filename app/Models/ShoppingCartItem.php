@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ShoppingCartItem extends Model
 {
-    protected $fillable = ['cart_id', 'product_item_id',];
+    protected $fillable = ['cart_id', 'product_item_id', 'selectedToCheckout']; // Include the new column in the fillable array
 
     public function cart()
     {
@@ -18,10 +18,7 @@ class ShoppingCartItem extends Model
     {
         return $this->belongsTo(ProductItem::class, 'product_item_id');
     }
-
 }
-
-
 
 
 

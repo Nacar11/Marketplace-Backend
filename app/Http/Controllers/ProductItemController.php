@@ -166,14 +166,6 @@ public function addListing(ProductItemRequest $request)
 }
 
 
-public function deleteListing($id)
-{
-$result = ProductItem::where('id', '=', $id)->delete();
-return response()->json([
-    'status' => $result,
-    'msg' => $result ? 'success' : 'fuck'
-]);
-}
 
 
 

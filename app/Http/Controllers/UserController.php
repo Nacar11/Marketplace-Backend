@@ -13,24 +13,14 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 
-
-
-
-
-
-
 class UserController extends Controller{
 
-    public function __invoke()
-        {
-            print("asdasd");
-        }
+  
      public function getUserData(Request $request)
         {
             try {
                 $userId = auth()->user()->id;
 
-                // Retrieve the user based on the user ID
                 $user = User::find($userId);
 
                 if (!$user) {
@@ -39,9 +29,9 @@ class UserController extends Controller{
 
                
 
-                return response()->json(['message' => 'success', 'userData' => $user]);
+                return response()->json(['message' => 'success', 'data' => $user]);
             } catch (\Exception $e) {
-                return response()->json(['message' => 'Error', 'error' => $e->getMessage()], 500);
+                return response()->json(['message' => 'error', 'error' => $e->getMessage()], 500);
             }
         }
 }

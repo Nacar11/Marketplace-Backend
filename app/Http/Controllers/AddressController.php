@@ -81,7 +81,6 @@ public function userHasAddress()
     try {
         $userId = auth()->user()->id;
 
-        // Retrieve addresses associated with the user
         $userAddresses = Address::whereHas('userAddresses', function ($query) use ($userId) {
             $query->where('user_id', $userId);
         })->get();
