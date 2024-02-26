@@ -79,8 +79,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('getCartItemByID/{id}', [ShoppingCartItemController::class, 'getCartItemByID']);
     Route::post('addToCart', [ShoppingCartItemController::class, 'addToCart']);
     Route::delete('deleteCartItem/{cartItemId}', [ShoppingCartItemController::class, 'deleteCartItem']);
-
-
+Route::put('selectForCheckout/{id}/',  [ShoppingCartItemController::class, 'selectCartItemForCheckout']);
+Route::put('unSelectForCheckout/{id}',  [ShoppingCartItemController::class, 'unselectCartItemForCheckout']);
     Route::get('/countries', CountryController::class);
     Route::post('/addAddress', [AddressController::class, 'store']);
     Route::get('/getAddresses', [AddressController::class, 'getAddresses']);

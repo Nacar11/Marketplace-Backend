@@ -17,8 +17,8 @@ class CreateUserPaymentMethodsTable extends Migration
             $table->string('account_number');
             $table->string('expiry_date');
             $table->boolean('is_default')->default(false);
+            $table->string('product_image')->nullable();
             $table->timestamps();
-
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('payment_type_id')->references('id')->on('payment_types')->onDelete('cascade');
         });

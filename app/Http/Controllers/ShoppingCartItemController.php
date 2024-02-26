@@ -80,7 +80,41 @@ public function deleteCartItem($cartItemId)
     ]);
 }
 
+public function selectCartItemForCheckout($cartItemId)
+{
+    $cartItem = ShoppingCartItem::find($cartItemId);
 
+    if (!$cartItem) {
+        return response()->json([
+            'message' => 'Cart item not found.',
+        ], 404);
+    }
+
+    $cartItem->selectedToCheckout = true;
+    $cartItem->save();
+
+    return response()->json([
+        'message' => 'success',
+    ]);
+}
+
+public function unselectCartItemForCheckout($cartItemId)
+{
+    $cartItem = ShoppingCartItem::find($cartItemId);
+
+    if (!$cartItem) {
+        return response()->json([
+            'message' => 'Cart item not found.',
+        ], 404);
+    }
+
+    $cartItem->selectedToCheckout = false;
+    $cartItem->save();
+
+    return response()->json([
+        'message' => 'success',
+    ]);
+}
     
     
 }
