@@ -43,50 +43,56 @@ use App\Http\Controllers\CityController;
 
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
+    //INITIALIZE USER DATA
     Route::get('getUserData', [UserController::class, 'getUserData']);
     Route::get('/logout', [AuthController::class, 'logout']);
+    Route::get('getUserGender', [UserController::class, 'getUserGender']);
+
+
+    //PRODUCT ITEMS AND FAVORITE PRODUCT ITEMS
     Route::get('productItem/{product}', [ProductItemController::class, 'show']);
     Route::post('productItem', [ProductItemController::class, 'store']);
     Route::get('getFavoritesByUser', [FavoriteController::class, 'getFavoritesByUser']);
     Route::post('addToFavorites', [FavoriteController::class, 'addToFavorites']);
     Route::delete('removeFromFavorites', [FavoriteController::class, 'removeFromFavorites']);
-
-    Route::get('getRegionsByCountryId/{id}', [RegionController::class, 'getRegionsByCountryId']);
-    Route::get('getCitiesByRegionId/{id}', [CityController::class, 'getCitiesByRegionId']);
     Route::get('productItemsbyCategory/{id}', [ProductItemController::class, 'getProductItemsByCategory']);
     Route::get('product', ProductController::class);
     Route::get('getProductTypesByCategory/{id}', [ProductCategoryController::class, 'getProductTypesByCategory']);
     Route::get('getProductItemsByProductType/{id}', [ProductItemController::class, 'getProductItemsByProductType']);
     Route::get('getProductItemsByUser', [ProductItemController::class, 'getProductItemsByUser']);
 
-    Route::get('getVariantsByProductTypes/{id}', [ProductController::class, 'getVariantsByProductTypes']);
+    //REGIONS, COUNTRIES AND CITIES
+    Route::get('getRegionsByCountryId/{id}', [RegionController::class, 'getRegionsByCountryId']);
+    Route::get('getCitiesByRegionId/{id}', [CityController::class, 'getCitiesByRegionId']);
  
+
+    //VARIATIONS
+    Route::get('getVariantsByProductTypes/{id}', [ProductController::class, 'getVariantsByProductTypes']);
     Route::get('variationOptions/{id}', [VariationController::class, 'getVariationOptions']);
     Route::get('variation', VariationController::class);
-    Route::get('variation/{variation}', [VariationController::class, 'show']);
-
-
+    Route::get('variation-option', VariationOptionController::class);
     Route::get('product-configuration', [ProductConfigurationController::class, 'getAll']);
     
 
-    Route::get('variation-option', VariationOptionController::class);
-    Route::get('variation-option/{id}', [VariationOptionController::class, 'show']);
+   
  
-    Route::put('variation-option/{id}', [VariationOptionController::class, 'update']);
-    Route::delete('variation-option/{id}', [VariationOptionController::class, 'destroy']);
-
+    //SHOPPING CART
     Route::get('getShoppingCartItemsByUser', ShoppingCartItemController::class);
     Route::get('getCartItemByID/{id}', [ShoppingCartItemController::class, 'getCartItemByID']);
     Route::post('addToCart', [ShoppingCartItemController::class, 'addToCart']);
     Route::delete('deleteCartItem/{cartItemId}', [ShoppingCartItemController::class, 'deleteCartItem']);
-Route::put('selectForCheckout/{id}/',  [ShoppingCartItemController::class, 'selectCartItemForCheckout']);
-Route::put('unSelectForCheckout/{id}',  [ShoppingCartItemController::class, 'unselectCartItemForCheckout']);
+    Route::put('selectForCheckout/{id}/',  [ShoppingCartItemController::class, 'selectCartItemForCheckout']);
+    Route::put('unSelectForCheckout/{id}',  [ShoppingCartItemController::class, 'unselectCartItemForCheckout']);
+
+    //ADDRESS
     Route::get('/countries', CountryController::class);
     Route::post('/addAddress', [AddressController::class, 'store']);
     Route::get('/getAddresses', [AddressController::class, 'getAddresses']);
     Route::get('/userHasAddress', [AddressController::class, 'userHasAddress']);
     Route::delete('/deleteAddress/{id}', [AddressController::class, 'deleteAddress']);
     Route::post('/setDefaultAddress/{id}', [AddressController::class, 'setDefaultAddress']);
+
+
 
     Route::get('/paymentTypes', PaymentTypeController::class);
     Route::get('/userPaymentMethods', UserPaymentMethodController::class);
@@ -125,7 +131,6 @@ Route::get('test',function(){
 Route::get('product-category', ProductCategoryController::class);
 Route::get('product-category/{id}', [ProductCategoryController::class, 'show']);
 
-// Route::get('getProductItemByCategory/{id}', [ProductCategoryController::class, 'getProductItemsByCategory']);
 
 Route::get('productItems', ProductItemController::class);
 Route::get('/getProductItem/{id}', [ProductItemController::class, 'getProductItem']);
@@ -142,3 +147,7 @@ Route::post('/checkUsername', [AuthController::class, 'checkUsername']);
 Route::post('variation/', [VariationController::class, 'store']);
 Route::post('product-configuration', [ProductConfigurationController::class, 'add']);
 Route::post('variation-option/', [VariationOptionController::class, 'store']);
+
+
+
+//PAYMONGO

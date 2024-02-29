@@ -52,24 +52,6 @@ class VariationController extends Controller
         ], 201);
     }
 
-    public function update(VariationRequest $request, $id)
-    {
-        $variation = Variation::find($id);
-        $variation->update($request->validated());
-
-        return response()->json([
-            'status' => 'Success',
-            'Body' => new VariationResource($variation),
-        ], 200);
-    }
-
-    public function destroy($id)
-    {
-    $result = Variation::where('id', '=', $id)->delete();
-    return response()->json([
-        'status' => $result,
-        'msg' => $result ? 'success' : 'failed'
-    ]);
-    }
+ 
     
 }

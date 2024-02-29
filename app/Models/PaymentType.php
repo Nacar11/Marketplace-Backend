@@ -9,9 +9,9 @@ class PaymentType extends Model
 {
     use HasFactory;
 
-    protected $table = 'payment_types'; // Specify the table name if it's not following Laravel's naming conventions
-
     protected $fillable = [
-        'value',
+        'name',
+        'code',
+        'product_image',
     ];
 }
