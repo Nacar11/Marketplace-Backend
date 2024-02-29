@@ -26,22 +26,6 @@ use App\Http\Controllers\CityController;
 
 
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
-
 Route::group(['middleware' => ['auth:sanctum']], function () {
     //INITIALIZE USER DATA
     Route::get('getUserData', [UserController::class, 'getUserData']);
@@ -93,8 +77,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/setDefaultAddress/{id}', [AddressController::class, 'setDefaultAddress']);
 
 
-
-    Route::get('/paymentTypes', PaymentTypeController::class);
+    //PAYMENTS AND ORDERS
+    Route::get('/getPaymentTypes', PaymentTypeController::class);
     Route::get('/userPaymentMethods', UserPaymentMethodController::class);
     Route::put('/updateUPM', [UserPaymentMethodController::class, 'update']);
     Route::get('/getUPMbyID', [UserPaymentMethodController::class, 'getUPMbyID']);

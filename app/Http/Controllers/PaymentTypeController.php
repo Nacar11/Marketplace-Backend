@@ -11,6 +11,6 @@ class PaymentTypeController extends Controller
     {
         $paymentTypes = PaymentType::all();
 
-        return response()->json(['data' => $paymentTypes]);
+        return response()->json(['message' => 'success', 'data' => $paymentTypes]);
     }
 }
