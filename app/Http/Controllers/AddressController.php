@@ -154,4 +154,34 @@ public function userHasAddress()
     }
 }
 
+public function getDefaultAddress()
+{
+    try {
+        $userId = auth()->user()->id;
+
+        $defaultUserAddress = UserAddress::where('user_id', $userId)
+            ->where('is_default', true)
+            ->with('address.country', 'address.region', 'address.city')
+            ->first();
+
+        if (!$defaultUserAddress) {
+            return response()->json([
+                'message' => 'error',
+                'data' => null,
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'success',
+            'data' => $defaultUserAddress,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'error',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
 }
+
+}
+

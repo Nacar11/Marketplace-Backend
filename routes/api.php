@@ -75,7 +75,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/userHasAddress', [AddressController::class, 'userHasAddress']);
     Route::delete('/deleteAddress/{id}', [AddressController::class, 'deleteAddress']);
     Route::post('/setDefaultAddress/{id}', [AddressController::class, 'setDefaultAddress']);
-
+    Route::get('/getDefaultAddress', [AddressController::class, 'getDefaultAddress']);
 
     //PAYMENTS AND ORDERS
     Route::get('/getPaymentTypes', PaymentTypeController::class);
