@@ -23,7 +23,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\CityController;
-
+use App\Http\Controllers\WebHookController;
 
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
@@ -79,11 +79,16 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     //PAYMENTS AND ORDERS
     Route::get('/getPaymentTypes', PaymentTypeController::class);
+    //
     Route::get('/userPaymentMethods', UserPaymentMethodController::class);
     Route::put('/updateUPM', [UserPaymentMethodController::class, 'update']);
     Route::get('/getUPMbyID', [UserPaymentMethodController::class, 'getUPMbyID']);
 
- 
+
+
+
+
+
     Route::get('getOrderLinesByID', [OrderLineController::class,'getOrderLinesByUser']);
     Route::get('/getAllOrderLines', [OrderLineController::class, 'getAllOrderLines']);
     Route::get('/getSingleOrderLine/{id}', [OrderLineController::class, 'getSingleOrderLine']);
@@ -134,4 +139,6 @@ Route::post('variation-option/', [VariationOptionController::class, 'store']);
 
 
 
-//PAYMONGO
+
+//WEBHOOKS FROM PAYMONGO
+Route::post('/checkoutPaymentSuccess', [WebHookController::class,'checkoutPaymentSuccess']);

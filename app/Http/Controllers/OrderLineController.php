@@ -88,7 +88,7 @@ class OrderLineController extends Controller
 
         //seller
         $productOwner = $orderLine->productItem->user;
-        $productOwner->notify(new OrderReceivedNotification($orderLine));
+        // $productOwner->notify(new OrderReceivedNotification($orderLine));
         
         return response()->json(['message' => 'success'], 201);
     } catch (\Exception $e) {

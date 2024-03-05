@@ -143,10 +143,10 @@ public function changePassword(Request $request)
         $existingUser = User::where('email', $email)->first();
 
         if ($existingUser) {
-            // Update the user's password
-            $existingUser->password = bcrypt($newPassword); // Assuming password is hashed using bcrypt
+          
+            $existingUser->password = bcrypt($newPassword); 
 
-            // Save the updated password
+            
             $existingUser->save();
 
             return response()->json(['message' => 'Password changed successfully'], 200);
