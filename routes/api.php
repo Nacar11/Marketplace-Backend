@@ -79,6 +79,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     //PAYMENTS AND ORDERS
     Route::get('/getPaymentTypes', PaymentTypeController::class);
+    Route::post('/addOrderLine', [OrderLineController::class, 'store']);
+
     //
     Route::get('/userPaymentMethods', UserPaymentMethodController::class);
     Route::put('/updateUPM', [UserPaymentMethodController::class, 'update']);
@@ -86,13 +88,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 
 
-
-
-
     Route::get('getOrderLinesByID', [OrderLineController::class,'getOrderLinesByUser']);
     Route::get('/getAllOrderLines', [OrderLineController::class, 'getAllOrderLines']);
     Route::get('/getSingleOrderLine/{id}', [OrderLineController::class, 'getSingleOrderLine']);
-    Route::post('/addOrderLine', [OrderLineController::class, 'store']);
     Route::get('/getOrderlinesFromProductListings', [OrderLineController::class, 'getOrderLinesFromProductListings']);
     Route::delete('deleteOrderLinesByID/{ID}', [OrderLineController::class, 'deleteOrderLine']);
 
@@ -138,7 +136,6 @@ Route::post('product-configuration', [ProductConfigurationController::class, 'ad
 Route::post('variation-option/', [VariationOptionController::class, 'store']);
 
 
+   //WEBHOOKS FROM PAYMONGO
+    Route::post('/checkoutPaymentSuccess', [WebHookController::class,'checkoutPaymentSuccess']);
 
-
-//WEBHOOKS FROM PAYMONGO
-Route::post('/checkoutPaymentSuccess', [WebHookController::class,'checkoutPaymentSuccess']);
