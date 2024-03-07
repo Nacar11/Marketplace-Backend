@@ -20,7 +20,6 @@ class UserPaymentMethod extends Model
         'is_default',
     ];
 
-    // Define relationships with the 'users' and 'payment_type' tables
     public function user()
     {
         return $this->belongsTo(User::class);

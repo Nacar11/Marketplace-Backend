@@ -78,21 +78,21 @@ class OrderLineController extends Controller
         $orderLine = OrderLine::create($validatedData);
         $orderLine->load('user', 'paymentMethod', 'shippingAddress.country', 'shippingMethod', 'productItem.user', 'productItem.product');        
         $user = auth()->user();
-        $user->notify(new OrderPlacedNotification($orderLine));
+        // $user->notify(new OrderPlacedNotification($orderLine));
         
         //clear shopping cart
         // $shoppingCartController = new ShoppingCartController();
         // $shoppingCartController->deleteAllShoppingCartItems($user->id);    
-        $shoppingCart = ShoppingCart::where('user_id', $userId)->first();
-        $shoppingCart->items()->delete();
+        // $shoppingCart = ShoppingCart::where('user_id', $userId)->first();
+        // $shoppingCart->items()->delete();
 
         //seller
-        $productOwner = $orderLine->productItem->user;
+        // $productOwner = $orderLine->productItem->user;
         // $productOwner->notify(new OrderReceivedNotification($orderLine));
         
         return response()->json(['message' => 'success'], 201);
     } catch (\Exception $e) {
-        return response()->json(['message' => 'error'], 500); 
+        return response()->json(['message' => $e], 500); 
     }
     }   
 
