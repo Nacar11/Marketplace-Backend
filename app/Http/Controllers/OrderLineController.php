@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Orderline;
+use App\Models\OrderLine;
 use App\Http\Requests\OrderLineRequest;
 use Illuminate\Http\Request;
 use App\Models\ShippingMethod;
+use App\Models\Variation;
+use App\Models\ShoppingCartItem;
 use App\Models\ShoppingCart;
 use Notifications;
 use App\http\Controllers\ShoppingCartController;
@@ -118,15 +120,14 @@ class OrderLineController extends Controller
     }
 
     public function getOrderLinesByUser()
-{
-    // Get the authenticated user's ID
+    {
+   
     $userId = auth()->user()->id;
 
     $orderLines = OrderLine::with([
         'user' => function ($query) {
             $query->select('id', 'username', 'first_name', 'last_name', 'date_of_birth', 'email', 'contact_number', 'gender' );
         },
-        'paymentMethod',
         'shippingAddress',
         'orderStatus',
         'shippingMethod',
@@ -139,8 +140,12 @@ class OrderLineController extends Controller
         return response()->json(['message' => 'No order lines found for the user'], 404);
     }
 
-    return $orderLines;
-}
+    
+    return response()->json([
+    'message' => 'success',
+    'data' => $orderLines
+    ]);
+    }
 
 public function deleteOrderLine($ID)
 {
@@ -152,8 +157,52 @@ return response()->json([
 }
 
 
+ public function checkoutPaymentSuccess(Request $request)
+    //WEBHOOK FUNCTION TO CREATE ORDER LINES WHEN CHECKOUT PAYMENT FROM PAYMONGO SUCCEEDED, LIVEMODE == FALSE
+    //REFERENCE TO CHECKOUT SESSION RESOURCE JSON OBJECT
+    //https://developers.paymongo.com/reference/checkout-session-resource
+    //(THIS FUNCTION IS ONLY CALLED AS A WEBHOOK, CANNOT TEST IT THIS ON API CLIENT TOOLS)
+        {
+         $initialShippingMethod = ShippingMethod::first();
+         $lineItems = $request->input('data.attributes.data.attributes.line_items');
+         $metadata = $request->input('data.attributes.data.attributes.metadata');
+         $ids = json_decode($metadata['cart_ids']);
 
+            for ($i = 0; $i < count($lineItems); $i++) {
+                $item = $lineItems[$i];
+                $description = $item['description'];
+                $amount = $item['amount'];
 
+                $sku = uniqid();
+               
+                $shoppingCartItem  = ShoppingCartItem::find($ids[$i]);
+                $productItemId = $shoppingCartItem->product_item_id;
+                
+                OrderLine::create([
+	                'product_item_id'=> $productItemId,
+	                'price' => number_format($amount / 100, 2),
+	                'payment_method_id'=> 1,
+	                'shipping_address_id'=> $metadata['address_id'],
+                    'user_id' => $metadata['user_id'],
+                    'SKU' => $sku,
+                    'shipping_method_id' => $initialShippingMethod ? $initialShippingMethod->id : null,
+                    'order_date' =>now()->format('Y-m-d'),
+                    'order_status_id' => 1
+                    ]);
+                    // here delete
+                    $shoppingCartItem->delete();
 
+            }
+        return response()->json([
+            'message' => 'success',
+            'data' => 'checkout session payment success'
+            ], 200);
+        }
 
+ 
 }
+
+
+
+
+

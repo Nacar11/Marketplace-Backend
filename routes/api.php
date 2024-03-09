@@ -62,7 +62,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
  
     //SHOPPING CART
     Route::get('getShoppingCartItemsByUser', ShoppingCartItemController::class);
-    Route::get('getCartItemByID/{id}', [ShoppingCartItemController::class, 'getCartItemByID']);
     Route::post('addToCart', [ShoppingCartItemController::class, 'addToCart']);
     Route::delete('deleteCartItem/{cartItemId}', [ShoppingCartItemController::class, 'deleteCartItem']);
     Route::put('selectForCheckout/{id}/',  [ShoppingCartItemController::class, 'selectCartItemForCheckout']);
@@ -79,16 +78,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     //PAYMENTS AND ORDERS
     Route::get('/getPaymentTypes', PaymentTypeController::class);
-    Route::post('/addOrderLine', [OrderLineController::class, 'store']);
-
-    //
-    Route::get('/userPaymentMethods', UserPaymentMethodController::class);
-    Route::put('/updateUPM', [UserPaymentMethodController::class, 'update']);
-    Route::get('/getUPMbyID', [UserPaymentMethodController::class, 'getUPMbyID']);
-
-
-
-    Route::get('getOrderLinesByID', [OrderLineController::class,'getOrderLinesByUser']);
+    ////////////////continue
+    Route::get('/getOrderLinesByUser', [OrderLineController::class,'getOrderLinesByUser']);
     Route::get('/getAllOrderLines', [OrderLineController::class, 'getAllOrderLines']);
     Route::get('/getSingleOrderLine/{id}', [OrderLineController::class, 'getSingleOrderLine']);
     Route::get('/getOrderlinesFromProductListings', [OrderLineController::class, 'getOrderLinesFromProductListings']);
@@ -99,10 +90,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/getShippingMethods', ShippingMethodController::class);
     Route::post('/addListing', [ProductItemController::class, 'addListing']);
     Route::delete('deleteListingByID/{itemID}', [ProductItemController::class, 'deleteListing']);
-
-
-    Route::get('getCartItemsForUser', [ShoppingCartItemController::class, 'getCartItemsForUser']);
-
 
 });
 
@@ -136,6 +123,6 @@ Route::post('product-configuration', [ProductConfigurationController::class, 'ad
 Route::post('variation-option/', [VariationOptionController::class, 'store']);
 
 
-   //WEBHOOKS FROM PAYMONGO
-    Route::post('/checkoutPaymentSuccess', [WebHookController::class,'checkoutPaymentSuccess']);
+//WEBHOOKS FROM PAYMONGO
+Route::post('/checkoutPaymentSuccess', [OrderLineController::class,'checkoutPaymentSuccess']);
 

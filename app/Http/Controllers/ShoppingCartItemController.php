@@ -8,11 +8,6 @@ use App\Http\Requests\ShoppingCartItemRequest;
 class ShoppingCartItemController extends Controller
 {
 
-    public function getCartItemByID($id)
-    {
-        return ShoppingCartItem::with('variationOptions')->find($id);
-    }
-
     public function __invoke()
     {
     $user = auth()->user();
@@ -34,7 +29,7 @@ class ShoppingCartItemController extends Controller
     }
 
     public function addToCart(ShoppingCartItemRequest $request)
-{
+    {
     $user = auth()->user();
     $cart = $user->shoppingCart;
     $cartId = $cart->id;
@@ -62,9 +57,9 @@ class ShoppingCartItemController extends Controller
     return response()->json([
         'message' => 'success',
     ]);
-}
-public function deleteCartItem($cartItemId)
-{
+    }
+    public function deleteCartItem($cartItemId)
+    {
     $cartItem = ShoppingCartItem::find($cartItemId);
 
     if (!$cartItem) {
@@ -78,10 +73,10 @@ public function deleteCartItem($cartItemId)
     return response()->json([
         'message' => 'success',
     ]);
-}
+    }
 
-public function selectCartItemForCheckout($cartItemId)
-{
+    public function selectCartItemForCheckout($cartItemId)
+    {
     $cartItem = ShoppingCartItem::find($cartItemId);
 
     if (!$cartItem) {
@@ -96,10 +91,10 @@ public function selectCartItemForCheckout($cartItemId)
     return response()->json([
         'message' => 'success',
     ]);
-}
+    }
 
-public function unselectCartItemForCheckout($cartItemId)
-{
+    public function unselectCartItemForCheckout($cartItemId)
+    {
     $cartItem = ShoppingCartItem::find($cartItemId);
 
     if (!$cartItem) {
@@ -114,7 +109,7 @@ public function unselectCartItemForCheckout($cartItemId)
     return response()->json([
         'message' => 'success',
     ]);
-}
+    }
     
     
 }
