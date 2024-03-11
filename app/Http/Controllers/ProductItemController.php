@@ -38,7 +38,11 @@ class ProductItemController extends Controller
         ->where('user_id', $userId)
         ->get();
     
-    return $productItems;
+   
+   return response()->json([
+        'message' => "success",
+        'data' => $productItems,
+    ], 200);
 }
 
     public function store(ProductItemRequest $request)

@@ -128,11 +128,13 @@ class OrderLineController extends Controller
         'user' => function ($query) {
             $query->select('id', 'username', 'first_name', 'last_name', 'date_of_birth', 'email', 'contact_number', 'gender' );
         },
-        'shippingAddress',
+        'shippingAddress.city',
+        'shippingAddress.region',
         'orderStatus',
         'shippingMethod',
         'productItem.productImages',
-        'productItem.product'
+        'productItem.product',
+        'productItem.user'
     ])->where('user_id', $userId)
       ->get();
 
