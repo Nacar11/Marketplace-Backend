@@ -79,15 +79,17 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     //PAYMENTS AND ORDERS
     Route::get('/getPaymentTypes', PaymentTypeController::class);
     ////////////////continue
-    Route::get('/getOrderLinesByUser', [OrderLineController::class,'getOrderLinesByUser']);
-    Route::get('/getAllOrderLines', [OrderLineController::class, 'getAllOrderLines']);
-    Route::get('/getSingleOrderLine/{id}', [OrderLineController::class, 'getSingleOrderLine']);
-    Route::get('/getOrderlinesFromProductListings', [OrderLineController::class, 'getOrderLinesFromProductListings']);
-    Route::delete('deleteOrderLinesByID/{ID}', [OrderLineController::class, 'deleteOrderLine']);
-
-
-    Route::get('/getFirstShipping', [ShippingMethodController::class, 'getFirst']);
     Route::get('/getShippingMethods', ShippingMethodController::class);
+    Route::get('/getOrderLinesByUser', [OrderLineController::class,'getOrderLinesByUser']);
+    Route::get('/getAllOrderLines', OrderLineController::class );
+    //
+
+
+
+    // Route::delete('deleteOrderLinesByID/{ID}', [OrderLineController::class, 'deleteOrderLine']);
+
+
+    
     Route::post('/addListing', [ProductItemController::class, 'addListing']);
     Route::delete('deleteListingByID/{itemID}', [ProductItemController::class, 'deleteListing']);
 

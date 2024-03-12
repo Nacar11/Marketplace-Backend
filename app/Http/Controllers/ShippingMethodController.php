@@ -9,7 +9,10 @@ class ShippingMethodController extends Controller
     public function __invoke()
     {
         $shippingMethods = ShippingMethod::all();
-        return response()->json($shippingMethods);
+         return response()->json([
+        'message' => "success",
+        'data' => $shippingMethods,
+    ], 200);
     }
 
     public function getFirst()
