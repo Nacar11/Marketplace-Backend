@@ -105,12 +105,12 @@ class ProductItemController extends Controller
         ], 200);
     }
 
-    public function destroy($id)
+    public function deleteListedItem($id)
     {
     $result = ProductItem::where('id', '=', $id)->delete();
     return response()->json([
-        'status' => $result,
-        'msg' => $result ? 'success' : 'failed'
+        'message' => 'success',
+      
     ]);
     }
 

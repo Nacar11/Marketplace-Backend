@@ -44,6 +44,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('getProductTypesByCategory/{id}', [ProductCategoryController::class, 'getProductTypesByCategory']);
     Route::get('getProductItemsByProductType/{id}', [ProductItemController::class, 'getProductItemsByProductType']);
     Route::get('getProductItemsByUser', [ProductItemController::class, 'getProductItemsByUser']);
+    Route::delete('deleteListedItem/{id}', [ProductItemController::class, 'deleteListedItem']);
 
     //REGIONS, COUNTRIES AND CITIES
     Route::get('getRegionsByCountryId/{id}', [RegionController::class, 'getRegionsByCountryId']);
@@ -83,15 +84,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/getOrderLinesByUser', [OrderLineController::class,'getOrderLinesByUser']);
     Route::get('/getAllOrderLines', OrderLineController::class );
     //
-
-
-
-    // Route::delete('deleteOrderLinesByID/{ID}', [OrderLineController::class, 'deleteOrderLine']);
-
-
     
     Route::post('/addListing', [ProductItemController::class, 'addListing']);
-    Route::delete('deleteListingByID/{itemID}', [ProductItemController::class, 'deleteListing']);
 
 });
 
