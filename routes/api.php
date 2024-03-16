@@ -42,6 +42,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('productItemsbyCategory/{id}', [ProductItemController::class, 'getProductItemsByCategory']);
     Route::get('product', ProductController::class);
     Route::get('getProductTypesByCategory/{id}', [ProductCategoryController::class, 'getProductTypesByCategory']);
+    Route::get('getProductTypes', [ProductController::class, 'getProductTypes']);
     Route::get('getProductItemsByProductType/{id}', [ProductItemController::class, 'getProductItemsByProductType']);
     Route::get('getProductItemsByUser', [ProductItemController::class, 'getProductItemsByUser']);
     Route::delete('deleteListedItem/{id}', [ProductItemController::class, 'deleteListedItem']);
@@ -99,11 +100,12 @@ Route::get('test',function(){
     return 'success';
 });
 Route::get('product-category', ProductCategoryController::class);
+Route::get('productCategories', [ProductCategoryController::class, 'getProductCategories']);
 Route::get('product-category/{id}', [ProductCategoryController::class, 'show']);
 
 
-Route::get('productItems', ProductItemController::class);
-Route::get('/getProductItem/{id}', [ProductItemController::class, 'getProductItem']);
+// Route::get('productItems', ProductItemController::class);
+// Route::get('/getProductItem/{id}', [ProductItemController::class, 'getProductItem']);
 
 Route::get('auth/facebook', [AuthController::class, 'facebookpage']);
 Route::post('google/callback', [AuthController::class, 'googleRedirect']);

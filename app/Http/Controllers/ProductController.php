@@ -12,7 +12,11 @@ class ProductController extends Controller
 {
     public function __invoke()
     {
-        return Product::query()->get();
+      
+    return response()->json([
+    'message' => 'success',
+    'data' =>    Product::query()->get(),
+    ]);
     }
 
 
@@ -27,6 +31,10 @@ class ProductController extends Controller
         
         $variants = $category->variations->load('variationOptions');
         
+         return response()->json([
+        'message' => 'success',
+        'data' =>    $variants,
+        ]);
         return $variants;
     }
     

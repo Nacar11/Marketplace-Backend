@@ -9,6 +9,16 @@ use App\Models\ProductItem;
 
 class ProductCategoryController extends Controller
 {
+
+    
+public function getProductCategories()
+{
+        $categories = ProductCategory::all();
+
+          return response()->json(['message' => 'success', 'data' => $categories], 200);
+
+}
+
 public function __invoke()
 {
     $categories = ProductCategory::query()->get();
