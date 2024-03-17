@@ -12,8 +12,6 @@ class AddressController extends Controller
     {
         try {
             $validatedData = $request->validated();
-
-            // Create a new address
             $address = Address::create([
                 'contact_number'=> $validatedData['contact_number'],
                 'unit_number' => $validatedData['unit_number'],
@@ -24,8 +22,6 @@ class AddressController extends Controller
                 'postal_code' => $validatedData['postal_code'],
                 'country_id' => $validatedData['country_id'],
             ]);
-
-             // Check if the user has any existing addresses
             $existingUserAddressesCount = auth()->user()->userAddresses()->count();
 
             // Set is_default to true if the user doesn't have any existing addresses
@@ -52,8 +48,6 @@ public function getAddresses()
 {
     try {
         $userId = auth()->user()->id;
-
-       
         $userAddresses = UserAddress::where('user_id', $userId)
                                   ->with('address.country', 'address.region', 'address.city')
                                   ->get();
@@ -122,25 +116,19 @@ public function userHasAddress()
     public function setDefaultAddress($addressId)
 {
     try {
-        // Get the address associated with the given addressId
         $address = Address::findOrFail($addressId);
-
-        // Get the user's default address
         $defaultUserAddress = UserAddress::where('user_id', auth()->user()->id)
             ->where('is_default', true)
             ->first();
 
-        // If there is a default address, set it to false
         if ($defaultUserAddress) {
             $defaultUserAddress->update(['is_default' => false]);
         }
 
-        // Get the user_address for the specified address
         $userAddress = UserAddress::where('user_id', auth()->user()->id)
             ->where('address_id', $address->id)
             ->first();
 
-        // Update the specified user_address to true
         $userAddress->update(['is_default' => true]);
 
         return response()->json([

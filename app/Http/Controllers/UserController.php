@@ -37,7 +37,7 @@ class UserController extends Controller{
         if ($user && $user->gender) {
             return response()->json(['message' => 'success', 'data' => $user->gender]);
         } else {
-            return null;
+            return response()->json(['message' => 'error', 'data' => null]);
         }
     }
 }
