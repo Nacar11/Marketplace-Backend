@@ -17,7 +17,9 @@ class ProductItemController extends Controller
     public function __invoke()
     {
         $productItems = ProductItem::with('product.productCategory', 'productImages', 'productConfigurations.variationOption.variation')->get();    
-        return $productItems;
+
+       return response()->json(['message' => 'success',
+                          'data' => $productItems], 200);
     }
 
     public function getProductItemsByProductType($productId)
@@ -26,7 +28,8 @@ class ProductItemController extends Controller
         ->where('product_id', $productId)
         ->get();
     
-    return $productItems;
+    return response()->json(['message' => 'success',
+                          'data' => $productItems], 200);
     
     }
 
@@ -45,72 +48,11 @@ class ProductItemController extends Controller
     ], 200);
 }
 
-    public function store(ProductItemRequest $request)
-{
-    $user = auth()->user();
-    $userId = $user->id;
-    $sku = uniqid();
-    $productItem = ProductItem::create(array_merge($request->validated(), [
-        'user_id' => $userId,
-        'SKU' => $sku,
-    ]));
-
-    // Handle product images
-     if($request->HasFile('product_images')){
-            $uploadPath = 'uploads/products/';
-            $i=1;
-            foreach($request->file('product_images') as $imageFile){
-                $extension = $imageFile->getClientOriginalExtension();
-                $fileName = time().$i++.'.'.$extension;
-                $imageFile->move($uploadPath,$fileName);
-                $finalImagePath = $uploadPath.$fileName;
-
-                $productImage = new ProductImage([
-                    'product_id' => $productItem->id,
-                    'product_image' => asset($finalImagePath),
-                ]);
-                $productItem->productImages()->save($productImage);
-            }
-        }
-    $productItem->load('product', 'productImages', 'variationOptions.variation');
-
-    return $productItem;
-}
-
- public function show($id)
-{
-    $product_item = ProductItem::with('product.productCategory', 'productImages', 'productConfigurations.variationOption.variation')
-        ->find($id);
-
-    if (!$product_item) {
-        return response()->json([
-            'message' => "Product item not found",
-        ], 404);
-    }
-
-    return response()->json([
-        'message' => "success",
-        'data' => $product_item,
-    ], 200);
-}
-
-    public function update(ProductItemRequest $request, $id)
-    {
-        $productItem = ProductItem::find($id);
-        $productItem->update($request->validated());
-        return response()->json([
-            'status' => "Success",
-            'Body' => new ProductItemResource($productItem),
-
-        ], 200);
-    }
-
     public function deleteListedItem($id)
     {
     $result = ProductItem::where('id', '=', $id)->delete();
     return response()->json([
         'message' => 'success',
-      
     ]);
     }
 
@@ -123,21 +65,10 @@ class ProductItemController extends Controller
         }
     
         $productItem->load('user', 'product', 'product.productCategory', 'productImages', 'variationOptions.variation');
-        return response()->json(['data' => $productItem], 200);
+        return response()->json(['message' => 'success',
+                                 'data' => $productItem], 200);
     }
 
-//     public function imageUpload(Request $request)
-// {
-//     // return $request;
-//     if ($request->hasFile('File')) {
-//         $file = $request->file('File');
-//         $fileName = time() . '_' . $file->getClientOriginalName();
-//         $file->move(public_path('uploads'), $fileName); // Save the file to the public/uploads directory
-//         return response()->json(['message' => 'File uploaded successfully'],200);
-//     } else {    
-//         return response()->json(['message' => 'File not provided'], 400);
-//     }
-// }
 
 public function addListing(ProductItemRequest $request)
 {
@@ -168,10 +99,4 @@ public function addListing(ProductItemRequest $request)
 
     return response()->json(['message' => 'success', 'data' => $productItem], 200);
 }
-
-
-
-
-
-
 }

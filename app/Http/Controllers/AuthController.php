@@ -18,25 +18,9 @@ use Notifications;
 use App\Notifications\welcomeEmailNotification;
 use App\Notifications\EmailVerificationCodeNotification;
 use App\Notifications\WelcomeSMSNotification;
-
 use App\Notifications\SMSVerificationCodeNotification;
 
-
-
-
-
 class AuthController extends Controller{
-
-
-    public function __invoke()
-{
-    $users = User::with('shoppingCart')->get();
-    
-    return response()->json([
-        'message' => 'success',
-        'data' => $users
-    ]);
-}
 
     public function login(Request $request){
 
@@ -220,74 +204,77 @@ public function checkUsername(Request $request)
     
 
 
-    public function googleRedirect(Request $request){
-        try {
-            $email = $request->input('email');
-            $user = User::where('email', $email)->first();   
+   public function googleRedirect(Request $request){
+    try {
+        $email = $request->input('email');
+        $user = User::where('email', $email)->first();   
+        
+        if ($user) {
+            Auth::login($user);
+            $token = $user->createToken('auth-token')->plainTextToken;
             
-            if ($user) {
-                Auth::login($user);
-                $token = $user->createToken('auth-token')->plainTextToken;
-                return response()->json([ 
-                    'message' => 'success',
-                    'access_token' => $token,
-                    'token_type' => 'Bearer',
-                    'expires_in' => null,
-                    'username' => $user->username,
-                    'user_id' => $user->id,
-                    'email' => $user->email,
-                    'first_name' => $user->first_name,
-                    'last_name' => $user->last_name,
-                    'contact_number' => $user->contact_number,
-                    'shopping_cart' => $user->shoppingCart
-                ]);
-            }
-             else {
-                // No user found with the provided email
-                return response()->json(['message' => 'registerFirst'], 200);
-            }
-        } catch (\Exception $e) {
-            // Handle exceptions if they occur
-            return response()->json(['error' => $e->getMessage()], 500);
+            $userData = [
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'expires_in' => null,
+                'username' => $user->username,
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'contact_number' => $user->contact_number,
+                'shopping_cart' => $user->shoppingCart
+            ];
+            
+            return response()->json([ 
+                'message' => 'success',
+                'data' => $userData
+            ]);
+        } else {
+            return response()->json(['message' => 'registerFirst'], 200);
         }
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
     }
+}
 
-    public function facebookRedirect(Request $request){
-        try {
-            $email = $request->input('email');
-            $user = User::where('email', $email)->first();   
+   public function facebookRedirect(Request $request){
+    try {
+        $email = $request->input('email');
+        $user = User::where('email', $email)->first();   
+        
+        if ($user) {
+            Auth::login($user);
+            $token = $user->createToken('auth-token')->plainTextToken;
             
-            if ($user) {
-                Auth::login($user);
-                $token = $user->createToken('auth-token')->plainTextToken;
-                return response()->json([ 
-                    'message' => 'Success',
-                    'access_token' => $token,
-                    'token_type' => 'Bearer',
-                    'expires_in' => null,
-                    'username' => $user->username,
-                    'user_id' => $user->id,
-                    'email' => $user->email,
-                    'first_name' => $user->first_name,
-                    'last_name' => $user->last_name,
-                    'contact_number' => $user->contact_number,
-                    'shopping_cart' => $user->shoppingCart
-                ]);
-            }
-             else {
-                // No user found with the provided email
-                return response()->json(['message' => 'registerFirst'], 200);
-            }
-        } catch (\Exception $e) {
-            // Handle exceptions if they occur
-            return response()->json(['error' => $e->getMessage()], 500);
+            $userData = [
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'expires_in' => null,
+                'username' => $user->username,
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'contact_number' => $user->contact_number,
+                'shopping_cart' => $user->shoppingCart
+            ];
+            
+            return response()->json([ 
+                'message' => 'Success',
+                'data' => $userData
+            ]);
+        } else {
+            return response()->json(['message' => 'registerFirst'], 200);
         }
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
     }
+}
 
    public function getEmailVerificationCode(Request $request){
     $userEmail = $request->input('email');
 
-    // Check if the user with the given email exists in the database
     $existingUser = User::where('email', $userEmail)->first();
 
     if ($existingUser === null) {
@@ -312,13 +299,9 @@ public function checkUsername(Request $request)
     public function SMSVerificationCode(Request $contact_number){
 
         $user_contact_number = $contact_number->input('contact_number');
-        // return $user_contact_number;
-
         if ($user_contact_number !== null) {
             $verificationCode = rand(100000, 999999);
         
-
-            
             // $notification = new SMSVerificationCodeNotification($verificationCode); 
             // \Notification::route('vonage', $user_contact_number)->notify($notification);
 

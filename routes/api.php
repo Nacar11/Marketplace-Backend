@@ -1,9 +1,7 @@
 <?php
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-// use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductItemController;
 use App\Http\Controllers\ProductCategoryController;
@@ -15,7 +13,6 @@ use App\Http\Controllers\ShoppingCartController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\PaymentTypeController;
-use App\Http\Controllers\UserPaymentMethodController;
 use App\Http\Controllers\OrderLineController;
 use App\Http\Controllers\ShippingMethodController;
 use App\Http\Controllers\NotificationController;
@@ -23,8 +20,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\CityController;
-use App\Http\Controllers\WebHookController;
-
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     //INITIALIZE USER DATA
@@ -34,18 +29,24 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 
     //PRODUCT ITEMS AND FAVORITE PRODUCT ITEMS
-    Route::get('productItem/{product}', [ProductItemController::class, 'show']);
-    Route::post('productItem', [ProductItemController::class, 'store']);
+    Route::get('productItems', ProductItemController::class);
+    Route::get('getProductItemsByProductType/{id}', [ProductItemController::class, 'getProductItemsByProductType']);
+    Route::get('productItem/{id}', [ProductItemController::class, 'getProductItem']);
+    Route::get('getProductItemsByUser', [ProductItemController::class, 'getProductItemsByUser']);
+    Route::delete('deleteListedItem/{id}', [ProductItemController::class, 'deleteListedItem']);
+    Route::post('/addListing', [ProductItemController::class, 'addListing']);
     Route::get('getFavoritesByUser', [FavoriteController::class, 'getFavoritesByUser']);
     Route::post('addToFavorites', [FavoriteController::class, 'addToFavorites']);
     Route::delete('removeFromFavorites', [FavoriteController::class, 'removeFromFavorites']);
-    Route::get('productItemsbyCategory/{id}', [ProductItemController::class, 'getProductItemsByCategory']);
-    Route::get('product', ProductController::class);
+
+    //PRODUCT TYPES AND CATEGORIES
+    Route::get('getOrganizedProductCategories', ProductCategoryController::class);
+    Route::get('productCategories', [ProductCategoryController::class, 'getProductCategories']);
     Route::get('getProductTypesByCategory/{id}', [ProductCategoryController::class, 'getProductTypesByCategory']);
     Route::get('getProductTypes', [ProductController::class, 'getProductTypes']);
-    Route::get('getProductItemsByProductType/{id}', [ProductItemController::class, 'getProductItemsByProductType']);
-    Route::get('getProductItemsByUser', [ProductItemController::class, 'getProductItemsByUser']);
-    Route::delete('deleteListedItem/{id}', [ProductItemController::class, 'deleteListedItem']);
+    Route::get('product', ProductController::class);
+
+
 
     //REGIONS, COUNTRIES AND CITIES
     Route::get('getRegionsByCountryId/{id}', [RegionController::class, 'getRegionsByCountryId']);
@@ -53,12 +54,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
  
 
     //VARIATIONS
-    Route::get('getVariantsByProductTypes/{id}', [ProductController::class, 'getVariantsByProductTypes']);
-    Route::get('variationOptions/{id}', [VariationController::class, 'getVariationOptions']);
-    Route::get('variation', VariationController::class);
-    Route::get('variation-option', VariationOptionController::class);
-    Route::get('product-configuration', [ProductConfigurationController::class, 'getAll']);
-    
+    Route::get('getVariationsByProductTypes/{id}', [ProductController::class, 'getVariantsByProductTypes']);
+    Route::get('productConfiguration', [ProductConfigurationController::class, 'getAll']);
+    Route::post('productConfiguration', [ProductConfigurationController::class, 'add']);
 
    
  
@@ -79,47 +77,39 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/getDefaultAddress', [AddressController::class, 'getDefaultAddress']);
 
     //PAYMENTS AND ORDERS
-    Route::get('/getPaymentTypes', PaymentTypeController::class);
-    ////////////////continue
-    Route::get('/getShippingMethods', ShippingMethodController::class);
     Route::get('/getOrderLinesByUser', [OrderLineController::class,'getOrderLinesByUser']);
-    Route::get('/getAllOrderLines', OrderLineController::class );
-    //
+    Route::get('/getAllOrderLines', OrderLineController::class);
+    Route::get('/getPaymentTypes', PaymentTypeController::class);
+    Route::get('/getShippingMethods', ShippingMethodController::class);
     
-    Route::post('/addListing', [ProductItemController::class, 'addListing']);
 
 });
 
-Route::post('changePass', [AuthController::class, 'changePassword']);
-Route::get('/users', AuthController::class);
-Route::post('/getEmailVerificationCode', [AuthController::class, 'getEmailVerificationCode']);
-Route::post('/SMSVerificationCode', [AuthController::class, 'SMSVerificationCode']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/register', [AuthController::class, 'register']);
 Route::get('test',function(){
     return 'success';
 });
-Route::get('product-category', ProductCategoryController::class);
-Route::get('productCategories', [ProductCategoryController::class, 'getProductCategories']);
-Route::get('product-category/{id}', [ProductCategoryController::class, 'show']);
 
+//USER LOGIN / FRONTPAGE APIS
+Route::post('changePass', [AuthController::class, 'changePassword']);
+Route::post('/login', [AuthController::class, 'login']);
 
-// Route::get('productItems', ProductItemController::class);
-// Route::get('/getProductItem/{id}', [ProductItemController::class, 'getProductItem']);
-
-Route::get('auth/facebook', [AuthController::class, 'facebookpage']);
+//SOCIAL LOGINS
 Route::post('google/callback', [AuthController::class, 'googleRedirect']);
 Route::post('facebook/callback', [AuthController::class, 'facebookRedirect']);
 
+//SIGN UP PROCESS
 Route::post('/checkEmail', [AuthController::class, 'checkEmail']);
 Route::post('/getUserByEmail', [AuthController::class, 'getUserByEmail']);
 Route::post('/checkUsername', [AuthController::class, 'checkUsername']);
+Route::post('/register', [AuthController::class, 'register']);
+//GOOGLE.DEVELOPERS
+Route::post('/getEmailVerificationCode', [AuthController::class, 'getEmailVerificationCode']);
+//VONAGE SMS
+Route::post('/SMSVerificationCode', [AuthController::class, 'SMSVerificationCode']);
 
-
+//SHORTCUTS
 Route::post('variation/', [VariationController::class, 'store']);
-Route::post('product-configuration', [ProductConfigurationController::class, 'add']);
 Route::post('variation-option/', [VariationOptionController::class, 'store']);
-
 
 //WEBHOOKS FROM PAYMONGO
 Route::post('/checkoutPaymentSuccess', [OrderLineController::class,'checkoutPaymentSuccess']);

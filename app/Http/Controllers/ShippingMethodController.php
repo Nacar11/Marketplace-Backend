@@ -15,14 +15,4 @@ class ShippingMethodController extends Controller
     ], 200);
     }
 
-    public function getFirst()
-    {
-    $firstShippingMethod = ShippingMethod::first();
-
-    if ($firstShippingMethod) {
-        return response()->json($firstShippingMethod);
-    } else {
-        return response()->json(['message' => 'No shipping methods found.'], 404);
-    }
-    }
 }
