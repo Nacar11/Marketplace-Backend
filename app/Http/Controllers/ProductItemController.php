@@ -55,7 +55,7 @@ class ProductItemController extends Controller
     return response()->json([
         'message' => 'success',
     ]);
-    }
+    }ASDADA
 
 
     public function getProductItem($id)
