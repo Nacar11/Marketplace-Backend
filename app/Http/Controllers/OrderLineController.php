@@ -23,12 +23,33 @@ class OrderLineController extends Controller
     {
     $orderLines = OrderLine::with([
         'user',
-        'productItem.product'
+        'productItem.product',
+        'orderStatus'
     ])->get();
      return response()->json([
     'message' => 'success',
     'data' => $orderLines
     ]);
+    }
+
+    public function cancelOrderLine($orderLineId)
+    {
+    try {
+        $orderLine = OrderLine::find($orderLineId);
+        
+        if (!$orderLine) {
+            return response()->json(['message' => 'Order line not found'], 404);
+        }
+        
+        $cancelledStatusId = 2;
+        
+        $orderLine->order_status_id = $cancelledStatusId;
+        $orderLine->save();
+        
+        return response()->json(['message' => 'success'], 200);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
     }
 
     public function checkoutPaymentSuccess(Request $request)

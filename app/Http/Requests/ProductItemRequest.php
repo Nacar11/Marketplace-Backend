@@ -7,31 +7,21 @@ use Illuminate\Foundation\Http\FormRequest;
 class ProductItemRequest extends FormRequest
 {
 
-    protected function prepareForValidation()
-    {
-        $this->merge([
-            'price' => (double) $this->input('price'), // Cast the 'price' input to double
-        ]);
-    }
-    /**
-     * Determine if the user is authorized to make this request.
-     */
+   
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
-     */
+  
     public function rules(): array
     {
         return [
             'product_id' => 'required|exists:products,id',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
+            'variation_option_ids' => 'required|array', 
+            'variation_option_ids.*' => 'exists:variation_options,id',
         ];
     }
 

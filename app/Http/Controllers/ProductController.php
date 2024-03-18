@@ -35,7 +35,7 @@ class ProductController extends Controller
         'message' => 'success',
         'data' =>    $variants,
         ]);
-        return $variants;
+        
     }
     
 }

@@ -7,6 +7,7 @@ use App\Http\Requests\ProductItemRequest;
 use App\Http\Requests\ImageFileRequest;
 use App\Models\ProductItem;
 use App\Models\ProductImage;
+use App\Models\ProductConfiguration;
 use Carbon\Carbon;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -64,13 +65,13 @@ class ProductItemController extends Controller
             return response()->json(['message' => 'ProductItem not found'], 404);
         }
     
-        $productItem->load('user', 'product', 'product.productCategory', 'productImages', 'variationOptions.variation');
+        $productItem->load('user', 'product', 'product.productCategory', 'productConfigurations.variationOption.variation', 'productImages');
         return response()->json(['message' => 'success',
                                  'data' => $productItem], 200);
     }
 
 
-public function addListing(ProductItemRequest $request)
+public function addListingAndConfiguration(ProductItemRequest $request)
 {
     $user = auth()->user();
     $userId = $user->id;
@@ -79,6 +80,8 @@ public function addListing(ProductItemRequest $request)
         'user_id' => $userId,
         'SKU' => $sku,
     ]));
+
+   
     
 
     foreach ($request->allFiles() as $fieldName => $file) {
@@ -95,6 +98,16 @@ public function addListing(ProductItemRequest $request)
         } else {
              return response()->json(['messages' => 'image not valid'], 200);
         }
+    }
+
+    $variationOptionIds = $request->input('variation_option_ids', []);
+    $productConfigurations = [];
+    foreach ($variationOptionIds as $variationOptionId) {
+        $productConfigurations[] = ProductConfiguration::create([
+            'product_item_id' => $productItem->id,
+            'variation_option_id' => $variationOptionId,
+           
+        ]);
     }
 
     return response()->json(['message' => 'success', 'data' => $productItem], 200);

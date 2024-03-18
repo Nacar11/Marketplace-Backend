@@ -34,7 +34,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('productItem/{id}', [ProductItemController::class, 'getProductItem']);
     Route::get('getProductItemsByUser', [ProductItemController::class, 'getProductItemsByUser']);
     Route::delete('deleteListedItem/{id}', [ProductItemController::class, 'deleteListedItem']);
-    Route::post('/addListing', [ProductItemController::class, 'addListing']);
+    Route::post('/addListingAndConfiguration', [ProductItemController::class, 'addListingAndConfiguration']);
     Route::get('getFavoritesByUser', [FavoriteController::class, 'getFavoritesByUser']);
     Route::post('addToFavorites', [FavoriteController::class, 'addToFavorites']);
     Route::delete('removeFromFavorites', [FavoriteController::class, 'removeFromFavorites']);
@@ -54,7 +54,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
  
 
     //VARIATIONS
-    Route::get('getVariationsByProductTypes/{id}', [ProductController::class, 'getVariantsByProductTypes']);
+    Route::get('getVariationsByProductCategory/{id}', [ProductCategoryController::class, 'getVariationsByProductCategory']);
     Route::get('productConfiguration', [ProductConfigurationController::class, 'getAll']);
     Route::post('productConfiguration', [ProductConfigurationController::class, 'add']);
 
@@ -81,6 +81,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/getAllOrderLines', OrderLineController::class);
     Route::get('/getPaymentTypes', PaymentTypeController::class);
     Route::get('/getShippingMethods', ShippingMethodController::class);
+    Route::post('/cancelOrderLine/{orderLineId}', [OrderLineController::class, 'cancelOrderLine']);
     
 
 });

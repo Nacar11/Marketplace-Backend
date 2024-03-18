@@ -68,4 +68,19 @@ public function __invoke()
         'data' => $product_types,
     ], 200);
 }
+
+ public function getVariationsByProductCategory($categoryId)
+    {
+        $category = ProductCategory::find($categoryId);
+        if (!$category) {
+            return response()->json(['error' => 'Product Category not found'], 404);
+        }
+
+        $variants = $category->variations->load('variationOptions');
+
+        return response()->json([
+            'message' => 'success',
+            'data' => $variants,
+        ]);
+    }
 }
