@@ -47,14 +47,23 @@ class AuthController extends Controller{
 
         // $user->notify(new WelcomeEmailNotification($user));
 
-
-        return response()->json([ 
-            'message' => 'success',
+        $userData = [
             'access_token' => $token,
             'token_type' => 'Bearer',
+            'expires_in' => null,
             'username' => $user->username,
             'user_id' => $user->id,
-            ]);     
+            'email' => $user->email,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'contact_number' => $user->contact_number,
+            'shopping_cart' => $user->shoppingCart
+        ];
+
+         return response()->json([ 
+                'message' => 'success',
+                'data' => $userData
+            ]);   
         }
 
     public function logout(){
@@ -181,27 +190,6 @@ public function checkUsername(Request $request)
         return response()->json(['message' => 'An error occurred while checking the username'], 500);
     }
 }
-
-    
-
-
-
-    public function getShoppingCartByUser($id){
-
-        $user = User::find($id); 
-        if (!$user) {
-            return "User Not Found"; 
-        }
-        $shoppingCart = $user->shoppingCart;
-        if (!$shoppingCart) {
-            return "Shopping Cart Not Found."; 
-        }
-        $shoppingCart->load('items.productItem.productImages', 'items.productItem.product');
-    
-        return $shoppingCart;  
-        return response()->json(['success' =>  $shoppingCart], 200);
-        }
-    
 
 
    public function googleRedirect(Request $request){

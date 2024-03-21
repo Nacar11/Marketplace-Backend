@@ -8,14 +8,6 @@ use Illuminate\Http\Request;
 
 class FavoriteController extends Controller
 {
-    public function __invoke()
-    {
-        $favorites = Favorite::with('user', 'productItem.product.productCategory', 'productItem.productImages', 'productItem.productConfigurations.variationOption.variation')
-            ->get();
-
-        return FavoriteResource::collection($favorites);
-    }
-
     public function getFavoritesByUser()
     {
 
@@ -28,7 +20,6 @@ class FavoriteController extends Controller
         'message' => 'success',
         'data' =>  $favorites,
     ]);
-      
     }
 
     public function addToFavorites(Request $request)

@@ -16,25 +16,4 @@ class UserPaymentMethodController extends Controller
         return response()->json($userPaymentMethods);
     }
 
-    public function update(UserPaymentMethodRequest $request)
-    {
-    $userPaymentMethod = UserPaymentMethod::where('user_id', auth()->user()->id)->first();
-
-    if (!$userPaymentMethod) {
-        return response()->json(['message' => 'User payment method not found'], 404);
-    }
-
-
-    $userPaymentMethod->update($request->validated());
-
-    return response()->json(['message' => 'User payment method updated successfully']);
-    }
-
-    public function getUPMbyID()
-    {
-        $userId = auth()->user()->id;
-        $userPaymentMethods = UserPaymentMethod::where('user_id', $userId)->get();
-
-        return response()->json($userPaymentMethods);
-    }
 }
