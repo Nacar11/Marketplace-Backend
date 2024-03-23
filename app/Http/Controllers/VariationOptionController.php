@@ -25,4 +25,25 @@ class VariationOptionController extends Controller
         ], 201); 
     }
 
+      public function storeMultiple(Request $request)
+    {
+        $validatedData = $request->validate([
+            'values' => 'required|array',
+            'variation_id' => 'required|integer',
+        ]);
+
+        $variationOptions = [];
+        foreach ($validatedData['values'] as $value) {
+            $variationOption = VariationOption::create([
+                'value' => $value,
+                'variation_id' => $validatedData['variation_id'],
+            ]);
+            $variationOptions[] = $variationOption;
+        }
+
+        return response()->json([
+            'message' => 'success',
+        ], 201);
+    }
+
 }

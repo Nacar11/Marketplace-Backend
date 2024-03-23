@@ -111,6 +111,7 @@ Route::post('/SMSVerificationCode', [AuthController::class, 'SMSVerificationCode
 //SHORTCUTS
 Route::post('variation/', [VariationController::class, 'store']);
 Route::post('variation-option/', [VariationOptionController::class, 'store']);
+Route::post('storeMultipleVariationOptions/', [VariationOptionController::class, 'storeMultiple']);
 
 //WEBHOOKS FROM PAYMONGO
 Route::post('/checkoutPaymentSuccess', [OrderLineController::class,'checkoutPaymentSuccess']);
