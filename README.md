@@ -40,6 +40,8 @@ to run the project, input in terminal:
 ```sh
 $ php artisan serve
 ```
+
+
 Check if http://127.0.0.1:8000/api/test returns success
 
 
