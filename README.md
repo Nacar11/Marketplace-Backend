@@ -1,3 +1,54 @@
+## About Marketplace Configuration
+
+Install Xampp version 8.2.12 above 
+https://www.apachefriends.org/download.html
+
+run xampp, create and name a fresh empty database
+
+open project with a code editor
+
+Using composer.phar file, input  php composer.phar install from terminal inside project directory(make sure to set environment variable for php installed as part of the package from xampp)
+
+input in terminal: "php artisan key:generate" and "cp .env.example .env"
+
+inside env. file:
+make sure DB_PORT is the same port where MySQL of xammp is running
+change MAIL_USERNAME AND MAIL_PASSWORD to the username and password of your google developer account
+MAIL_PASSWORD is generated from your google account -> password -> 2-step Verification -> Generate App Password
+VONAGE_KEY AND VONAGE_SECRET is provided by creating a vonage account, important for SMS Notification Features but not entirely needed
+
+
+```sh
+$ npm install mysql
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
 <p align="center">
