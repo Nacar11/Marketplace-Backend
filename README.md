@@ -1,17 +1,12 @@
-<p align="center">
-<a href="https://www.apachefriends.org/download.html"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://www.apachefriends.org/download.html"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-</p>
-
-
-
 ## About Marketplace Configuration
 
 Install Xampp version 8.2.12 above 
+
 <a href="https://www.apachefriends.org/download.html"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
 
 Run xampp, create and name a fresh empty database, then download the database here: 
-<a href="https://drive.google.com/drive/folders/11S3gyDeC9NV2jPEph4Jn89UiIlKmTj7U?usp=sharing"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+
+<a href="https://drive.google.com/drive/folders/11S3gyDeC9NV2jPEph4Jn89UiIlKmTj7U?usp=sharing"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Latest Stable Version"></a>
 
 Open project with a code editor
 
