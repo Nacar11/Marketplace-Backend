@@ -3,18 +3,19 @@
 Install Xampp version 8.2.12 above 
 https://www.apachefriends.org/download.html
 
-run xampp, create and name a fresh empty database
+Run xampp, create and name a fresh empty database, then download the database here: 
+https://drive.google.com/drive/folders/11S3gyDeC9NV2jPEph4Jn89UiIlKmTj7U?usp=sharing
 
-open project with a code editor
+Open project with a code editor
 
 Using composer.phar file, input from terminal inside project directory: 
 ```sh
 $ php composer.phar install
 ```
 
-(make sure to set environment variable for php installed as part of the package from xampp)
+Make sure to set environment variable for php installed as part of the package from xampp
 
-input in terminal: 
+Input in terminal: 
 ```sh
 $ php artisan key:generate
 ```
@@ -23,38 +24,17 @@ and
 $ cp .env.example .env
 ```
 
-inside env. file:
-make sure DB_PORT is the same port where MySQL of xammp is running
-change MAIL_USERNAME AND MAIL_PASSWORD to the username and password of your google developer account
+Inside env. file:
+Make sure DB_PORT is the same port where MySQL of xammp is running
+Change MAIL_USERNAME AND MAIL_PASSWORD to the username and password of your google developer account
 MAIL_PASSWORD is generated from your google account -> password -> 2-step Verification -> Generate App Password
 VONAGE_KEY AND VONAGE_SECRET is provided by creating a vonage account, important for SMS Notification Features but not entirely needed
 
-
+to run the project, input in terminal:
 ```sh
-$ npm install mysql
+$ php artisan serve
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Check if http://127.0.0.1:8000/api/test returns success
 
 
 
