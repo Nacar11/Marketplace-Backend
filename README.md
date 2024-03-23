@@ -7,9 +7,21 @@ run xampp, create and name a fresh empty database
 
 open project with a code editor
 
-Using composer.phar file, input  php composer.phar install from terminal inside project directory(make sure to set environment variable for php installed as part of the package from xampp)
+Using composer.phar file, input from terminal inside project directory: 
+```sh
+$ php composer.phar install
+```
 
-input in terminal: "php artisan key:generate" and "cp .env.example .env"
+(make sure to set environment variable for php installed as part of the package from xampp)
+
+input in terminal: 
+```sh
+$ php artisan key:generate
+```
+and 
+```sh
+$ cp .env.example .env
+```
 
 inside env. file:
 make sure DB_PORT is the same port where MySQL of xammp is running
