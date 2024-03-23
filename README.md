@@ -27,9 +27,13 @@ $ cp .env.example .env
 ```
 
 Inside env. file:
+
 Make sure DB_PORT is the same port where MySQL of xammp is running
+
 Change MAIL_USERNAME AND MAIL_PASSWORD to the username and password of your google developer account
+
 MAIL_PASSWORD is generated from your google account -> password -> 2-step Verification -> Generate App Password
+
 VONAGE_KEY AND VONAGE_SECRET is provided by creating a vonage account, important for SMS Notification Features but not entirely needed
 
 to run the project, input in terminal:
