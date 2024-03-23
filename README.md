@@ -1,3 +1,10 @@
+<p align="center">
+<a href="https://www.apachefriends.org/download.html"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://www.apachefriends.org/download.html"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+</p>
+
+
+
 ## About Marketplace Configuration
 
 Install Xampp version 8.2.12 above 
