@@ -36,16 +36,20 @@ MAIL_PASSWORD is generated from your google account -> password -> 2-step Verifi
 
 VONAGE_KEY AND VONAGE_SECRET is provided by creating a vonage account, important for SMS Notification Features but not entirely needed
 
-to run the project, input in terminal:
+To run the project, input in terminal:
 ```sh
 $ php artisan serve
 ```
 
 
-Check if http://127.0.0.1:8000/api/test returns success
+Check if http://127.0.0.1:8000/api/test 
 
+returns success
 
-
+Finally, run ngrok:
+```sh
+$ .\ngrok http --domain=prompt-closely-goose.ngrok-free.app 8000
+```
 
 
 
